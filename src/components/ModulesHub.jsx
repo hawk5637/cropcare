@@ -3,14 +3,15 @@ import { useApp } from '../context/AppContext';
 import {
   Layers3, Map, Sprout, LayoutGrid, MessageSquareHeart, Droplets, FlaskConical,
   Bug, CloudSun, Wrench, HeadphonesIcon, BarChart2, Store, Users, Warehouse,
-  Truck, Wallet, PackageCheck, Accessibility, Search, ChevronRight
+  Truck, Wallet, PackageCheck, Accessibility, Search, ChevronRight, Sliders
 } from 'lucide-react';
 
 const MODULES = [
   { key: 'land-soil', name: 'Land & Soil', icon: Map, color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800', desc: 'Soil health, plot map, GPS boundaries', roles: ['farmer', 'expert'] },
   { key: 'seed', name: 'Seed', icon: Sprout, color: 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800', desc: 'Variety selection, seed treatment, buy seeds', roles: ['farmer', 'supplier'] },
   { key: 'crop-planning', name: 'Crop Planning', icon: LayoutGrid, color: 'bg-lime-100 dark:bg-lime-950/40 text-lime-700 dark:text-lime-400 border-lime-200 dark:border-lime-800', desc: 'Sowing calendar, rotation, profit estimate', roles: ['farmer', 'expert'] },
-  { key: 'ai-assistant', name: 'AI Farm Assistant', icon: MessageSquareHeart, color: 'bg-violet-100 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800', desc: 'Chat with Gemini-powered agronomist AI', roles: ['farmer', 'buyer', 'supplier', 'expert'] },
+  { key: 'what-if-simulator', name: 'What-If Farm Simulator', icon: Sliders, color: 'bg-teal-100 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border-teal-200 dark:border-teal-800', desc: 'Simulate crop, water, and fertilizer scenarios', roles: ['farmer', 'expert'] },
+  { key: 'ai-assistant', name: 'Farm Advisor AI', icon: MessageSquareHeart, color: 'bg-violet-100 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800', desc: 'Grounded agronomist AI & parcel telemetry advice', roles: ['farmer', 'buyer', 'supplier', 'expert'] },
   { key: 'water', name: 'Water & Irrigation', icon: Droplets, color: 'bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800', desc: 'Pump control, soil moisture, schedules', roles: ['farmer', 'expert'] },
   { key: 'fertilizer', name: 'Fertilizer', icon: FlaskConical, color: 'bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800', desc: 'NPK calculator, deficiency guide, buy inputs', roles: ['farmer', 'supplier', 'expert'] },
   { key: 'pest-disease', name: 'Pest & Disease', icon: Bug, color: 'bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800', desc: 'Disease library, scan history, outbreak alerts', roles: ['farmer', 'expert'] },
@@ -29,7 +30,7 @@ const MODULES = [
 
 const CATEGORIES = [
   { key: 'all', label: 'All Modules' },
-  { key: 'farming', label: 'On-Farm', keys: ['land-soil', 'seed', 'crop-planning', 'water', 'fertilizer', 'pest-disease', 'weather', 'machinery'] },
+  { key: 'farming', label: 'On-Farm', keys: ['land-soil', 'seed', 'crop-planning', 'what-if-simulator', 'water', 'fertilizer', 'pest-disease', 'weather', 'machinery'] },
   { key: 'market', label: 'Market & Sales', keys: ['market', 'buyer-management', 'storage', 'logistics', 'payment', 'after-selling'] },
   { key: 'support', label: 'Support', keys: ['ai-assistant', 'expert-support', 'farm-management', 'accessibility'] }
 ];

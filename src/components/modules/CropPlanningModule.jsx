@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { LayoutGrid, Calendar, ChevronRight, Sprout, Droplets, FlaskConical, Tractor, Package, TrendingUp } from 'lucide-react';
+import { LayoutGrid, Calendar, ChevronRight, Sprout, Droplets, FlaskConical, Tractor, Package, TrendingUp, Sliders } from 'lucide-react';
 
 const CROPS = ['Wheat', 'Rice (Basmati)', 'Maize', 'Cotton', 'Mustard', 'Soybean', 'Sugarcane', 'Tomato', 'Onion'];
 const SEASONS = ['Rabi (Oct-Mar)', 'Kharif (Jun-Oct)', 'Zaid (Mar-Jun)'];
@@ -44,7 +44,7 @@ const TYPE_COLORS = {
 };
 
 export default function CropPlanningModule() {
-  const { mode } = useApp();
+  const { mode, setActiveNav, setActiveModule } = useApp();
   const [crop, setCrop] = useState('Wheat');
   const [season, setSeason] = useState(SEASONS[0]);
   const [plot, setPlot] = useState(PLOTS[0]);
@@ -88,12 +88,24 @@ export default function CropPlanningModule() {
             </select>
           </div>
         </div>
-        <button
-          onClick={handleGenerate}
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-lime-600 to-green-600 text-white font-extrabold text-sm shadow-md hover:from-lime-700 hover:to-green-700 transition-all flex items-center justify-center gap-2"
-        >
-          <Calendar className="w-4 h-4" /> Generate Crop Calendar
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={handleGenerate}
+            className="flex-1 py-3 rounded-xl bg-gradient-to-r from-lime-600 to-green-600 text-white font-extrabold text-sm shadow-md hover:from-lime-700 hover:to-green-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Calendar className="w-4 h-4" /> Generate Crop Calendar
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveNav('module');
+              setActiveModule('what-if-simulator');
+            }}
+            className="py-3 px-5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Sliders className="w-4 h-4" /> Simulate What-If Scenarios
+          </button>
+        </div>
       </div>
 
       {/* Generated Calendar */}
