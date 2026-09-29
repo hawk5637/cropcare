@@ -26,6 +26,7 @@ export default function FarmerDashboard() {
     userName, 
     mode, 
     setActiveNav, 
+    setActiveModule,
     activeDashboardTab, 
     setActiveDashboardTab, 
     setIsIntroModalOpen,
@@ -106,6 +107,17 @@ export default function FarmerDashboard() {
             >
               {isDripRunning ? <Square className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
               <span>{isDripRunning ? 'Stop Drip Cycle' : t('roles.farmer.actions.triggerDrip')}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveNav('module');
+                setActiveModule('ai-assistant');
+              }}
+              className="px-4 py-2.5 rounded-xl bg-lime-400 text-slate-900 font-extrabold text-xs shadow-md hover:bg-lime-300 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <Bot className="w-4 h-4 text-emerald-800" />
+              <span>Farm Advisor AI</span>
             </button>
 
             <button

@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
 import { callGemini, friendly, modelChain } from './api/_gemini.js';
 import { findPlantEntry, getPlants, getAllDiseases, searchKnowledge } from './api/_knowledge.js';
+import { buildFarmAdvisorPrompt, PROJECT_DATA } from './api/_advisorContext.js';
 
 dotenv.config();
 
@@ -474,6 +475,99 @@ How to answer:
   } catch (err) {
     console.error('Chat error:', err);
     res.status(500).json({ error: `Assistant error: ${err.message}` });
+  }
+});
+
+// POST /api/farm-advisor — Grounded Farm Advisor AI Assistant
+app.post('/api/farm-advisor', aiLimiter, async (req, res) => {
+  try {
+    const { 
+      message, 
+      history = [], 
+      plotId = 'plot-1', 
+      language = 'en', 
+      userName = 'Farmer' 
+    } = req.body || {};
+
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ error: 'A query message is required for Farm Advisor AI.' });
+    }
+
+    const apiKey = getApiKey(req);
+    if (!apiKey) {
+      return res.status(503).json({
+        error: 'GEMINI_API_KEY is not configured on the server. Please add your GEMINI_API_KEY to the .env file.',
+        needs_config: true
+      });
+    }
+
+    const { systemPrompt, selectedPlot } = buildFarmAdvisorPrompt({
+      plotId,
+      language,
+      userName
+    });
+
+    const contents = [];
+
+    // Append prior history
+    if (Array.isArray(history)) {
+      for (const turn of history.slice(-8)) {
+        if (turn.sender && turn.text && !turn.isError && !turn.text.startsWith('⚠️')) {
+          contents.push({
+            role: turn.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: turn.text }]
+          });
+        }
+      }
+    }
+
+    // Append user message
+    contents.push({
+      role: 'user',
+      parts: [{ text: message.trim() }]
+    });
+
+    const generationConfig = {
+      temperature: 0.1, // Low temperature for high factual adherence to project data
+      maxOutputTokens: 600
+    };
+
+    try {
+      const { data, model } = await callGemini(
+        { systemInstruction: systemPrompt, contents, generationConfig },
+        15000,
+        apiKey
+      );
+
+      const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!replyText) {
+        return res.status(502).json({
+          error: 'No response received from Farm Advisor model.',
+          details: [{ model, status: 502, message: 'Empty candidate received' }]
+        });
+      }
+
+      return res.status(200).json({
+        reply: replyText,
+        plot: {
+          id: selectedPlot.id,
+          name: selectedPlot.name,
+          crop: selectedPlot.current_crop,
+          soilType: selectedPlot.soil.type,
+          moisture: selectedPlot.soil.moisture,
+          healthScore: selectedPlot.health_score
+        },
+        model_used: model,
+        grounded: true
+      });
+    } catch (e) {
+      const errors = e.errors || [{ status: 500, message: String(e.message || e) }];
+      console.error("[Farm Advisor AI] Gemini failed:", JSON.stringify(errors));
+      return res.status(502).json({ ...friendly(errors), details: errors });
+    }
+  } catch (err) {
+    console.error('Farm Advisor error:', err);
+    res.status(500).json({ error: `Farm Advisor error: ${err.message}` });
   }
 });
 

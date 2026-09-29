@@ -33,12 +33,14 @@ import LogisticsModule from './components/modules/LogisticsModule.jsx';
 import PaymentModule from './components/modules/PaymentModule.jsx';
 import AfterSellingModule from './components/modules/AfterSellingModule.jsx';
 import AccessibilityModule from './components/modules/AccessibilityModule.jsx';
+import FarmAdvisorModule from './components/modules/FarmAdvisorModule.jsx';
 
 const MODULE_MAP = {
   'land-soil': LandSoilModule,
   'seed': SeedModule,
   'crop-planning': CropPlanningModule,
-  'ai-assistant': ChatbotWidget,
+  'ai-assistant': FarmAdvisorModule,
+  'farm-advisor': FarmAdvisorModule,
   'water': WaterModule,
   'fertilizer': FertilizerModule,
   'pest-disease': PestDiseaseModule,

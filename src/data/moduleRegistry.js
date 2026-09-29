@@ -5,7 +5,7 @@ export const MODULE_REGISTRY = [
   { id: 'land-soil',        roles: ['farmer', 'expert'],            title: { en: 'Land & Soil', hi: 'भूमि और मिट्टी', ta: 'நிலம் & மண்', fr: 'Terre & Sol' } },
   { id: 'seed',             roles: ['farmer', 'supplier'],          title: { en: 'Seed', hi: 'बीज', ta: 'விதை', fr: 'Semences' } },
   { id: 'crop-planning',    roles: ['farmer'],                      title: { en: 'Crop Planning', hi: 'फसल योजना', ta: 'பயிர் திட்டமிடல்', fr: 'Planification' } },
-  { id: 'ai-assistant',     roles: ['farmer', 'buyer', 'supplier', 'expert'], title: { en: 'AI Farm Assistant', hi: 'AI सहायक', ta: 'AI உதவியாளர்', fr: 'Assistant IA' } },
+  { id: 'ai-assistant',     roles: ['farmer', 'buyer', 'supplier', 'expert'], title: { en: 'Farm Advisor AI', hi: 'फार्म एडवाइजर AI', ta: 'பண்ணை ஆலோசகர் AI', fr: 'Conseiller Agricole IA' } },
   { id: 'water',            roles: ['farmer'],                      title: { en: 'Water', hi: 'सिंचाई', ta: 'நீர் பாசனம்', fr: 'Eau' } },
   { id: 'fertilizer',       roles: ['farmer', 'expert'],            title: { en: 'Fertilizer & Nutrients', hi: 'खाद और पोषण', ta: 'உரம் & ஊட்டச்சத்து', fr: 'Fertilisant' } },
   { id: 'pest-disease',     roles: ['farmer', 'expert'],            title: { en: 'Pest & Disease', hi: 'कीट और रोग', ta: 'பூச்சி & நோய்', fr: 'Ravageurs' } },

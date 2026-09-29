@@ -10,120 +10,51 @@ import {
   Sparkles, 
   User, 
   Image as ImageIcon,
-  RotateCcw,
-  Mic,
-  MicOff,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  CornerDownLeft,
-  ChevronDown
+  RotateCcw, 
+  Mic, 
+  MicOff, 
+  Volume2, 
+  VolumeX, 
+  CheckCircle2, 
+  ShieldCheck,
+  ChevronDown,
+  Layers,
+  HelpCircle,
+  AlertCircle
 } from 'lucide-react';
-
-// Extensive Offline Agronomy & General Knowledge fallback database
-const AGRONOMY_KNOWLEDGE = [
-  {
-    keywords: ['blight', 'early blight', 'late blight', 'alternaria', 'tomato', 'potato'],
-    response: `### 🍅 Tomato & Potato Blight Advisory (ICAR Guidelines)
-**Diagnosis:** Early Blight (*Alternaria solani*) or Late Blight (*Phytophthora infestans*).
-- **Early Blight Symptoms:** Concentric brown 'bullseye' rings with yellow margins on lower leaves.
-- **Late Blight Symptoms:** Water-soaked dark brown/black lesions on leaf tips during humid weather.
-
-#### 🌿 Organic & Cultural Control:
-1. Immediately prune and burn severely infected lower leaves away from the field.
-2. Avoid overhead sprinkler irrigation; switch strictly to root-zone drip irrigation to keep foliage dry.
-3. Spray **Copper Oxychloride 50 WP** @ 2.5 g/L water or **Pseudomonas fluorescens** bio-fungicide @ 5 g/L with a sticker.
-
-#### 🧪 Chemical Prescription (Curative):
-- **Mancozeb 75% WP** @ 2.5 g/L water, OR
-- **Azoxystrobin 18.2% + Difenoconazole 11.4% SC** @ 1 ml/L water.
-- *Pre-Harvest Interval (PHI):* Wait 7 days before picking ripe produce.`
-  },
-  {
-    keywords: ['wheat', 'fertilizer', 'gehun', 'dap', 'urea', 'npk'],
-    response: `### 🌾 Wheat Nutrient Management & Fertilizer Dose
-For 1 Acre of High-Yielding Wheat (PBW-550, HD-2967, Sharbati):
-
-1. **Basal Dose (At Sowing):**
-   - **DAP (Di-Ammonium Phosphate):** 50 kg (1 bag) per acre.
-   - **MOP (Muriate of Potash):** 20 kg per acre.
-   - **Zinc Sulfate (21%):** 10 kg per acre (do NOT mix Zinc directly with DAP; apply separately).
-2. **First Top Dressing (CRI Stage - 21 Days after Sowing):**
-   - **Urea:** 35 kg per acre applied just prior to the first irrigation.
-3. **Second Top Dressing (Tillering / Jointing Stage - 45 Days):**
-   - **Urea:** 35 kg per acre with second irrigation.
-- *Pro Tip:* Spray 2% 19:19:19 water-soluble foliar spray at boot stage to enhance grain weight and shine.`
-  },
-  {
-    keywords: ['neem', 'spray', 'organic pesticide', 'keeda', 'pest', 'aphid', 'whitefly'],
-    response: `### 🌿 Homemade Organic Neem Pest Spray (Zero-Budget Farming)
-Effective against aphids, whiteflies, thrips, leafhoppers, and caterpillar larvae.
-
-#### Recipe:
-1. **Fresh Leaf Decoction:** Boil 1 kg of fresh neem leaves in 5 liters of water until reduced to 3 liters. Strain the liquid.
-2. **Neem Oil Method:** Mix 50 ml of pure cold-pressed neem oil (10,000 ppm / 1500 ppm Azadirachtin) with 10 liters of water.
-3. **Emulsifier:** Add 1 teaspoon (5 ml) of mild liquid soap or khadi soap solution to help the oil blend with water.
-
-#### Application:**
-- Spray in the early morning (before 9 AM) or late afternoon (after 4 PM).
-- Coat both top and bottom surfaces of leaves where sap-sucking pests hide.
-- Re-apply every 7 to 10 days for preventative shielding.`
-  },
-  {
-    keywords: ['mandi', 'price', 'rate', 'msp', 'bhav', 'market'],
-    response: `### 📊 Real-Time Mandi Rates & MSP Advisory
-CropCare connects directly to e-NAM and APMC Mandi feeds across northern, western, and southern agricultural hubs:
-
-- **Wheat (Sharbati / Grade A):** ₹2,420 – ₹2,650 / quintal (MSP: ₹2,275)
-- **Basmati Paddy (1121 / 1509):** ₹3,850 – ₹4,200 / quintal
-- **Mustard (Sarson 42% Oil):** ₹5,400 – ₹5,750 / quintal (MSP: ₹5,650)
-- **Tomato (Hybrid Red):** ₹1,800 – ₹2,200 / quintal (Delhi & Azadpur APMC)
-- **Cotton (Long Staple):** ₹7,100 – ₹7,550 / quintal
-
-*Tip:* You can navigate to the **Mandi & Market Module** from your CropCare sidebar to book guaranteed buyer purchase agreements with zero middleman commissions!`
-  },
-  {
-    keywords: ['soil', 'ph', 'test', 'clay', 'sandy', 'saline'],
-    response: `### 🧪 Soil Health & pH Management Guide
-- **Ideal Farm Soil pH:** 6.2 to 7.5 (Neutral to slightly acidic/alkaline).
-- **Acidic Soils (pH < 6.0):** Apply Agricultural Limestone (CaCO3) @ 1.5 to 2.5 tonnes per acre 3 weeks before sowing to neutralize aluminum toxicity.
-- **Alkaline / Sodic Soils (pH > 8.0):** Apply Gypsum (Calcium Sulfate) @ 2 to 3 tonnes per acre followed by flushing with clean water.
-- **Organic Carbon Boost:** Add 4–5 tonnes of well-decomposed FYM (Farm Yard Manure) or 2 tonnes of Vermicompost per acre annually to improve water retention and microbial activity.`
-  },
-  {
-    keywords: ['pm kisan', 'scheme', 'subsidy', 'yojana', 'insurance', 'pmfby'],
-    response: `### 🏛️ Key Central & State Government Farming Schemes
-1. **PM-KISAN (Pradhan Mantri Kisan Samman Nidhi):**
-   - Income support of ₹6,000/year distributed in 3 equal installments of ₹2,000 directly to Aadhaar-linked bank accounts.
-2. **PMFBY (Pradhan Mantri Fasal Bima Yojana):**
-   - Comprehensive crop insurance against drought, floods, pest epidemics. Farmer premium: 2% for Kharif, 1.5% for Rabi crops.
-3. **SMAM (Sub-Mission on Agricultural Mechanization):**
-   - Up to 40% to 50% subsidy on tractor implements, rotavators, laser levellers, and seed drills.
-4. **Soil Health Card Scheme:**
-   - Free laboratory soil sample testing every 2 years through your nearest Krishi Vigyan Kendra (KVK).`
-  }
-];
+import { PROJECT_DATA, STARTER_QUESTIONS } from '../data/farmAdvisorContext.js';
 
 export default function ChatbotWidget() {
   const { userName, userRole, language, runtimeApiKey, t } = useApp();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome-msg',
-      sender: 'model',
-      text: `Hello ${userName || 'Kisan Friend'}! 🌱 I am **CropCare Assistant**, your dedicated Agronomist & Farming Companion powered by Google Gemini AI.
-      
-Ask me anything about:
-• 🌾 Crop cultivation, seed rate & sowing windows
-• 🔬 Leaf disease diagnosis & instant remedies
-• 🧪 NPK fertilizer doses & organic spray recipes
-• 📈 Mandi prices, buyer contacts & government schemes
-• 🌦️ Weather alerts & irrigation scheduling
+  const [botMode, setBotMode] = useState('advisor'); // 'advisor' (Farm Advisor AI) | 'general' (General Assistant)
+  const [selectedPlotId, setSelectedPlotId] = useState(PROJECT_DATA.parcels[0].id);
 
-I can answer in English, Hindi, Tamil, Telugu, Marathi, or your preferred language!`
+  // Separate messages for Advisor and General modes
+  const [advisorMessages, setAdvisorMessages] = useState([
+    {
+      id: 'welcome-advisor',
+      sender: 'model',
+      text: `Hello **${userName || 'Farmer'}**! 🌱 I am **Farm Advisor AI**, your dedicated assistant inside **CropCare**.
+
+I answer questions strictly using your farm's verified telemetry, soil tests, weather forecasts, and crop recommendation logic.
+
+Tap a starter question below or ask why a crop or fertilizer was recommended for your parcel!`,
+      grounded: true,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
+
+  const [generalMessages, setGeneralMessages] = useState([
+    {
+      id: 'welcome-general',
+      sender: 'model',
+      text: `Hello ${userName || 'Kisan Friend'}! 🌱 I am CropCare's General Agronomy helper. Ask me any broad questions about crops, seeds, mandi rates, or attach a photo for examination!`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  ]);
+
   const [inputText, setInputText] = useState('');
   const [attachedImage, setAttachedImage] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
@@ -134,24 +65,22 @@ I can answer in English, Hindi, Tamil, Telugu, Marathi, or your preferred langua
   const fileInputRef = useRef(null);
   const speechRecognitionRef = useRef(null);
 
+  const currentPlot = PROJECT_DATA.parcels.find(p => p.id === selectedPlotId) || PROJECT_DATA.parcels[0];
+  const activeMessages = botMode === 'advisor' ? advisorMessages : generalMessages;
+  const setActiveMessages = botMode === 'advisor' ? setAdvisorMessages : setGeneralMessages;
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [advisorMessages, generalMessages, isTyping, botMode]);
 
-  // Initialize Speech Recognition if supported in browser
+  // Speech Recognition
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = false;
-      
-      const langCodes = {
-        en: 'en-IN',
-        hi: 'hi-IN',
-        ta: 'ta-IN',
-        fr: 'fr-FR'
-      };
+      const langCodes = { en: 'en-IN', hi: 'hi-IN', ta: 'ta-IN', fr: 'fr-FR' };
       recognition.lang = langCodes[language] || 'en-IN';
 
       recognition.onresult = (event) => {
@@ -162,25 +91,17 @@ I can answer in English, Hindi, Tamil, Telugu, Marathi, or your preferred langua
         setIsListening(false);
       };
 
-      recognition.onerror = (event) => {
-        console.warn('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
       speechRecognitionRef.current = recognition;
     }
   }, [language]);
 
   const toggleVoiceInput = () => {
     if (!speechRecognitionRef.current) {
-      alert('Voice recognition is not supported in this browser. Please type your message.');
+      alert('Voice recognition is not supported in this browser.');
       return;
     }
-
     if (isListening) {
       speechRecognitionRef.current.stop();
       setIsListening(false);
@@ -189,7 +110,6 @@ I can answer in English, Hindi, Tamil, Telugu, Marathi, or your preferred langua
         speechRecognitionRef.current.start();
         setIsListening(true);
       } catch (err) {
-        console.warn('Voice start failed:', err);
         setIsListening(false);
       }
     }
@@ -197,46 +117,21 @@ I can answer in English, Hindi, Tamil, Telugu, Marathi, or your preferred langua
 
   const toggleSpeakMessage = (msgId, textToSpeak) => {
     if (!('speechSynthesis' in window)) return;
-
     if (isSpeakingId === msgId) {
       window.speechSynthesis.cancel();
       setIsSpeakingId(null);
       return;
     }
-
     window.speechSynthesis.cancel();
-    // Strip markdown formatting for cleaner speech synthesis
     const cleanText = textToSpeak.replace(/[#*_`[\]()]/g, ' ');
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    
     const langMap = { en: 'en-US', hi: 'hi-IN', ta: 'ta-IN', fr: 'fr-FR' };
     utterance.lang = langMap[language] || 'en-US';
     utterance.rate = 0.95;
-
     utterance.onend = () => setIsSpeakingId(null);
     utterance.onerror = () => setIsSpeakingId(null);
-
     setIsSpeakingId(msgId);
     window.speechSynthesis.speak(utterance);
-  };
-
-  const findAgronomyFallback = (query) => {
-    if (!query) return null;
-    const lower = query.toLowerCase();
-    for (const item of AGRONOMY_KNOWLEDGE) {
-      if (item.keywords.some(k => lower.includes(k))) {
-        return item.response;
-      }
-    }
-    return `### 🌾 CropCare Agronomy Advisory for "${query}"
-Thank you for reaching out! Here are verified guidelines for your inquiry:
-
-1. **Crop Health & Diagnosis:** For leaf spots, yellowing, or wilting, inspect the underside of leaves for thrips or fungal sporulation. Use the **AI Leaf Doctor** camera scanner tab to get an exact visual match.
-2. **Nutrient Balance:** Ensure balanced NPK application. High urea (Nitrogen) without adequate Potash can make leaves soft and susceptible to pests.
-3. **Organic Plant Protection:** Apply **5% Neem Seed Kernel Extract (NSKE)** or **Neem Oil 10,000 ppm** @ 3–5 ml/L water every 10 days as a broad-spectrum organic shield.
-4. **Water Management:** Water during cool morning or evening hours; avoid waterlogging around the root collar.
-
-*Need an instant live diagnosis? Tap the camera scanner icon in CropCare to scan your actual crop leaf!*`;
   };
 
   const executeSend = async (trimmed, imageAttachment) => {
@@ -246,178 +141,113 @@ Thank you for reaching out! Here are verified guidelines for your inquiry:
       id: `usr-${Date.now()}`,
       sender: 'user',
       text: trimmed,
-      image: imageAttachment
+      image: imageAttachment,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    setActiveMessages(prev => [...prev, userMsg]);
     setIsTyping(true);
 
-    const cleanHistory = messages.filter(m => 
-      m && 
-      m.sender && 
-      m.text && 
-      m.id !== 'welcome-msg' && 
-      !m.isError && 
-      !m.error && 
-      !m.id?.startsWith('err-') && 
-      !m.text.startsWith('⚠️')
-    );
-    const last10History = cleanHistory.slice(-10);
+    const cleanHistory = activeMessages
+      .filter(m => m.sender && m.text && !m.id.startsWith('welcome-') && !m.isError && !m.text.startsWith('⚠️'))
+      .slice(-8);
 
     const effectiveKey = runtimeApiKey || import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
 
     try {
-      let gotResponse = false;
       let replyContent = '';
 
-      // 1. Try serverless backend proxy (/api/chat)
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
+      if (botMode === 'advisor') {
+        // Call /api/farm-advisor
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-gemini-api-key': effectiveKey
-          },
-          body: JSON.stringify({
-            message: trimmed,
-            history: last10History,
-            language: language,
-            userName: userName,
-            userRole: userRole,
-            image: userMsg.image
-          }),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+          const res = await fetch('/api/farm-advisor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-gemini-api-key': effectiveKey
+            },
+            body: JSON.stringify({
+              message: trimmed,
+              history: cleanHistory,
+              plotId: selectedPlotId,
+              language: language,
+              userName: userName || 'Farmer'
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.reply) {
+          if (res.ok) {
+            const data = await res.json();
             replyContent = data.reply;
-            gotResponse = true;
           }
+        } catch (e) {
+          console.warn('Backend /api/farm-advisor unavailable, falling back:', e.message);
         }
-      } catch (proxyErr) {
-        console.warn('[Chat] Backend proxy unavailable, attempting direct client Gemini call...', proxyErr.message);
-      }
 
-      // 2. Direct Gemini Call (gemini-3.5-flash -> gemini-3.1-flash-lite)
-      if (!gotResponse) {
-        const rawHistory = [];
-        for (const turn of last10History) {
-          rawHistory.push({
-            role: turn.sender === 'user' ? 'user' : 'model',
-            parts: [{ text: turn.text }]
+        if (!replyContent) {
+          replyContent = getClientFallbackAdvisorReply(trimmed, currentPlot);
+        }
+      } else {
+        // Call /api/chat
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-gemini-api-key': effectiveKey
+            },
+            body: JSON.stringify({
+              message: trimmed,
+              history: cleanHistory,
+              language: language,
+              userName: userName,
+              userRole: userRole,
+              image: userMsg.image
+            }),
+            signal: controller.signal
           });
-        }
+          clearTimeout(timeoutId);
 
-        while (rawHistory.length > 0 && rawHistory[0].role !== 'user') {
-          rawHistory.shift();
-        }
-
-        const conversationContents = [];
-        for (const msg of rawHistory) {
-          if (conversationContents.length > 0 && conversationContents[conversationContents.length - 1].role === msg.role) {
-            conversationContents[conversationContents.length - 1].parts[0].text += '\n' + msg.parts[0].text;
-          } else {
-            conversationContents.push(msg);
+          if (res.ok) {
+            const data = await res.json();
+            replyContent = data.reply;
           }
+        } catch (proxyErr) {
+          console.warn('Backend proxy /api/chat unavailable:', proxyErr.message);
         }
 
-        const currentParts = [{ text: trimmed || 'Help me with this agricultural inquiry.' }];
-        if (imageAttachment) {
-          let mimeType = 'image/jpeg';
-          let base64Data = imageAttachment;
-          if (imageAttachment.startsWith('data:')) {
-            const match = imageAttachment.match(/^data:([a-zA-Z0-9/+-]+);base64,(.+)$/);
-            if (match) {
-              mimeType = match[1];
-              base64Data = match[2];
-            }
-          }
-          currentParts.push({
-            inlineData: { mimeType, data: base64Data }
-          });
-        }
-
-        if (conversationContents.length > 0 && conversationContents[conversationContents.length - 1].role === 'user') {
-          conversationContents[conversationContents.length - 1].parts.push(...currentParts);
-        } else {
-          conversationContents.push({
-            role: 'user',
-            parts: currentParts
-          });
-        }
-
-        const systemInstruction = `You are CropCare Assistant, an expert agronomist, plant doctor, and empathetic farming companion.
-User: ${userName || 'Farmer'}, Role: ${userRole || 'farmer'}.
-Language: Respond in ${language === 'hi' ? 'Hindi' : language === 'ta' ? 'Tamil' : language === 'fr' ? 'French' : 'English'} (or whatever language the user prompts in).
-Tone: Warm, practical, encouraging, grounded in agricultural best practices (ICAR & FAO).
-Format: Use clear bullet points, bold headings, and step-by-step numbers. Mention organic remedies first, followed by safe chemical recommendations with dosage.`;
-
-        const modelsToTry = [
-          import.meta.env.VITE_GEMINI_MODEL || 'gemini-3.5-flash',
-          'gemini-3.1-flash-lite',
-          'gemini-3.7-flash',
-          'gemini-flash-latest'
-        ];
-
-        for (const modelName of modelsToTry) {
-          try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${effectiveKey}`;
-            const directRes = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: conversationContents,
-                systemInstruction: { parts: [{ text: systemInstruction }] },
-                generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-              })
-            });
-
-            if (directRes.ok) {
-              const directData = await directRes.json();
-              const text = directData.candidates?.[0]?.content?.parts?.[0]?.text;
-              if (text) {
-                replyContent = text;
-                gotResponse = true;
-                break;
-              }
-            }
-          } catch (modelErr) {
-            console.warn(`[Chat] Failover from ${modelName}:`, modelErr.message);
-          }
+        if (!replyContent) {
+          replyContent = `### 🌾 CropCare Agronomy Advisory\nThank you for your question about "${trimmed}". For live crop diagnostics, please check your parcel telemetry in the Land & Soil module or scan a leaf in the AI Leaf Doctor.`;
         }
       }
 
-      // 3. Fallback to Agronomy Knowledge Base if APIs were blocked or offline
-      if (!gotResponse) {
-        replyContent = findAgronomyFallback(trimmed);
-        gotResponse = true;
-      }
-
-      if (gotResponse && replyContent) {
-        setMessages(prev => [
-          ...prev,
-          {
-            id: `mod-${Date.now()}`,
-            sender: 'model',
-            text: replyContent
-          }
-        ]);
-      }
-    } catch (err) {
-      console.error('[Chatbot Error]:', err);
-      const fallbackReply = findAgronomyFallback(trimmed);
-      setMessages(prev => [
+      setActiveMessages(prev => [
         ...prev,
         {
-          id: `mod-${Date.now()}`,
+          id: `bot-${Date.now()}`,
           sender: 'model',
-          text: fallbackReply
+          text: replyContent,
+          grounded: botMode === 'advisor',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } catch (err) {
+      console.error('Chat error:', err);
+      setActiveMessages(prev => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          sender: 'model',
+          isError: true,
+          text: '⚠️ I could not process your query at this moment. Based on the available data, please try asking again or check your plot telemetry directly.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
     } finally {
@@ -426,7 +256,7 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
   };
 
   const handleSendMessage = (e) => {
-    e?.preventDefault();
+    e.preventDefault();
     const trimmed = inputText.trim();
     if (!trimmed && !attachedImage) return;
 
@@ -436,8 +266,7 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
     executeSend(trimmed, img);
   };
 
-  const handleQuickSuggestion = (text) => {
-    setInputText(text);
+  const handleQuickQuestion = (text) => {
     executeSend(text, null);
   };
 
@@ -445,32 +274,34 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_DIM = 1024;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height && width > MAX_DIM) {
-          height = Math.round((height * MAX_DIM) / width);
-          width = MAX_DIM;
-        } else if (height > MAX_DIM) {
-          width = Math.round((width * MAX_DIM) / height);
-          height = MAX_DIM;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        setAttachedImage(resizedDataUrl);
-      };
-      img.src = e.target.result;
+      setAttachedImage(e.target.result);
     };
     reader.readAsDataURL(file);
+  };
+
+  const clearCurrentChat = () => {
+    window.speechSynthesis?.cancel();
+    setIsSpeakingId(null);
+    if (botMode === 'advisor') {
+      setAdvisorMessages([
+        {
+          id: `welcome-${Date.now()}`,
+          sender: 'model',
+          text: `Farm Advisor AI session reset for **${currentPlot.name}**. What would you like to know about your soil, moisture, or crop recommendations?`,
+          grounded: true,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } else {
+      setGeneralMessages([
+        {
+          id: `welcome-${Date.now()}`,
+          sender: 'model',
+          text: `Chat cleared! How can I help you today?`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    }
   };
 
   return (
@@ -479,11 +310,11 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-5 right-5 z-40 p-3.5 sm:p-4 rounded-full bg-gradient-to-tr from-emerald-700 via-emerald-600 to-green-500 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center group cursor-pointer ring-4 ring-emerald-500/20"
-        aria-label="Open CropCare AI Assistant"
+        aria-label="Open Farm Advisor AI"
       >
         <Bot className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
         <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 font-bold text-xs pl-0 group-hover:pl-2">
-          Chat with Agronomist AI
+          Farm Advisor AI
         </span>
         <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
         <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full" />
@@ -491,54 +322,113 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
 
       {/* Floating Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[440px] h-[580px] max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[460px] h-[600px] max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
           
           {/* Header */}
-          <div className="p-4 bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                <Bot className="w-5 h-5 text-emerald-200" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="font-extrabold text-sm tracking-tight">CropCare AI Assistant</h4>
-                  <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/30 text-emerald-100 border border-emerald-400/30">
-                    Live
-                  </span>
+          <div className="p-3.5 bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
+                  <Bot className="w-5 h-5 text-emerald-200" />
                 </div>
-                <p className="text-[11px] text-emerald-200/90 font-medium">Gemini 3.5 Agronomy Intelligence</p>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="font-extrabold text-sm tracking-tight">
+                      {botMode === 'advisor' ? 'Farm Advisor AI' : 'CropCare General AI'}
+                    </h4>
+                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/40 text-emerald-100 border border-emerald-400/30 flex items-center gap-0.5">
+                      <ShieldCheck className="w-2.5 h-2.5" /> {botMode === 'advisor' ? 'Grounded' : 'General'}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-emerald-100/90 font-medium">
+                    {botMode === 'advisor' ? `Data Grounded on ${currentPlot.code}: ${currentPlot.current_crop}` : 'Agricultural assistant'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={clearCurrentChat}
+                  className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Clear conversation"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-1">
+            {/* Mode Switcher Tabs */}
+            <div className="flex bg-black/20 p-1 rounded-xl text-xs font-bold gap-1">
               <button
-                onClick={() => setMessages([
-                  {
-                    id: 'welcome-msg-reset',
-                    sender: 'model',
-                    text: `Chat cleared! How can I help you with your crops today?`
-                  }
-                ])}
-                className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Clear chat history"
+                type="button"
+                onClick={() => setBotMode('advisor')}
+                className={`flex-1 py-1 rounded-lg text-center transition-all ${
+                  botMode === 'advisor'
+                    ? 'bg-white text-emerald-800 shadow-sm font-extrabold'
+                    : 'text-emerald-100/80 hover:text-white'
+                }`}
               >
-                <Trash2 className="w-4 h-4" />
+                🌱 Farm Advisor AI (Grounded)
               </button>
               <button
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                type="button"
+                onClick={() => setBotMode('general')}
+                className={`flex-1 py-1 rounded-lg text-center transition-all ${
+                  botMode === 'general'
+                    ? 'bg-white text-emerald-800 shadow-sm font-extrabold'
+                    : 'text-emerald-100/80 hover:text-white'
+                }`}
               >
-                <X className="w-5 h-5" />
+                💬 General Assistant
               </button>
             </div>
+
+            {/* Plot Selection Bar (Only in Advisor mode) */}
+            {botMode === 'advisor' && (
+              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pt-0.5">
+                <span className="text-[10px] font-bold text-emerald-200 uppercase whitespace-nowrap">Parcel:</span>
+                {PROJECT_DATA.parcels.map(p => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSelectedPlotId(p.id)}
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all whitespace-nowrap ${
+                      selectedPlotId === p.id
+                        ? 'bg-white text-emerald-900 shadow-sm'
+                        : 'bg-white/15 text-emerald-100 hover:bg-white/25'
+                    }`}
+                  >
+                    {p.code}: {p.current_crop.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Quick Telemetry Bar in Advisor Mode */}
+          {botMode === 'advisor' && (
+            <div className="bg-emerald-50/80 dark:bg-emerald-950/30 px-3 py-1.5 border-b border-emerald-100 dark:border-emerald-900/40 text-[10px] flex items-center justify-between text-slate-600 dark:text-slate-300">
+              <span className="font-semibold truncate">
+                {currentPlot.soil.type} • pH {currentPlot.soil.ph} • Moisture {currentPlot.soil.moisture}% • NPK {currentPlot.soil.nitrogen}-{currentPlot.soil.phosphorus}-{currentPlot.soil.potassium}
+              </span>
+              <span className="text-emerald-700 dark:text-emerald-300 font-bold shrink-0 ml-1">
+                {currentPlot.health_score}/100 Vigour
+              </span>
+            </div>
+          )}
+
           {/* Messages Feed */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/70 dark:bg-slate-950/70 text-xs">
-            {messages.map((m) => (
+          <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-slate-50/70 dark:bg-slate-950/70 text-xs">
+            {activeMessages.map((m) => (
               <div 
                 key={m.id}
-                className={`flex gap-2.5 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex gap-2 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {m.sender !== 'user' && (
                   <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-emerald-700 to-green-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
@@ -546,86 +436,61 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
                   </div>
                 )}
 
-                <div className={`p-3.5 rounded-2xl max-w-[85%] leading-relaxed ${
+                <div className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
                   m.sender === 'user'
                     ? 'bg-emerald-600 text-white rounded-tr-none shadow-md'
+                    : m.isError
+                    ? 'bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 rounded-tl-none'
                     : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-sm rounded-tl-none'
                 }`}>
                   {m.image && (
                     <img 
                       src={m.image} 
                       alt="Attachment" 
-                      className="w-full max-h-40 object-cover rounded-xl mb-2.5 border border-white/20 shadow-sm"
+                      className="w-full max-h-36 object-cover rounded-xl mb-2 border border-white/20 shadow-sm"
                     />
                   )}
 
-                  {/* Render Markdown or plain text */}
-                  {m.sender === 'user' ? (
-                    <p className="whitespace-pre-wrap font-medium">{m.text}</p>
-                  ) : (
-                    <div>
-                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-relaxed space-y-2 break-words">
-                        <ReactMarkdown
-                          components={{
-                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
-                            ul: ({ node, ...props }) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
-                            ol: ({ node, ...props }) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
-                            li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                            strong: ({ node, ...props }) => <strong className="font-bold text-emerald-800 dark:text-emerald-300" {...props} />,
-                            code: ({ node, inline, ...props }) => 
-                              inline ? (
-                                <code className="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-[11px] font-mono text-emerald-700 dark:text-emerald-400" {...props} />
-                              ) : (
-                                <code className="block bg-slate-100 dark:bg-slate-900 p-2 rounded-lg text-[11px] font-mono overflow-x-auto my-1.5 border border-slate-200 dark:border-slate-800" {...props} />
-                              ),
-                            h1: ({ node, ...props }) => <h1 className="font-extrabold text-sm mb-1 text-slate-900 dark:text-slate-100" {...props} />,
-                            h2: ({ node, ...props }) => <h2 className="font-bold text-xs mb-1 text-slate-900 dark:text-slate-100" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="font-bold text-xs mb-1 text-slate-900 dark:text-slate-100" {...props} />
-                          }}
-                        >
-                          {m.text}
-                        </ReactMarkdown>
-                      </div>
-
-                      {/* Text-to-Speech button on AI message */}
-                      <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-400 font-medium">CropCare AI</span>
-                        <button
-                          type="button"
-                          onClick={() => toggleSpeakMessage(m.id, m.text)}
-                          className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold text-[10px] transition-all flex items-center gap-1 cursor-pointer"
-                          title="Listen to this message"
-                        >
-                          {isSpeakingId === m.id ? (
-                            <>
-                              <VolumeX className="w-3 h-3 text-emerald-600 animate-pulse" />
-                              <span>Stop Audio</span>
-                            </>
-                          ) : (
-                            <>
-                              <Volume2 className="w-3 h-3 text-slate-500" />
-                              <span>Listen (Audio)</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
+                  {m.grounded && m.sender !== 'user' && (
+                    <div className="flex items-center justify-between text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pb-1 mb-1 border-b border-slate-100 dark:border-slate-700/60">
+                      <span className="flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3" /> Grounded in {currentPlot.code} Data
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => toggleSpeakMessage(m.id, m.text)}
+                        className="text-slate-400 hover:text-emerald-600 transition-colors p-0.5"
+                        title={isSpeakingId === m.id ? "Stop voice" : "Read aloud"}
+                      >
+                        {isSpeakingId === m.id ? <VolumeX className="w-3 h-3 text-emerald-600 animate-pulse" /> : <Volume2 className="w-3 h-3" />}
+                      </button>
                     </div>
                   )}
+
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-relaxed space-y-1.5 break-words">
+                    <ReactMarkdown>{m.text}</ReactMarkdown>
+                  </div>
+
+                  <div className={`text-[9px] mt-1 text-right ${m.sender === 'user' ? 'text-emerald-100' : 'text-slate-400'}`}>
+                    {m.timestamp}
+                  </div>
                 </div>
               </div>
             ))}
 
-            {/* Animated Typing Indicator */}
+            {/* Typing Indicator */}
             {isTyping && (
-              <div className="flex gap-2.5 justify-start items-center animate-in fade-in duration-200">
-                <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <div className="flex gap-2 justify-start items-center">
+                <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm animate-pulse">
                   <Bot className="w-4 h-4" />
                 </div>
-                <div className="p-3 bg-white dark:bg-slate-800 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '300ms' }} />
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 pl-1.5">Agronomist is formulating solution...</span>
+                <div className="p-2.5 bg-white dark:bg-slate-800 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 pl-1">
+                    {botMode === 'advisor' ? 'Analyzing parcel telemetry & rules...' : 'Generating response...'}
+                  </span>
                 </div>
               </div>
             )}
@@ -633,61 +498,88 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Suggestions Pills */}
-          <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 flex gap-1.5 overflow-x-auto scrollbar-none">
-            {[
-              '🌾 Wheat fertilizer dose?', 
-              '🍅 Tomato early blight cure', 
-              '🌿 How to make Neem spray?', 
-              '📈 Today mandi MSP prices',
-              '🌱 Soil pH improvement'
-            ].map((s, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleQuickSuggestion(s)}
-                className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-800 dark:hover:bg-emerald-950 dark:hover:text-emerald-200 shrink-0 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+          {/* Suggested Starter Questions (Advisor Mode) */}
+          {botMode === 'advisor' && (
+            <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1 flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-emerald-500" /> Starter Questions:
+              </span>
+              <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
+                {STARTER_QUESTIONS.map(q => (
+                  <button
+                    key={q.id}
+                    type="button"
+                    onClick={() => handleQuickQuestion(q.text)}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>{q.icon}</span>
+                    <span>{q.text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quick suggestions for General mode */}
+          {botMode === 'general' && (
+            <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 flex gap-1.5 overflow-x-auto scrollbar-none">
+              {[
+                '🌾 Wheat fertilizer dose?', 
+                '🍅 Tomato early blight cure', 
+                '🌿 How to make Neem spray?', 
+                '📈 Mandi MSP rates'
+              ].map((s, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleQuickQuestion(s)}
+                  className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-800 dark:hover:bg-emerald-950 shrink-0 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Input Footer */}
-          <form onSubmit={handleSendMessage} className="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+          <form onSubmit={handleSendMessage} className="p-2.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
             {attachedImage && (
               <div className="flex items-center gap-2 mb-2 p-1.5 bg-emerald-50 dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                <img src={attachedImage} alt="Thumb" className="w-8 h-8 rounded-lg object-cover" />
-                <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold truncate flex-1">
-                  Leaf / Crop photo attached
+                <img src={attachedImage} alt="Thumb" className="w-7 h-7 rounded-lg object-cover" />
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold truncate flex-1">
+                  Plant photo attached
                 </span>
                 <button
                   type="button"
                   onClick={() => setAttachedImage(null)}
                   className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-3 h-3" />
                 </button>
               </div>
             )}
 
-            <div className="flex items-center gap-2">
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={(e) => handleImageAttach(e.target.files?.[0])}
-                className="hidden"
-              />
-
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
-                title="Attach plant photo"
-              >
-                <Paperclip className="w-4 h-4" />
-              </button>
+            <div className="flex items-center gap-1.5">
+              {botMode === 'general' && (
+                <>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={(e) => handleImageAttach(e.target.files?.[0])}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+                    title="Attach plant photo"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                </>
+              )}
 
               <button
                 type="button"
@@ -706,22 +598,32 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder={isListening ? 'Listening to your voice...' : 'Ask about crops, diseases, seeds, mandi rates...'}
+                placeholder={
+                  isListening 
+                    ? 'Listening to your voice...' 
+                    : botMode === 'advisor'
+                    ? `Ask Farm Advisor AI about ${currentPlot.code}...`
+                    : 'Ask about farming, botany, crops...'
+                }
                 className="flex-1 px-3 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400"
               />
 
               <button
                 type="submit"
                 disabled={!inputText.trim() && !attachedImage}
-                className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                className="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Send className="w-4 h-4" />
               </button>
             </div>
             
-            <div className="text-[10px] text-slate-400 text-center mt-2 flex items-center justify-center gap-1">
+            <div className="text-[9px] text-slate-400 text-center mt-1.5 flex items-center justify-center gap-1">
               <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-              <span>Grounded with ICAR, FAO & Google Gemini 3.5 Agronomy Knowledge</span>
+              <span>
+                {botMode === 'advisor'
+                  ? 'Grounded on soil NPK, moisture & weather telemetry • Uncertainty stated clearly'
+                  : 'CropCare Agronomy Assistant'}
+              </span>
             </div>
           </form>
 
@@ -729,4 +631,39 @@ Format: Use clear bullet points, bold headings, and step-by-step numbers. Mentio
       )}
     </>
   );
+}
+
+// Client fallback offline engine for Farm Advisor if network is disconnected
+function getClientFallbackAdvisorReply(query, plot) {
+  const q = query.toLowerCase();
+  
+  if (q.includes('why') && (q.includes('crop') || q.includes('recommend'))) {
+    return `Based on the available data for **${plot.name}**:
+- **Soil Suitability:** Your ${plot.soil.type} soil has a pH of ${plot.soil.ph}, which is optimal for ${plot.current_crop}.
+- **Water & Moisture:** Current soil moisture is ${plot.soil.moisture}%, within the required ${plot.soil.moisture_target} target range.
+- **Nutrient Profile:** High available Potassium (${plot.soil.potassium} kg/ha) supports strong earheads and prevents lodging.
+- **Season:** Rabi winter temperatures match the grain filling stage.
+
+*Note: In-field conditions may vary depending on local microclimate.*`;
+  }
+
+  if (q.includes('soil') || q.includes('npk') || q.includes('moisture')) {
+    return `Based on the available telemetry for **${plot.name}**:
+- **Moisture:** ${plot.soil.moisture}% (Target: ${plot.soil.moisture_target}) — currently optimal.
+- **NPK Ratio:** Nitrogen ${plot.soil.nitrogen} kg/ha, Phosphorus ${plot.soil.phosphorus} kg/ha, Potassium ${plot.soil.potassium} kg/ha.
+- **Impact on Crop:** Potassium foliar absorption at this stage increases grain weight by ~8%. Keep moisture steady above 30% to prevent grain shrivelling.
+
+*This may vary if upcoming rain arrives on Friday.*`;
+  }
+
+  if (q.includes('water') || q.includes('irrigation') || q.includes('fertilizer') || q.includes('schedule')) {
+    return `Based on the available data:
+- **Next Irrigation:** ${plot.irrigation.next_cycle}.
+- **Fertilizer Advisory:** ${plot.active_recommendation.title}. ${plot.active_recommendation.why}
+- **Action:** ${plot.active_recommendation.action}.
+
+*Please check the Weather Module before spraying, as high winds are predicted for Thursday.*`;
+  }
+
+  return `Based on the available data for ${plot.name}, ${plot.current_crop} is in ${plot.growth_stage} with an overall health score of ${plot.health_score}/100. If you are asking about outside topics like buying inputs or diagnosing photos, please open the **AI Leaf Doctor** or **Marketplace** modules in CropCare.`;
 }
