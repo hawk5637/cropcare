@@ -273,7 +273,7 @@ Thank you for reaching out! Here are verified guidelines for your inquiry:
       // 1. Try serverless backend proxy (/api/chat)
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
 
         const res = await fetch('/api/chat', {
           method: 'POST',

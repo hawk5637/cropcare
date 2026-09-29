@@ -483,10 +483,13 @@ export default function LeafScanner() {
   // Sync camera stream to <video> element reliably
   useEffect(() => {
     if (videoRef.current && cameraStream && isCameraActive) {
-      videoRef.current.srcObject = cameraStream;
-      videoRef.current.play().catch(err => {
-        console.warn('Video play was delayed or blocked:', err);
-      });
+      if (videoRef.current.srcObject !== cameraStream) {
+        videoRef.current.srcObject = cameraStream;
+      }
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
     }
   }, [cameraStream, isCameraActive, activeTab]);
 
@@ -831,7 +834,7 @@ Reply ONLY with valid JSON.`;
           if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          const timeoutId = setTimeout(() => controller.abort(), 25000);
 
           const res = await fetch('/api/analyze', {
             method: 'POST',
