@@ -27,6 +27,7 @@ export default function FarmerDashboard() {
   const { 
     userName, 
     mode, 
+    language,
     setActiveNav, 
     setActiveModule,
     activeDashboardTab, 
@@ -38,6 +39,55 @@ export default function FarmerDashboard() {
   const [isDripRunning, setIsDripRunning] = useState(false);
   const [soilMoisture, setSoilMoisture] = useState(36);
   const [bidsAccepted, setBidsAccepted] = useState([]);
+
+  const dashboardTexts = {
+    en: {
+      welcome: "Welcome",
+      exploreTour: "Explore Tour",
+      advisorBtn: "Farm Advisor AI",
+      whatIfBtn: "What-If Simulator",
+      budgetBtn: "Budget Planner",
+      spotlight1: { title: "Leaf Disease Scanner", desc: "Capture photos for instant ICAR remedies & organic spray formulas.", badge: "Live AI Doctor" },
+      spotlight2: { title: "Mandi Rates & MSP", desc: "Track daily APMC prices and lock guaranteed buyer purchase contracts.", badge: "Live Mandi Ticker" },
+      spotlight3: { title: "Precision Farming Hub", desc: "Soil tests, drip irrigation, drone spraying, tractors & cold storage.", badge: "18 Modules" },
+      spotlight4: { title: "Platform Intro & Tour", desc: "Watch the animated guide explaining every smart feature of CropCare.", badge: "Interactive" }
+    },
+    hi: {
+      welcome: "स्वागत है",
+      exploreTour: "प्लेटफॉर्म टूर",
+      advisorBtn: "फार्म एडवाइजर AI",
+      whatIfBtn: "व्हाट-इफ सिम्युलेटर",
+      budgetBtn: "बजट योजनाकार",
+      spotlight1: { title: "पत्ती रोग स्कैनर", desc: "तुरंत ICAR उपचार एवं जैविक काढ़ा नुस्खों के लिए फोटो लें।", badge: "लाइव AI डॉक्टर" },
+      spotlight2: { title: "मंडी भाव एवं MSP", desc: "दैनिक APMC भाव देखें और खरीदारों से सुरक्षित अनुबंध करें।", badge: "लाइव मंडी टिकर" },
+      spotlight3: { title: "परिशुद्ध कृषि केंद्र", desc: "मिट्टी जांच, ड्रिप सिंचाई, ड्रोन छिड़काव, ट्रैक्टर एवं कोल्ड स्टोरेज।", badge: "18 मॉड्यूल" },
+      spotlight4: { title: "प्लेटफॉर्म परिचय एवं टूर", desc: "क्रॉपकेयर की सभी स्मार्ट सुविधाओं का एनिमेटेड वॉकथ्रू देखें।", badge: "इंटरएक्टिव" }
+    },
+    ta: {
+      welcome: "நல்வரவு",
+      exploreTour: "சுற்றுப்பயணம்",
+      advisorBtn: "பண்ணை ஆலோசகர் AI",
+      whatIfBtn: "உருவகப்படுத்துதல்",
+      budgetBtn: "பட்ஜெட் திட்டமிடல்",
+      spotlight1: { title: "இலை நோய் ஸ்கேனர்", desc: "உடனடி தீர்வுகள் மற்றும் இயற்கை மருந்துகளுக்கு புகைப்படம் எடுக்கவும்.", badge: "நேரடி AI மருத்துவர்" },
+      spotlight2: { title: "மண்டி விலை & MSP", desc: "தினசரி APMC விலைகளைக் கண்காணித்து ஒப்பந்தங்களை உறுதி செய்யவும்.", badge: "நேரடி மண்டி நிலவரம்" },
+      spotlight3: { title: "துல்லிய வேளாண் மையம்", desc: "மண் பரிசோதனை, சொட்டு நீர் பாசனம், ட்ரோன் தெளிப்பு, டிராக்டர்கள்.", badge: "18 தொகுதிகள்" },
+      spotlight4: { title: "தள அறிமுகம் & சுற்றுப்பயணம்", desc: "அனைத்து ஸ்மார்ட் அம்சங்களையும் விளக்கும் வழிகாட்டியைப் பாருங்கள்.", badge: "ஊடாடும் தளம்" }
+    },
+    fr: {
+      welcome: "Bienvenue",
+      exploreTour: "Visite Guidée",
+      advisorBtn: "Conseiller IA",
+      whatIfBtn: "Simulateur",
+      budgetBtn: "Budget Planner",
+      spotlight1: { title: "Scanner de Maladies", desc: "Capturez des photos pour des remèdes certifiés et formules bio.", badge: "Docteur IA" },
+      spotlight2: { title: "Cours Mandi & MSP", desc: "Suivez les cours journaliers APMC et verrouillez des contrats d'achat.", badge: "Cotations Direct" },
+      spotlight3: { title: "Pôle de Précision", desc: "Analyses de sol, goutte-à-goutte, drones, tracteurs et stockage froid.", badge: "18 Modules" },
+      spotlight4: { title: "Présentation de la Plateforme", desc: "Découvrez le guide animé expliquant chaque fonctionnalité.", badge: "Interactif" }
+    }
+  };
+
+  const dLoc = dashboardTexts[language] || dashboardTexts.en;
 
   const toggleDrip = () => {
     setIsDripRunning(!isDripRunning);
@@ -83,7 +133,7 @@ export default function FarmerDashboard() {
               <span>{t('roles.farmer.badge')}</span>
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Welcome, {userName}
+              {dLoc.welcome}, {userName}
             </h2>
             <p className="text-xs sm:text-sm text-emerald-100 mt-1 max-w-xl">
               {t('roles.farmer.meta')}
@@ -96,7 +146,7 @@ export default function FarmerDashboard() {
               className="px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer hover:scale-105 active:scale-95"
             >
               <Sparkles className="w-4 h-4 text-emerald-300 animate-pulse" />
-              <span>Explore Tour</span>
+              <span>{dLoc.exploreTour}</span>
             </button>
 
             <button
@@ -119,7 +169,7 @@ export default function FarmerDashboard() {
               className="px-3.5 py-2.5 rounded-xl bg-lime-400 text-slate-900 font-extrabold text-xs shadow-md hover:bg-lime-300 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
             >
               <Bot className="w-4 h-4 text-emerald-800" />
-              <span>Farm Advisor AI</span>
+              <span>{dLoc.advisorBtn}</span>
             </button>
 
             <button
@@ -130,7 +180,7 @@ export default function FarmerDashboard() {
               className="px-3.5 py-2.5 rounded-xl bg-teal-400 text-slate-900 font-extrabold text-xs shadow-md hover:bg-teal-300 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
             >
               <Sliders className="w-4 h-4 text-teal-900" />
-              <span>What-If Simulator</span>
+              <span>{dLoc.whatIfBtn}</span>
             </button>
 
             <button
@@ -141,7 +191,7 @@ export default function FarmerDashboard() {
               className="px-3.5 py-2.5 rounded-xl bg-emerald-400 text-slate-900 font-extrabold text-xs shadow-md hover:bg-emerald-300 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
             >
               <Scale className="w-4 h-4 text-emerald-950" />
-              <span>Budget Planner</span>
+              <span>{dLoc.budgetBtn}</span>
             </button>
 
             <button
@@ -193,14 +243,14 @@ export default function FarmerDashboard() {
               <Camera className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
-              Live AI Doctor
+              {dLoc.spotlight1.badge}
             </span>
           </div>
           <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-2.5">
-            Leaf Disease Scanner
+            {dLoc.spotlight1.title}
           </h4>
           <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-            Capture photos for instant ICAR remedies & organic spray formulas.
+            {dLoc.spotlight1.desc}
           </p>
         </div>
 
@@ -213,14 +263,14 @@ export default function FarmerDashboard() {
               <TrendingUp className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200">
-              Live Mandi Ticker
+              {dLoc.spotlight2.badge}
             </span>
           </div>
           <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-2.5">
-            Mandi Rates & MSP
+            {dLoc.spotlight2.title}
           </h4>
           <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-            Track daily APMC prices and lock guaranteed buyer purchase contracts.
+            {dLoc.spotlight2.desc}
           </p>
         </div>
 
@@ -233,14 +283,14 @@ export default function FarmerDashboard() {
               <Sprout className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-              18 Modules
+              {dLoc.spotlight3.badge}
             </span>
           </div>
           <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-2.5">
-            Precision Farming Hub
+            {dLoc.spotlight3.title}
           </h4>
           <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-            Soil tests, drip irrigation, drone spraying, tractors & cold storage.
+            {dLoc.spotlight3.desc}
           </p>
         </div>
 
@@ -253,14 +303,14 @@ export default function FarmerDashboard() {
               <Sparkles className="w-5 h-5 text-yellow-300" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-200 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
-              Interactive
+              {dLoc.spotlight4.badge}
             </span>
           </div>
           <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-2.5">
-            Platform Intro & Tour
+            {dLoc.spotlight4.title}
           </h4>
           <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-            Watch the animated guide explaining every smart feature of CropCare.
+            {dLoc.spotlight4.desc}
           </p>
         </div>
       </div>

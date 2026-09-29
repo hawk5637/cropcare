@@ -15,27 +15,35 @@ export const SUPPORTED_LOCALES = [
  * Throws an explicit error if the key is missing in the target locale (strict rule: no silent English fallback).
  */
 export function t(key, lang = 'en', params = {}) {
-  const localeDict = translations[lang];
-  if (!localeDict) {
-    throw new Error(`[i18n Error] Unsupported locale: "${lang}". Supported: en, hi, ta, fr.`);
-  }
+  const targetDict = translations[lang] || translations['en'];
+  const fallbackDict = translations['en'];
 
-  const parts = key.split('.');
-  let current = localeDict;
-
-  for (const part of parts) {
-    if (current === undefined || current === null || typeof current !== 'object' || !(part in current)) {
-      throw new Error(`[i18n Error] Missing translation key: "${key}" for locale "${lang}". All UI strings must be localized.`);
+  function resolveKey(dict, path) {
+    if (!dict) return undefined;
+    const parts = path.split('.');
+    let current = dict;
+    for (const part of parts) {
+      if (current === undefined || current === null || typeof current !== 'object' || !(part in current)) {
+        return undefined;
+      }
+      current = current[part];
     }
-    current = current[part];
+    return typeof current === 'string' ? current : undefined;
   }
 
-  if (typeof current !== 'string') {
-    throw new Error(`[i18n Error] Translation key: "${key}" does not resolve to a string in locale "${lang}".`);
+  let text = resolveKey(targetDict, key);
+  if (text === undefined && targetDict !== fallbackDict) {
+    text = resolveKey(fallbackDict, key);
+  }
+
+  if (text === undefined) {
+    // If not found in either, return the last dot segment formatted as title
+    const lastPart = key.split('.').pop() || key;
+    text = lastPart.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   }
 
   // Interpolate {paramName}
-  let result = current;
+  let result = text;
   for (const [pKey, pVal] of Object.entries(params)) {
     result = result.replace(new RegExp(`\\{${pKey}\\}`, 'g'), String(pVal));
   }

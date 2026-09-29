@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { getModuleTitle } from '../data/moduleRegistry.js';
 import {
   Layers3, Map, Sprout, LayoutGrid, MessageSquareHeart, Droplets, FlaskConical,
   Bug, CloudSun, Wrench, HeadphonesIcon, BarChart2, Store, Users, Warehouse,
@@ -29,21 +30,29 @@ const MODULES = [
   { key: 'accessibility', name: 'Accessibility', icon: Accessibility, color: 'bg-cyan-100 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800', desc: 'Language, theme, font size, TTS voice', roles: ['farmer', 'buyer', 'supplier', 'expert'] }
 ];
 
+const CATEGORY_NAMES = {
+  en: { all: 'All Modules', farming: 'On-Farm', market: 'Market & Sales', support: 'Support', title: 'All Modules', subtitle: '18 integrated tools — select any module to open it', search: 'Search modules...' },
+  hi: { all: 'सभी मॉड्यूल', farming: 'खेत पर', market: 'बाजार एवं बिक्री', support: 'सहायता', title: 'सभी मॉड्यूल', subtitle: '18 एकीकृत उपकरण — खोलने के लिए किसी भी मॉड्यूल का चयन करें', search: 'मॉड्यूल खोजें...' },
+  ta: { all: 'அனைத்து தொகுதிகள்', farming: 'பண்ணையில்', market: 'சந்தை & விற்பனை', support: 'ஆதரவு', title: 'அனைத்து தொகுதிகள்', subtitle: '18 ஒருங்கிணைந்த கருவிகள் — பயன்பாட்டினைத் திறக்க கிளிக் செய்க', search: 'தொகுதிகளைத் தேடுக...' },
+  fr: { all: 'Tous les Modules', farming: 'Sur l’Exploitation', market: 'Marché & Ventes', support: 'Support', title: 'Tous les Modules', subtitle: '18 outils intégrés — sélectionnez un module pour l’ouvrir', search: 'Rechercher des modules...' }
+};
+
 const CATEGORIES = [
-  { key: 'all', label: 'All Modules' },
-  { key: 'farming', label: 'On-Farm', keys: ['land-soil', 'seed', 'crop-planning', 'resource-budget', 'what-if-simulator', 'water', 'fertilizer', 'pest-disease', 'weather', 'machinery'] },
-  { key: 'market', label: 'Market & Sales', keys: ['market', 'buyer-management', 'storage', 'logistics', 'payment', 'after-selling'] },
-  { key: 'support', label: 'Support', keys: ['ai-assistant', 'expert-support', 'farm-management', 'accessibility'] }
+  { key: 'all', keys: null },
+  { key: 'farming', keys: ['land-soil', 'seed', 'crop-planning', 'resource-budget', 'what-if-simulator', 'water', 'fertilizer', 'pest-disease', 'weather', 'machinery'] },
+  { key: 'market', keys: ['market', 'buyer-management', 'storage', 'logistics', 'payment', 'after-selling'] },
+  { key: 'support', keys: ['ai-assistant', 'expert-support', 'farm-management', 'accessibility'] }
 ];
 
 export default function ModulesHub() {
-  const { setActiveNav, setActiveModule, userRole } = useApp();
+  const { setActiveNav, setActiveModule, userRole, language } = useApp();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
 
+  const locCat = CATEGORY_NAMES[language] || CATEGORY_NAMES.en;
+
   const openModule = (key) => {
     if (key === 'ai-assistant') {
-      // ChatbotWidget is a floating widget; just navigate back to dashboard
       setActiveNav('dashboard');
       return;
     }
@@ -54,7 +63,8 @@ export default function ModulesHub() {
   const activeCategoryKeys = CATEGORIES.find(c => c.key === category)?.keys || null;
 
   const filtered = MODULES.filter(m => {
-    const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) || m.desc.toLowerCase().includes(search.toLowerCase());
+    const title = getModuleTitle(m.key, language) || m.name;
+    const matchesSearch = title.toLowerCase().includes(search.toLowerCase()) || m.desc.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = !activeCategoryKeys || activeCategoryKeys.includes(m.key);
     return matchesSearch && matchesCategory;
   });
@@ -72,8 +82,8 @@ export default function ModulesHub() {
             <Layers3 className="w-6 h-6 text-emerald-300" />
             <span className="text-emerald-300 font-semibold text-sm">CropCare Platform</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">All Modules</h1>
-          <p className="text-emerald-200 text-sm">18 integrated tools — select any module to open it</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">{locCat.title}</h1>
+          <p className="text-emerald-200 text-sm">{locCat.subtitle}</p>
         </div>
       </div>
 
@@ -83,7 +93,7 @@ export default function ModulesHub() {
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search modules..."
+          placeholder={locCat.search}
           className="w-full pl-10 pr-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
         />
       </div>
@@ -100,7 +110,7 @@ export default function ModulesHub() {
                 : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-emerald-400'
             }`}
           >
-            {cat.label}
+            {locCat[cat.key] || cat.key}
           </button>
         ))}
       </div>
@@ -110,6 +120,7 @@ export default function ModulesHub() {
         {filtered.map(m => {
           const Icon = m.icon;
           const accessible = m.roles.includes(userRole);
+          const moduleTitle = getModuleTitle(m.key, language) || m.name;
           return (
             <button
               key={m.key}
@@ -129,7 +140,7 @@ export default function ModulesHub() {
                   <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 )}
               </div>
-              <div className="font-extrabold text-slate-900 dark:text-white text-sm leading-tight mb-1">{m.name}</div>
+              <div className="font-extrabold text-slate-900 dark:text-white text-sm leading-tight mb-1">{moduleTitle}</div>
               <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">{m.desc}</div>
               {!accessible && (
                 <div className="text-[10px] font-bold text-slate-400 mt-2 uppercase">Not available for {userRole}</div>
