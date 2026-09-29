@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export default function CatalogSection() {
-  const { userRole, mode, addToCart, t } = useApp();
+  const { userRole, mode, addToCart, t, language } = useApp();
 
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,19 +24,26 @@ export default function CatalogSection() {
   const [selectedItemForModal, setSelectedItemForModal] = useState(null);
   const [addedItemIds, setAddedItemIds] = useState([]);
 
+  const getItemName = (item) => {
+    if (!item) return '';
+    if (item.name && typeof item.name === 'object' && item.name[language]) return item.name[language];
+    if (item.name && typeof item.name === 'object' && item.name.en) return item.name.en;
+    return t(`catalog.items.${item.key}`);
+  };
+
   const categories = [
-    { id: 'all', label: t('catalog.allCategory') },
-    { id: 'produce', label: t('catalog.produceCategory') },
-    { id: 'seeds', label: t('catalog.seedsCategory') },
-    { id: 'machinery', label: t('catalog.machineryCategory') },
-    { id: 'spares', label: t('catalog.sparesCategory') }
+    { id: 'all', label: t('catalog.allCategory'), count: catalogItems.length },
+    { id: 'produce', label: t('catalog.produceCategory'), count: catalogItems.filter(i => i.category === 'produce').length },
+    { id: 'seeds', label: t('catalog.seedsCategory'), count: catalogItems.filter(i => i.category === 'seeds').length },
+    { id: 'machinery', label: t('catalog.machineryCategory'), count: catalogItems.filter(i => i.category === 'machinery').length },
+    { id: 'spares', label: t('catalog.sparesCategory'), count: catalogItems.filter(i => i.category === 'spares').length }
   ];
 
   const filteredItems = useMemo(() => {
     return catalogItems
       .filter(item => {
         const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-        const itemName = t(`catalog.items.${item.key}`).toLowerCase();
+        const itemName = getItemName(item).toLowerCase();
         const matchesSearch = !searchQuery || 
           itemName.includes(searchQuery.toLowerCase()) ||
           item.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -49,7 +56,7 @@ export default function CatalogSection() {
         if (sortBy === 'ratingDesc') return b.rating - a.rating;
         return 0;
       });
-  }, [selectedCategory, searchQuery, sortBy, t]);
+  }, [selectedCategory, searchQuery, sortBy, language, t]);
 
   const handleAddToCart = (item) => {
     confetti({ particleCount: 40, spread: 45, origin: { y: 0.7 } });
@@ -68,7 +75,7 @@ export default function CatalogSection() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 mb-2">
             <Tag className="w-3.5 h-3.5 text-emerald-600" />
-            <span>53 Verified Verified Agricultural SKUs</span>
+            <span>{catalogItems.length} Verified Agricultural SKUs</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {t('catalog.title')}
@@ -98,13 +105,20 @@ export default function CatalogSection() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
                 selectedCategory === cat.id
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
-              {cat.label}
+              <span>{cat.label}</span>
+              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                selectedCategory === cat.id
+                  ? 'bg-white/20 text-white'
+                  : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+              }`}>
+                {cat.count}
+              </span>
             </button>
           ))}
         </div>
@@ -128,7 +142,7 @@ export default function CatalogSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredItems.map((item) => {
           const isAdded = addedItemIds.includes(item.id);
-          const localizedName = t(`catalog.items.${item.key}`);
+          const localizedName = getItemName(item);
 
           return (
             <div 
@@ -225,7 +239,7 @@ export default function CatalogSection() {
             <div className="relative aspect-video bg-slate-950">
               <img
                 src={selectedItemForModal.image}
-                alt={t(`catalog.items.${selectedItemForModal.key}`)}
+                alt={getItemName(selectedItemForModal)}
                 className="w-full h-full object-cover opacity-90"
               />
               <button
@@ -242,7 +256,7 @@ export default function CatalogSection() {
                   {selectedItemForModal.category}
                 </span>
                 <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-                  {t(`catalog.items.${selectedItemForModal.key}`)}
+                  {getItemName(selectedItemForModal)}
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">Origin: {selectedItemForModal.origin}</p>
               </div>
