@@ -16,7 +16,8 @@ import {
   Camera,
   Layers,
   Grid3x3,
-  BookOpen
+  BookOpen,
+  Play
 } from 'lucide-react';
 
 export default function Header() {
@@ -36,6 +37,8 @@ export default function Header() {
     cartCount,
     setIsConfigModalOpen,
     setIsIntroModalOpen,
+    replayLogo,
+    replayIntro,
     SUPPORTED_LOCALES,
     t 
   } = useApp();
@@ -342,6 +345,28 @@ export default function Header() {
                   >
                     <Key className="w-3.5 h-3.5 text-emerald-600" />
                     <span>{t('header.profile.settings')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (replayIntro) replayIntro();
+                      setProfileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg text-left transition-colors"
+                  >
+                    <Play className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>🎬 Watch Platform Intro</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (replayLogo) replayLogo();
+                      setProfileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-teal-700 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/40 rounded-lg text-left transition-colors"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+                    <span>✨ Replay Opening Logo</span>
                   </button>
 
                   <button

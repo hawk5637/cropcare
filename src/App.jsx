@@ -14,6 +14,8 @@ import AboutCropCare from './components/AboutCropCare.jsx';
 import ProfileSetup from './components/ProfileSetup.jsx';
 import ModulesHub from './components/ModulesHub.jsx';
 import PlatformIntroModal from './components/PlatformIntroModal.jsx';
+import AnimatedOpeningLogo from './components/AnimatedOpeningLogo.jsx';
+import AnimatedIntroScreen from './components/AnimatedIntroScreen.jsx';
 
 // All 18 modules
 import LandSoilModule from './components/modules/LandSoilModule.jsx';
@@ -69,28 +71,30 @@ export default function App() {
     activeNav, 
     setActiveNav, 
     activeModule, 
-    profileSetupDone,
+    flowStep,
+    setFlowStep,
     isIntroModalOpen,
     setIsIntroModalOpen
   } = useApp();
 
-  if (!isAuthenticated) {
+  // Step 1: First animated logo in opening
+  if (flowStep === 'logo') {
+    return <AnimatedOpeningLogo onComplete={() => setFlowStep('login')} />;
+  }
+
+  // Step 2: Then login page
+  if (flowStep === 'login' || !isAuthenticated) {
     return (
       <>
-        <LoginScreen />
+        <LoginScreen onLoginSuccess={() => setFlowStep('intro')} />
         <ApiKeyModal />
       </>
     );
   }
 
-  // Show profile setup on first login
-  if (isAuthenticated && !profileSetupDone) {
-    return (
-      <>
-        <ProfileSetup />
-        <ApiKeyModal />
-      </>
-    );
+  // Step 3: Then intro
+  if (flowStep === 'intro') {
+    return <AnimatedIntroScreen onComplete={() => setFlowStep('main')} />;
   }
 
   const renderActiveView = () => {

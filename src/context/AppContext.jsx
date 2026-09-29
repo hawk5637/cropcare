@@ -16,6 +16,8 @@ export function AppProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
     localStorage.getItem('cropcare_auth') === 'true'
   );
+  // Application Flow Step: 'logo' -> 'login' -> 'intro' -> 'main'
+  const [flowStep, setFlowStep] = useState('logo');
   const [profileSetupDone, setProfileSetupDone] = useState(() =>
     localStorage.getItem('cropcare_profile_done') === 'true'
   );
@@ -163,6 +165,9 @@ export function AppProvider({ children }) {
 
   const toggleHighContrast = () => setHighContrastState(prev => !prev);
 
+  const replayLogo = () => setFlowStep('logo');
+  const replayIntro = () => setFlowStep('intro');
+
   const login = (role, name) => {
     const finalRole = role || 'farmer';
     const fallbackName = finalRole === 'farmer' ? 'Kisan Mitra' : finalRole === 'buyer' ? 'AgriProcure' : finalRole === 'supplier' ? 'AgroMech Spares' : 'Agronomist';
@@ -170,7 +175,9 @@ export function AppProvider({ children }) {
     setUserRole(finalRole);
     setUserName(finalName);
     setIsAuthenticated(true);
+    setProfileSetupDone(true);
     localStorage.setItem('cropcare_auth', 'true');
+    localStorage.setItem('cropcare_profile_done', 'true');
     localStorage.setItem('cropcare_role', finalRole);
     localStorage.setItem('cropcare_name', finalName);
 
@@ -179,7 +186,9 @@ export function AppProvider({ children }) {
     else if (finalRole === 'expert') setActiveDashboardTab('telemetry');
     else setActiveDashboardTab('overview');
 
-    setActiveNav('profile-setup');
+    setActiveNav('dashboard');
+    // Progress sequentially into Step 3: Intro
+    setFlowStep('intro');
   };
 
   const completeProfileSetup = (profile) => {
@@ -190,9 +199,7 @@ export function AppProvider({ children }) {
     localStorage.setItem('cropcare_profile_done', 'true');
     if (profile.preferredLanguage) setLanguage(profile.preferredLanguage);
     setActiveNav('dashboard');
-    if (!localStorage.getItem('cropcare_intro_seen')) {
-      setIsIntroModalOpen(true);
-    }
+    setFlowStep('main');
   };
 
   const logout = () => {
@@ -200,6 +207,7 @@ export function AppProvider({ children }) {
     setProfileSetupDone(false);
     localStorage.removeItem('cropcare_auth');
     localStorage.removeItem('cropcare_profile_done');
+    setFlowStep('login');
   };
 
   const switchRole = (newRole) => {
@@ -298,6 +306,7 @@ export function AppProvider({ children }) {
         scanHistory, SUPPORTED_LOCALES,
         t, setLanguage, setMode, theme, setTheme: (val) => setThemeState(val), toggleTheme, setFontSize, toggleHighContrast,
         setActiveNav, setActiveModule, navigateToModule, setActiveDashboardTab,
+        flowStep, setFlowStep, replayLogo, replayIntro,
         login, logout, completeProfileSetup, switchRole,
         addToCart, removeFromCart,
         markNotificationRead, markAllRead,

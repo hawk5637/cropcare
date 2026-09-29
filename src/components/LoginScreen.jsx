@@ -17,7 +17,7 @@ import {
   Key
 } from 'lucide-react';
 
-export default function LoginScreen() {
+export default function LoginScreen({ onLoginSuccess }) {
   const { 
     login, 
     language, 
@@ -82,6 +82,7 @@ export default function LoginScreen() {
       origin: { y: 0.6 }
     });
     login(selectedRole, curRole.demoName);
+    if (onLoginSuccess) onLoginSuccess();
   };
 
   const handleSubmit = (e) => {
@@ -95,6 +96,7 @@ export default function LoginScreen() {
       });
       login(selectedRole, name);
       setIsVerifying(false);
+      if (onLoginSuccess) onLoginSuccess();
     }, 400);
   };
 
