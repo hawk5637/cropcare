@@ -1,0 +1,1619 @@
+[
+  {
+    "name": "Rice",
+    "local_names": {
+      "hi": "चावल / धान (Dhan)",
+      "ta": "அரிசி / நெல் (Nellu)",
+      "te": "వరి (Vari)",
+      "kn": "ಭತ್ತ (Bhatta)",
+      "ml": "നെല്ല് (Nellu)"
+    },
+    "scientific_name": "Oryza sativa",
+    "category": "cereal",
+    "how_to_identify_leaf": "Long, flat, slender linear blade (30-60 cm) with parallel venation, scabrid (rough) margins, and prominent ligule and sickle-shaped auricles at junction of blade and sheath.",
+    "how_to_identify_seed_or_fruit": "Grain enclosed in a yellowish-brown rough husk (lemma and palea) with ribbed surface; inside is an elongated oval polished or brown caryopsis grain.",
+    "lookalikes": ["Echinochloa crus-galli (Barnyard grass)", "Cyperus difformis", "Leersia oryzoides"],
+    "season": "Kharif (June-Nov), Rabi (Nov-April in Southern & Eastern India), Boro (Jan-May)",
+    "soil": "Clayey loam, silty clay, or alluvial soils capable of holding standing water; pH 5.5-7.0",
+    "water": "1200-1500 mm total requirement; continuous 2-5 cm standing water from tillering to grain dough stage",
+    "seed_rate_and_sowing": "Transplanting: 35-40 kg/ha (nursery sown 25-30 days before); DSR (Direct Seeded Rice): 20-25 kg/ha; Depth: 2-3 cm; Spacing: 20x15 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "79.34",
+      "fiber_g": "1.3",
+      "protein_g": "7.13",
+      "fat_g": "0.66",
+      "calories_kcal": "365",
+      "key_vitamins_minerals": ["Thiamine (B1)", "Niacin (B3)", "Magnesium", "Phosphorus", "Iron", "Zinc"]
+    },
+    "benefits": ["Primary calorie staple for over 60% of India", "Easily digestible complex carbohydrates", "Gluten-free energy source", "Rice bran oil provides heart-healthy oryzanol"],
+    "risks_or_cautions": ["High glycemic index in polished white rice poses blood glucose spikes for diabetics", "Arsenic accumulation in soils with groundwater contamination"],
+    "medicinal_uses": ["Rice gruel (kanji) used traditionally for rehydration in acute diarrhea", "Ayurvedic Rakthashali red rice prescribed for tridosha balance"],
+    "diseases": [
+      {
+        "name": "Blast (Magnaporthe oryzae)",
+        "type": "fungal",
+        "symptoms": "Spindle-shaped elliptical lesions with gray-white centers and dark brown margins on leaves; brown rot at panicle neck causing neck blast.",
+        "cause": "Airborne fungus favoured by high humidity (>90%), night temp 19-23°C, and excessive nitrogen.",
+        "organic_treatment": ["Foliar spray of 5% Neem seed kernel extract (NSKE)", "Pseudomonas fluorescens spray @ 10g/L or 2.5 kg/ha in water"],
+        "chemical_treatment_type": ["Tricyclazole 75% WP", "Azoxystrobin 18.2% + Difenoconazole 11.4% SC", "Isoprothiolane 40% EC"],
+        "prevention": ["Avoid excessive split doses of urea", "Use resistant varieties like IR-64, Swarna Sub1", "Seed treatment with Carbendazim 2g/kg"]
+      },
+      {
+        "name": "Bacterial Leaf Blight (Xanthomonas oryzae pv. oryzae)",
+        "type": "bacterial",
+        "symptoms": "Water-soaked translucent stripes on leaf margins turning wavy yellow-white; bacterial ooze droplets drying into amber beads.",
+        "cause": "Vascular bacterium entering via hydathodes or wounds, spread by flood irrigation and monsoon storms.",
+        "organic_treatment": ["Spray fresh cow dung water extract (20g/L)", "Neem cake soil amendment @ 250 kg/ha", "Copper hydroxide @ 2g/L"],
+        "chemical_treatment_type": ["Streptocycline (90:10 streptomycin:tetracycline) 1g in 10L mixed with Copper Oxychloride 25g", "Plantomycin"],
+        "prevention": ["Drain field for 3-4 days to arrest spread", "Balanced potassium fertilization", "Avoid clipping seedling tips during transplanting"]
+      },
+      {
+        "name": "Sheath Blight (Rhizoctonia solani)",
+        "type": "fungal",
+        "symptoms": "Oval or greenish-gray water-soaked lesions on leaf sheath near water line, progressing into irregular spots with brown borders.",
+        "cause": "Soil and water-borne sclerotia surviving between seasons; favoured by dense canopy and high humidity.",
+        "organic_treatment": ["Soil application of Trichoderma viride @ 2.5 kg/ha with FYM", "Spray 3% neem oil with soap solution"],
+        "chemical_treatment_type": ["Hexaconazole 5% EC", "Validamycin 3% L", "Thifluzamide 24% SC"],
+        "prevention": ["Wider spacing (25x15 cm) to promote air flow", "Avoid excess nitrogen", "Deep summer ploughing to bury sclerotia"]
+      },
+      {
+        "name": "Yellow Stem Borer (Scirpophaga incertulas)",
+        "type": "pest",
+        "symptoms": "Dead heart during vegetative phase (central shoot dies and pulls out easily); white earheads with chaffy grain at panicle stage.",
+        "cause": "Lepidopteran moth larvae boring into leaf sheath and central stem tissue.",
+        "organic_treatment": ["Install pheromone traps with Helilure @ 12 traps/ha", "Release Trichogramma japonicum egg parasitoid @ 100,000/ha weekly", "Spray Neem oil 1500 ppm @ 3 ml/L"],
+        "chemical_treatment_type": ["Cartap hydrochloride 4% G or 50% SP", "Chlorantraniliprole 18.5% SC", "Fipronil 5% SC"],
+        "prevention": ["Clip off seedling tips before transplanting to remove egg masses", "Collect and destroy stubble after harvest", "Encourage spiders in canopy"]
+      },
+      {
+        "name": "Brown Planthopper (Nilaparvata lugens)",
+        "type": "pest",
+        "symptoms": "Circular drying patches known as hopper burn; plants turn golden-brown, dry, and lodge; sooty mold develops on honey dew.",
+        "cause": "Delphacid hopper sucking plant sap from base of tillers; favoured by heavy nitrogen and continuous flood.",
+        "organic_treatment": ["Drain standing water completely for 3-5 days to break cycle", "Spray Metarhizium anisopliae @ 5g/L on basal stems", "5% neem seed kernel extract"],
+        "chemical_treatment_type": ["Pymetrozine 50% WDG", "Trifiumezoppyrim 10% SC", "Dinotefuran 20% SG"],
+        "prevention": ["Provide ally ways of 30 cm after every 2-3 meters (skip row)", "Do not spray synthetic pyrethroids which cause resurgence", "Maintain alternate wetting and drying (AWD)"]
+      }
+    ]
+  },
+  {
+    "name": "Wheat",
+    "local_names": {
+      "hi": "गेहूं (Gehun)",
+      "ta": "கோதுமை (Godhumai)",
+      "te": "గోధుమలు (Godhumalu)",
+      "kn": "ಗೋಧಿ (Godhi)",
+      "ml": "ഗോതമ്പ് (Gothambu)"
+    },
+    "scientific_name": "Triticum aestivum",
+    "category": "cereal",
+    "how_to_identify_leaf": "Flat, bluish-green linear leaves with parallel veins; prominent hairy auricles clasping the stem tightly at the base.",
+    "how_to_identify_seed_or_fruit": "Spike terminal inflorescence with awns (beards) or awnless; oval kernels with a central ventral crease and apical brush of hairs.",
+    "lookalikes": ["Barley (Hordeum vulgare)", "Rye (Secale cereale)", "Phalaris minor (Gullidanda weed)"],
+    "season": "Rabi (Sowing in Nov-Dec; Harvest in March-April)",
+    "soil": "Well-drained fertile loamy to clayey loams; neutral pH 6.0-7.5; sensitive to salinity",
+    "water": "400-500 mm across 4-6 critical irrigations: CRI (21 DAS), Tillering, Late jointing, Flowering, Milk stage, Dough stage",
+    "seed_rate_and_sowing": "Timely sown: 100 kg/ha; Late sown: 125 kg/ha; Row spacing 20-22.5 cm; Depth 4-5 cm (crucial not to sow deeper than 5 cm)",
+    "nutrition_per_100g": {
+      "carbs_g": "71.18",
+      "fiber_g": "12.2",
+      "protein_g": "13.68",
+      "fat_g": "2.47",
+      "calories_kcal": "340",
+      "key_vitamins_minerals": ["Folate", "Manganese", "Phosphorus", "Selenium", "Zinc", "Magnesium"]
+    },
+    "benefits": ["Primary source of protein and energy in North & Central India", "Whole wheat bran supports digestive health", "Provides sustained dietary fiber"],
+    "risks_or_cautions": ["Contains gluten; strictly contraindicated for individuals with Celiac disease or gluten intolerance"],
+    "medicinal_uses": ["Wheatgrass juice consumed traditionally for detoxification and immune support", "Wheat bran decoction used for constipation relief"],
+    "diseases": [
+      {
+        "name": "Yellow / Stripe Rust (Puccinia striiformis)",
+        "type": "fungal",
+        "symptoms": "Bright yellow powdery pustules arranged in prominent parallel stripes or ribbons on leaf blades and leaf sheaths.",
+        "cause": "Airborne fungal spores favoured by cool humid conditions (10-15°C with morning dew), common in NW plains.",
+        "organic_treatment": ["Foliar spray of fermented cow urine + neem leaf extract (10%)", "Spray Pseudomonas fluorescens @ 10g/L"],
+        "chemical_treatment_type": ["Propiconazole 25% EC @ 1 ml/L", "Tebuconazole 25.9% EC", "Azoxystrobin 18.2% + Difenoconazole 11.4% SC"],
+        "prevention": ["Sow rust-resistant cultivars like HD-2967, HD-3086, DBW-187, DBW-222", "Avoid late November sowings", "Eradicate alternate host barberry shrubs in hills"]
+      },
+      {
+        "name": "Brown / Leaf Rust (Puccinia triticina)",
+        "type": "fungal",
+        "symptoms": "Small, round to oval orange-brown powdery pustules scattered randomly across the upper leaf surface without forming stripes.",
+        "cause": "Airborne urediniospores active in warmer temps (18-25°C) towards late January and February.",
+        "organic_treatment": ["Spray sour buttermilk solution (50 ml/L) mixed with copper sulfate (0.5g/L)", "Neem oil 1500 ppm @ 3 ml/L"],
+        "chemical_treatment_type": ["Propiconazole 25% EC", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Timely sowing before Nov 20", "Use resistant certified seeds", "Destroy volunteer wheat plants"]
+      },
+      {
+        "name": "Karnal Bunt (Tilletia indica)",
+        "type": "fungal",
+        "symptoms": "Partial conversion of grain kernels into foul-smelling black powdery teliospore masses with fishy odor (trimethylamine).",
+        "cause": "Soil and airborne fungus active during earhead emergence under cool, overcast, drizzly weather (15-20°C).",
+        "organic_treatment": ["Seed bio-priming with Trichoderma harzianum @ 10g/kg", "Avoid flood irrigation during heading"],
+        "chemical_treatment_type": ["Propiconazole 25% EC foliar spray at boot leaf/early flowering stage", "Carboxin 37.5% + Thiram 37.5% WS seed treatment"],
+        "prevention": ["Strict quarantine on seed movement", "Rotate with non-host crops like mustard, gram or berseem", "Deep summer ploughing"]
+      },
+      {
+        "name": "Loose Smut (Ustilago tritici)",
+        "type": "fungal",
+        "symptoms": "Entire earhead transformed into a loose sooty black mass of powdery spores leaving only the bare rachis at harvest.",
+        "cause": "Internally seed-borne fungal mycelium dormant inside wheat embryo from previous season's infection.",
+        "organic_treatment": ["Solar heat treatment of seeds: soak in water for 4-5 hours in May, then dry on concrete in hot sun for 4 hours"],
+        "chemical_treatment_type": ["Carboxin 75% WP @ 2 g/kg seed", "Tebuconazole 2% DS @ 1.25 g/kg seed"],
+        "prevention": ["Use certified disease-free seed only", "Rogue out infected black earheads in polythene bags and burn"]
+      },
+      {
+        "name": "Wheat Aphid (Sitobion avenae / Rhopalosiphum padi)",
+        "type": "pest",
+        "symptoms": "Clusters of small green or yellow insects on leaves, earheads and stems; honeydew secretion leads to black sooty mold; shriveled grains.",
+        "cause": "Homopteran sap-sucking pest multiplying rapidly during warm cloudy spells in February-March.",
+        "organic_treatment": ["Conserve ladybird beetles (Coccinella septempunctata) and syrphid fly predators", "Spray 5% NSKE or 3% Neem oil"],
+        "chemical_treatment_type": ["Thiamethoxam 25% WG @ 0.3 g/L", "Imidacloprid 17.8% SL @ 0.3 ml/L"],
+        "prevention": ["Avoid excessive urea application which softens tissue", "Timely sowing to escape peak aphid population in late winter"]
+      }
+    ]
+  },
+  {
+    "name": "Maize",
+    "local_names": {
+      "hi": "मक्का (Makka)",
+      "ta": "மக்காச்சோளம் (Makkacholam)",
+      "te": "మొక్కజొన్న (Mokkajonna)",
+      "kn": "ಮೆಕ್ಕೆಜೋಳ (Mekkejola)",
+      "ml": "മക്കച്ചോളം (Makkacholam)"
+    },
+    "scientific_name": "Zea mays",
+    "category": "cereal",
+    "how_to_identify_leaf": "Large, broad, strap-like sword-shaped leaves (50-100 cm long, 5-10 cm wide) with wavy margins, prominent white midrib, and alternate two-ranked arrangement.",
+    "how_to_identify_seed_or_fruit": "Large cylindrical cob (ear) enclosed in tight fibrous husk, topped with silky tassels; rows of yellow, white, or orange hard kernels embedded on a central woody rachis.",
+    "lookalikes": ["Sorghum (Jowar)", "Pearl Millet (Bajra)", "Sugarcane (in seedling stage)"],
+    "season": "Kharif (June-July), Rabi (Oct-Nov in Bihar/South), Spring (Jan-Feb in Punjab/Haryana)",
+    "soil": "Deep, fertile, well-drained sandy loam to silty loam rich in organic matter; pH 6.0-7.5; cannot tolerate water stagnation",
+    "water": "500-750 mm; critical stages: Tasseling and Silking; sensitive to drought at flowering",
+    "seed_rate_and_sowing": "Hybrids: 18-20 kg/ha; Sweet corn: 8-10 kg/ha; Fodder: 40-50 kg/ha; Spacing: 60x20 cm; Depth: 3-5 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "74.26",
+      "fiber_g": "7.3",
+      "protein_g": "9.42",
+      "fat_g": "4.74",
+      "calories_kcal": "365",
+      "key_vitamins_minerals": ["Vitamin B6", "Thiamine", "Magnesium", "Phosphorus", "Carotenoids (Lutein, Zeaxanthin)", "Zinc"]
+    },
+    "benefits": ["Rich in lutein and zeaxanthin protecting retinal health", "Energy-dense feed grain and staple food", "Versatile industrial raw material (starch, corn oil, ethanol)"],
+    "risks_or_cautions": ["High intake of unenriched maize without diverse protein can risk pellagra due to low tryptophan/niacin bioavailability"],
+    "medicinal_uses": ["Corn silk (stigma maydis) brewed as a mild diuretic tea to support urinary tract and soothe bladder irritation"],
+    "diseases": [
+      {
+        "name": "Fall Armyworm (Spodoptera frugiperda)",
+        "type": "pest",
+        "symptoms": "Ragged holes and severe skeletonization in whorl leaves; characteristic coarse sawdust-like fecal frass inside whorls; boring into cob.",
+        "cause": "Invasive noctuid moth caterpillar with four black dots arranged in a square on 8th abdominal segment and inverted Y on head.",
+        "organic_treatment": ["Apply fine sand/soil + wood ash into central whorls (1:1 mix)", "Spray Bacillus thuringiensis (Bt) kurstaki @ 2 g/L", "Apply Metarhizium rileyi or Beauveria bassiana @ 5 g/L"],
+        "chemical_treatment_type": ["Emamectin benzoate 5% SG @ 0.4 g/L", "Chlorantraniliprole 18.5% SC @ 0.4 ml/L", "Spinetoram 11.7% SC @ 0.5 ml/L"],
+        "prevention": ["Intercrop with pulses (cowpea, desmodium) in push-pull arrangement", "Set up pheromone traps @ 10/ha at 10 days after germination", "Deep ploughing in summer to expose pupae to birds"]
+      },
+      {
+        "name": "Maydis Leaf Blight (Bipolaris maydis)",
+        "type": "fungal",
+        "symptoms": "Small elongated diamond-shaped or oval brownish lesions with distinct margins on leaves, coalescing into extensive necrotic streaks.",
+        "cause": "Ascomycete fungus favoured by warm, humid rainy weather (25-30°C and >80% RH).",
+        "organic_treatment": ["Foliar spray of 5% NSKE", "Trichoderma viride spray @ 10 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Azoxystrobin 23% SC @ 1 ml/L"],
+        "prevention": ["Use resistant hybrids like HQPM-1, Bio-9681", "Destroy infected crop residues after harvest", "Crop rotation with non-graminaceous crops"]
+      },
+      {
+        "name": "Turcicum Leaf Blight (Exserohilum turcicum)",
+        "type": "fungal",
+        "symptoms": "Large, long spindle-shaped or elliptical grayish-green or tan lesions (up to 15 cm long) starting on lower leaves and progressing upward.",
+        "cause": "Fungus active in cool, moist weather (18-25°C) with morning fog and dew.",
+        "organic_treatment": ["Spray fresh buttermilk (50 ml/L) mixed with copper oxychloride (1.5 g/L)", "Neem leaf decoction"],
+        "chemical_treatment_type": ["Hexaconazole 5% EC @ 2 ml/L", "Zineb 75% WP @ 2 g/L"],
+        "prevention": ["Seed treatment with Thiram @ 3 g/kg", "Maintain optimal plant spacing to avoid excessive leaf wetness"]
+      },
+      {
+        "name": "Banded Leaf and Sheath Blight (Rhizoctonia solani f. sp. sasakii)",
+        "type": "fungal",
+        "symptoms": "Characteristic alternating dark brown and bleached straw-colored bands or zebra-stripes on leaf sheaths and leaves, reaching the cob.",
+        "cause": "Soil-borne fungus spreading in warm humid conditions; sclerotia survive in soil.",
+        "organic_treatment": ["Strip off 2-3 lowest infected senescent leaves and sheaths", "Pseudomonas fluorescens soil application"],
+        "chemical_treatment_type": ["Validamycin 3% L @ 2.5 ml/L", "Thifluzamide 24% SC @ 0.7 ml/L"],
+        "prevention": ["Avoid waterlogging around root base", "Do not plant excessively dense populations", "Seed treatment with Trichoderma"]
+      },
+      {
+        "name": "Maize Stem Borer (Chilo partellus)",
+        "type": "pest",
+        "symptoms": "Pin-holes or 'shot holes' across leaves unfolding from whorl; dead heart in young plants; tunneling and frass inside the main stem.",
+        "cause": "Crambid moth larva boring inside the stalk and whorl.",
+        "organic_treatment": ["Release egg parasitoid Trichogramma chilonis @ 175,000/ha at 10-day intervals", "Whorl application of neem seed powder mixed with sawdust"],
+        "chemical_treatment_type": ["Carbofuran 3% G whorl application @ 5 kg/ha", "Chlorantraniliprole 18.5% SC @ 0.3 ml/L"],
+        "prevention": ["Pull and destroy dead heart plants", "Sow maize as border crop with sorghum trap crops", "Burn or compost maize stubble before spring"]
+      }
+    ]
+  },
+  {
+    "name": "Tomato",
+    "local_names": {
+      "hi": "टमाटर (Tamatar)",
+      "ta": "தக்காளி (Thakkali)",
+      "te": "టమాటా (Tamata)",
+      "kn": "ಟೊಮೆಟೊ (Tomato)",
+      "ml": "തക്കാളി (Thakkali)"
+    },
+    "scientific_name": "Solanum lycopersicum",
+    "category": "vegetable",
+    "how_to_identify_leaf": "Compound pinnate leaves with 5-9 ovate to oblong leaflets; irregularly lobed, dentate edges, glandular hairs that emit a pungent green herbal odor when rubbed.",
+    "how_to_identify_seed_or_fruit": "Fleshy globe, plum, or oblate berry with glossy red, orange, or yellow skin; multi-locular interior with slippery jelly surrounding small, flat, hairy teardrop-shaped buff seeds.",
+    "lookalikes": ["Potato foliage (Solanum tuberosum)", "Black Nightshade (Solanum nigrum)", "Eggplant leaves"],
+    "season": "Autumn-Winter (sown Aug-Sept), Spring-Summer (sown Nov-Dec), Kharif (sown May-June)",
+    "soil": "Well-drained sandy loam to clay loam rich in humus; pH 6.0-6.8; highly sensitive to waterlogging",
+    "water": "400-600 mm; regular drip irrigation; avoid overhead watering to prevent foliage disease; critical during fruit set",
+    "seed_rate_and_sowing": "Hybrids: 100-150 g/ha; Open pollinated: 300-400 g/ha; Transplant 25-day seedlings at 60x45 cm or 75x60 cm spacing",
+    "nutrition_per_100g": {
+      "carbs_g": "3.89",
+      "fiber_g": "1.2",
+      "protein_g": "0.88",
+      "fat_g": "0.20",
+      "calories_kcal": "18",
+      "key_vitamins_minerals": ["Lycopene", "Vitamin C (14 mg)", "Vitamin A", "Potassium", "Vitamin K1", "Folate"]
+    },
+    "benefits": ["Exceptional concentration of bioavailable lycopene for cardiovascular and prostate health", "Rich source of vitamin C and antioxidants", "Low-calorie dietary staple"],
+    "risks_or_cautions": ["Leaves, stems, and unripe green fruits contain solanine and tomatine alkaloids toxic if ingested in large quantities", "Acidity may irritate acid reflux sufferers"],
+    "medicinal_uses": ["Dietary lycopene utilized for antioxidant and vascular endothelium support", "Tomato pulp traditionally used as cooling topical astringent"],
+    "diseases": [
+      {
+        "name": "Early Blight (Alternaria solani)",
+        "type": "fungal",
+        "symptoms": "Dark brown circular spots with concentric target-board rings on older lower leaves; yellow halos surround spots; defoliation moves upward.",
+        "cause": "Fungus surviving in crop debris and solanaceous weeds; favoured by warm, humid weather with frequent rains (24-29°C).",
+        "organic_treatment": ["Foliar spray of 10% cow urine extract with garlic paste", "Trichoderma harzianum @ 5 g/L", "Copper hydroxide @ 2 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Difenoconazole 25% EC @ 0.5 ml/L", "Chlorothalonil 75% WP @ 2 g/L"],
+        "prevention": ["Prune bottom 12 inches of leaves to prevent soil splash", "Mulch ground with straw or plastic", "3-year crop rotation avoiding potato, brinjal, chilli"]
+      },
+      {
+        "name": "Late Blight (Phytophthora infestans)",
+        "type": "fungal",
+        "symptoms": "Large, irregular, water-soaked dark olive-brown patches on leaves with white fuzzy downy growth on leaf undersides in morning; rapid collapse.",
+        "cause": "Oomycete pathogen thriving in cool, wet, foggy conditions (12-18°C and >90% RH).",
+        "organic_treatment": ["Bordeaux mixture 1% spray", "Copper Oxychloride @ 3 g/L"],
+        "chemical_treatment_type": ["Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L", "Cymoxanil 8% + Mancozeb 64% WP", "Dimethomorph 50% WP @ 1 g/L"],
+        "prevention": ["Avoid overhead sprinkler irrigation", "Ensure wide row spacing for canopy ventilation", "Destroy all infected cull piles immediately"]
+      },
+      {
+        "name": "Tomato Leaf Curl Virus (ToLCV)",
+        "type": "viral",
+        "symptoms": "Severe upward and inward rolling/curling of leaves; thickening, leathery texture, yellowing margins; extreme stunting and complete flower drop.",
+        "cause": "Begomovirus transmitted exclusively by the whitefly vector (Bemisia tabaci).",
+        "organic_treatment": ["Install yellow sticky traps @ 25-30 traps/ha to monitor and trap whiteflies", "Spray Neem oil (10,000 ppm) @ 2 ml/L or 5% NSKE regularly", "Rogue out infected plants early"],
+        "chemical_treatment_type": ["Vector control: Diafenthiuron 50% WP @ 1.2 g/L", "Spiromesifen 22.9% SC @ 1 ml/L", "Acetamiprid 20% SP @ 0.3 g/L"],
+        "prevention": ["Use 40-mesh insect-proof nylon nets in nursery", "Grow resistant hybrids (e.g., Arka Rakshak, Arka Abhed)", "Grow border crops of maize or sorghum (3 rows)"]
+      },
+      {
+        "name": "Bacterial Wilt (Ralstonia solanacearum)",
+        "type": "bacterial",
+        "symptoms": "Rapid daytime wilting of entire plant while leaves remain green; vascular browning in cut stem; white stream of bacterial ooze in clear water glass test.",
+        "cause": "Soil-borne bacterium invading vascular system through root wounds; persists in soil for years.",
+        "organic_treatment": ["Soil drenching with Pseudomonas fluorescens @ 10 g/L", "Bio-fumigation with mustard cover crop green manure", "Bleaching powder @ 10-15 kg/ha applied before transplanting"],
+        "chemical_treatment_type": ["Streptocycline 1 g + Copper Oxychloride 25 g in 10 L water drench around root zone"],
+        "prevention": ["Plant resistant varieties like Arka Alok, Arka Abha", "Avoid cultivating infested plots; maintain strict drainage", "Graft scions onto bacterial wilt-resistant wild eggplant rootstock"]
+      },
+      {
+        "name": "Tomato Fruit Borer (Helicoverpa armigera)",
+        "type": "pest",
+        "symptoms": "Circular entrance holes on developing fruits with the caterpillar's rear portion protruding outside; fruit rotting and falling prematurely.",
+        "cause": "Polyphagous moth whose larvae feed on flower buds and bore into green or ripening fruits.",
+        "organic_treatment": ["Plant African marigold (Tagetes erecta) as trap crop (1 row marigold for every 16 rows tomato)", "Spray HaNPV (Helicoverpa nuclear polyhedrosis virus) @ 250 LE/ha with 0.5% jaggery", "Pheromone traps with Helilure @ 10/ha"],
+        "chemical_treatment_type": ["Chlorantraniliprole 18.5% SC @ 0.3 ml/L", "Flubendiamide 39.35% SC @ 0.3 ml/L", "Emamectin Benzoate 5% SG @ 0.4 g/L"],
+        "prevention": ["Hand-pick and destroy early instar larvae on leaves and flowers", "Deep summer ploughing to destroy pupae in soil"]
+      }
+    ]
+  },
+  {
+    "name": "Potato",
+    "local_names": {
+      "hi": "आलू (Aloo)",
+      "ta": "உருளைக்கிழங்கு (Urulaikilangu)",
+      "te": "బంగాళాదుంప (Bangaladumpa)",
+      "kn": "ಆಲೂಗಡ್ಡೆ (Aaloogadde)",
+      "ml": "ഉരുളക്കിഴങ്ങ് (Urulakkizhangu)"
+    },
+    "scientific_name": "Solanum tuberosum",
+    "category": "vegetable",
+    "how_to_identify_leaf": "Interruptedly pinnate compound leaves with 3-4 pairs of large ovate leaflets interspersed with tiny interjected leaflets; pubescent with slightly wavy margins.",
+    "how_to_identify_seed_or_fruit": "Swollen underground stem tuber with shallow 'eyes' (buds) scattered spirally; skin buff, brown, red, or purple; flesh white, cream, or yellow.",
+    "lookalikes": ["Sweet Potato (Ipomoea batatas)", "Yam (Dioscorea)", "Tomato plant foliage"],
+    "season": "Rabi in plains (Oct-Nov to Jan-Feb); Summer in hills (March-April to Aug-Sept)",
+    "soil": "Loose, well-aerated sandy loam rich in organic matter; pH 5.2-6.5; heavy clay hinders tuber enlargement and causes deformities",
+    "water": "450-550 mm; frequent light irrigations; stop watering 10-14 days before harvest to harden tuber skin",
+    "seed_rate_and_sowing": "Whole seed tubers (30-40g size) with 2-3 active sprouts: 2.5-3.0 tonnes/ha; Spacing: 60x20 cm; Depth: 7-10 cm in ridges and furrows",
+    "nutrition_per_100g": {
+      "carbs_g": "17.47",
+      "fiber_g": "2.2",
+      "protein_g": "2.02",
+      "fat_g": "0.09",
+      "calories_kcal": "77",
+      "key_vitamins_minerals": ["Potassium (421 mg)", "Vitamin C (19.7 mg)", "Vitamin B6", "Iron", "Magnesium", "Phosphorus"]
+    },
+    "benefits": ["Highly bioavailable potassium supporting electrolyte and blood pressure balance", "Resistant starch formed when cooked and cooled aids gut microbiome", "Accessible, filling culinary staple"],
+    "risks_or_cautions": ["Green skin areas exposed to light contain solanine and chaconine glycoalkaloids; discard green potatoes to avoid poisoning"],
+    "medicinal_uses": ["Raw potato slices applied topically to calm minor skin burns and soothe sun-irritated skin", "Potato juice traditionally consumed for mild peptic acidity"],
+    "diseases": [
+      {
+        "name": "Late Blight of Potato (Phytophthora infestans)",
+        "type": "fungal",
+        "symptoms": "Water-soaked irregular brown lesions on leaf tips/margins with white mildew under leaf in high humidity; tuber flesh develops dry rust-brown granular rot.",
+        "cause": "Oomycete pathogen surviving in infected seed tubers; explodes during cool overcast weather (12-20°C and >85% RH).",
+        "organic_treatment": ["Prophylactic spray of Bordeaux mixture 1%", "Foliar spray of Copper Oxychloride @ 3 g/L"],
+        "chemical_treatment_type": ["Cymoxanil 8% + Mancozeb 64% WP @ 2.5 g/L", "Metalaxyl-M 4% + Mancozeb 64% WP", "Mandipropamid 23.4% SC @ 1 ml/L"],
+        "prevention": ["Use certified disease-free seed tubers from cold store", "High earthing up to prevent zoospores from washing down to tubers", "Dehaulming (cutting off haulms) 10 days before harvest"]
+      },
+      {
+        "name": "Early Blight (Alternaria solani)",
+        "type": "fungal",
+        "symptoms": "Brown to black spots with concentric rings ('target board' pattern) on older lower leaves, causing premature yellowing and drying.",
+        "cause": "Airborne fungal conidia active in alternating wet and dry periods (25-30°C).",
+        "organic_treatment": ["Spray neem oil 10,000 ppm @ 2 ml/L", "Trichoderma viride foliar spray @ 5 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Difenoconazole 25% EC @ 0.5 ml/L"],
+        "prevention": ["Avoid water stress and maintain balanced fertility", "Destroy infected haulms post-harvest"]
+      },
+      {
+        "name": "Common Scab (Streptomyces scabies)",
+        "type": "bacterial",
+        "symptoms": "Rough, corky, raised or pitted brown pustules on tuber skin; reduces commercial grade though inner flesh remains edible.",
+        "cause": "Soil actinomycete surviving indefinitely in dry, alkaline soils (pH > 6.5).",
+        "organic_treatment": ["Green manuring with sunn hemp before potato crop", "Soil application of elemental sulfur to lower pH below 5.5", "Seed treatment with Trichoderma"],
+        "chemical_treatment_type": ["Seed tuber dip in Boric acid 3% solution for 30 minutes before storage or planting"],
+        "prevention": ["Maintain adequate soil moisture during tuber initiation for 4-6 weeks", "Avoid applying fresh uncomposted lime or poultry manure"]
+      },
+      {
+        "name": "Potato Tuber Moth (Phthorimaea operculella)",
+        "type": "pest",
+        "symptoms": "Mined blotches and galleries in leaves; larvae bore deep tunnels into tubers in field and store packed with dark silken excrement.",
+        "cause": "Microlepidopteran moth laying eggs on exposed tubers or foliage; active in warm storage conditions.",
+        "organic_treatment": ["Cover tubers in country stores with 2.5 cm layer of dried Lantana camara or eucalyptus leaves", "Pheromone traps in stores"],
+        "chemical_treatment_type": ["Spray Quinalphos 25% EC @ 2 ml/L in field before earthing up", "Bt kurstaki dust on seed tubers"],
+        "prevention": ["Deep planting and compact earthing up so tubers are never exposed", "Prompt harvest without leaving harvested bags overnight in field"]
+      },
+      {
+        "name": "Potato Apical Leaf Curl Virus (ToLCNDV-potato)",
+        "type": "viral",
+        "symptoms": "Severe curling, crinkling, and mosaic of top leaves with conspicuous yellowing; pronounced stunting of plant.",
+        "cause": "Geminivirus transmitted by whitefly (Bemisia tabaci); rampant in early sown crop in Northern plains.",
+        "organic_treatment": ["Yellow sticky traps @ 25/ha", "Neem formulation sprays (10,000 ppm) @ 2 ml/L"],
+        "chemical_treatment_type": ["Imidacloprid 17.8% SL seed tuber spray before planting", "Thiamethoxam 25% WG foliar spray @ 0.3 g/L"],
+        "prevention": ["Adjust planting date to mid-October after whitefly vector population drops", "Use vector-free certified foundation seed"]
+      }
+    ]
+  },
+  {
+    "name": "Brinjal",
+    "local_names": {
+      "hi": "बैंगन (Baingan)",
+      "ta": "கத்திரிக்காய் (Kathirikkai)",
+      "te": "వంకాయ (Vankaya)",
+      "kn": "ಬದನೆಕಾಯಿ (Badanekayi)",
+      "ml": "വഴുതനങ്ങ (Vazhuthananga)"
+    },
+    "scientific_name": "Solanum melongena",
+    "category": "vegetable",
+    "how_to_identify_leaf": "Large, alternate, ovate to oblong leaves with shallowly lobed or sinuate margins; star-shaped (stellate) hairs on surface; some varieties bear sharp spines on midrib.",
+    "how_to_identify_seed_or_fruit": "Fleshy pendant berry, glossy purple, green, striped or white; shape oblong, teardrop or spherical; interior soft spongy white flesh containing numerous tiny flat kidney-shaped pale seeds.",
+    "lookalikes": ["Wild Eggplant (Solanum viarum)", "Tomato plant", "Capsicum (in early seedling stage)"],
+    "season": "Autumn-Winter crop (sown June-July), Spring-Summer crop (sown Nov-Dec), Summer crop (sown Feb-March)",
+    "soil": "Deep, fertile silt loam or clay loam with high organic content; well drained; pH 6.0-6.8",
+    "water": "600-800 mm; requires consistent moisture; irrigate every 4-6 days during summer, 8-10 days in winter",
+    "seed_rate_and_sowing": "Hybrids: 150-200 g/ha; Varieties: 350-400 g/ha; Transplant 30-35 day seedlings at 75x60 cm or 90x60 cm spacing",
+    "nutrition_per_100g": {
+      "carbs_g": "5.88",
+      "fiber_g": "3.0",
+      "protein_g": "0.98",
+      "fat_g": "0.18",
+      "calories_kcal": "25",
+      "key_vitamins_minerals": ["Nasunin (Anthocyanin)", "Chlorogenic acid", "Manganese", "Potassium", "Folate", "Vitamin K"]
+    },
+    "benefits": ["Nasunin anthocyanin in purple skin is a potent antioxidant protecting cellular brain membranes", "High dietary fiber helps manage cholesterol absorption", "Low calorie food suitable for weight control"],
+    "risks_or_cautions": ["Contains moderate oxalates; individuals with history of calcium oxalate kidney stones should consume in moderation", "May trigger oral itching in people with nightshade sensitivity"],
+    "medicinal_uses": ["Roasted brinjal pulp consumed in traditional folk diets for liver health", "Decoction of brinjal roots traditionally used for soothing respiratory distress"],
+    "diseases": [
+      {
+        "name": "Shoot and Fruit Borer (Leucinodes orbonalis)",
+        "type": "pest",
+        "symptoms": "Wilting and drooping of tender growing shoot tips; small entry holes on fruits plugged with chewed frass; rotting inside fruit.",
+        "cause": "Pyralid moth whose pinkish larvae bore inside shoots in vegetative phase and into fruits during fruiting.",
+        "organic_treatment": ["Clip and destroy wilted shoots along with larvae weekly", "Install Lucilure pheromone traps @ 25-30/ha", "Spray Bacillus thuringiensis (Bt) @ 2 g/L", "Neem seed kernel extract 5%"],
+        "chemical_treatment_type": ["Chlorantraniliprole 18.5% SC @ 0.4 ml/L", "Emamectin benzoate 5% SG @ 0.4 g/L", "Spinosad 45% SC @ 0.4 ml/L"],
+        "prevention": ["Intercrop with coriander or fennel to encourage beneficial parasitoids", "Rogue out and bury damaged fruits deep in soil", "Avoid continuous brinjal cultivation"]
+      },
+      {
+        "name": "Little Leaf of Brinjal",
+        "type": "viral",
+        "symptoms": "Extreme reduction in leaf size forming tiny, clustered, bush-like malformed leaves; excessive bushiness (witches' broom); plant bears no fruit.",
+        "cause": "Phytoplasma organism transmitted by leafhopper vector (Hishimonus phycitis).",
+        "organic_treatment": ["Rogue and burn infected plants immediately on first appearance", "Spray neem oil 10,000 ppm @ 2 ml/L against leafhoppers"],
+        "chemical_treatment_type": ["Vector control: Imidacloprid 17.8% SL @ 0.3 ml/L", "Oxytetracycline hydrochloride foliar spray (temporarily suppresses symptoms)"],
+        "prevention": ["Dip seedlings in Tetracycline solution (500 ppm) for 30 minutes before transplanting", "Keep field edges clear of wild solanaceous weed hosts"]
+      },
+      {
+        "name": "Phomopsis Blight (Phomopsis vexans)",
+        "type": "fungal",
+        "symptoms": "Circular brown leaf spots with pale centers turning paper-thin; soft, watery, pale brown sunken spots on fruit covered with black pycnidia pimples.",
+        "cause": "Seed and soil-borne fungus spreading rapidly during warm rainy seasons (28-32°C).",
+        "organic_treatment": ["Hot water seed treatment at 50°C for 30 minutes", "Spray copper oxychloride @ 2.5 g/L"],
+        "chemical_treatment_type": ["Carbendazim 50% WP @ 1 g/L", "Zineb 75% WP @ 2 g/L", "Azoxystrobin 23% SC @ 1 ml/L"],
+        "prevention": ["Use certified disease-free seeds", "Follow crop rotation with non-solanaceous crops", "Collect and burn fallen diseased fruits"]
+      },
+      {
+        "name": "Bacterial Wilt (Ralstonia solanacearum)",
+        "type": "bacterial",
+        "symptoms": "Sudden drop and wilting of whole foliage during warm afternoons while leaves stay green; vascular ring turns dark brown; milky ooze in clear water.",
+        "cause": "Bacterium surviving in soil and water channels, entering through nematode or root injury.",
+        "organic_treatment": ["Soil drenching with Pseudomonas fluorescens @ 10 g/L", "Crop rotation with non-hosts like maize or rice", "Amend soil with neem cake"],
+        "chemical_treatment_type": ["Drenching with Streptocycline 1g + Copper Oxychloride 25g per 10 L water"],
+        "prevention": ["Plant resistant varieties (e.g., Pant Rituraj, Arka Nidhi, Pusa Purple Cluster)", "Control root-knot nematodes which create entry points"]
+      },
+      {
+        "name": "Two-Spotted Spider Mite (Tetranychus urticae)",
+        "type": "pest",
+        "symptoms": "Tiny white or yellow stipples on upper leaf surface; fine silken webbing on leaf undersides; leaves turn bronzed, dusty and dry up.",
+        "cause": "Acarine pest multiplying massively in hot, dry, dusty weather (>30°C and low RH).",
+        "organic_treatment": ["Forceful water spray on leaf undersides to dislodge webbing", "Spray wettable sulfur 80% WDG @ 3 g/L", "Neem oil 1500 ppm @ 3 ml/L"],
+        "chemical_treatment_type": ["Spiromesifen 22.9% SC @ 1 ml/L", "Propargite 57% EC @ 2 ml/L", "Fenpyroximate 5% EC @ 1 ml/L"],
+        "prevention": ["Avoid dusty roadside locations without shelterbelts", "Do not overuse broad-spectrum synthetic pyrethroids which kill predatory mites"]
+      }
+    ]
+  },
+  {
+    "name": "Chilli",
+    "local_names": {
+      "hi": "मिर्च (Mirch)",
+      "ta": "மிளகாய் (Milagai)",
+      "te": "మిరపకాయ (Mirapakaya)",
+      "kn": "ಮೆಣಸಿನಕಾಯಿ (Menasinakayi)",
+      "ml": "പച്ചമുളക് (Pachamulaku)"
+    },
+    "scientific_name": "Capsicum annuum",
+    "category": "spice",
+    "how_to_identify_leaf": "Simple, alternate or paired, lanceolate to elliptic-ovate leaves with acute apex, entire margins, glossy dark green surface with smooth texture.",
+    "how_to_identify_seed_or_fruit": "Elongated, conical, or slender glossy pod berry; green turning fiery red, orange, or yellow when ripe; filled with pungent placenta bearing flat disc-shaped yellowish seeds.",
+    "lookalikes": ["Bell Pepper / Capsicum", "Nightshade weeds (Solanum nigrum)", "Tabasco / Bird's eye chilli (Capsicum frutescens)"],
+    "season": "Kharif (sown May-June), Rabi (sown Sept-Oct), Summer (sown Jan-Feb in irrigated tracts)",
+    "soil": "Well-drained light loamy soils rich in organic matter; pH 6.0-7.0; cannot tolerate water stagnation even for 24 hours",
+    "water": "500-600 mm; sensitive to excess moisture; light, frequent irrigation (drip irrigation preferred)",
+    "seed_rate_and_sowing": "Hybrids: 200-250 g/ha; Varieties: 1.0 kg/ha; Nursery raised 30 days; Spacing: 60x45 cm or 75x45 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "8.81",
+      "fiber_g": "1.5",
+      "protein_g": "1.87",
+      "fat_g": "0.44",
+      "calories_kcal": "40",
+      "key_vitamins_minerals": ["Capsaicin", "Vitamin C (143 mg - over 200% DV)", "Vitamin A", "Vitamin B6", "Potassium", "Iron"]
+    },
+    "benefits": ["Capsaicin boosts metabolic rate and thermogenesis", "Extremely dense natural source of vitamin C and carotenoids", "Stimulates gastric secretions and circulation"],
+    "risks_or_cautions": ["Capsaicin irritates mucous membranes and eyes; excessive consumption can exacerbate gastric ulcers and acid reflux"],
+    "medicinal_uses": ["Topical capsaicin formulations used clinically for neuropathic pain and osteoarthritis analgesia", "Counter-irritant in traditional liniments"],
+    "diseases": [
+      {
+        "name": "Chilli Leaf Curl Virus (ChiLCV)",
+        "type": "viral",
+        "symptoms": "Upward curling and puckering of leaves with boat-shaped deformity; shortening of internodes resulting in severe stunting; no fruit formation.",
+        "cause": "Begomovirus transmitted by the whitefly vector (Bemisia tabaci).",
+        "organic_treatment": ["Install yellow sticky cards @ 30/ha", "Foliar spray of 5% NSKE or Neem oil (10,000 ppm) @ 2 ml/L", "Rogue out infected plants early"],
+        "chemical_treatment_type": ["Vector management: Diafenthiuron 50% WP @ 1.2 g/L", "Acetamiprid 20% SP @ 0.3 g/L", "Spiromesifen 22.9% SC @ 1 ml/L"],
+        "prevention": ["Raise seedlings under 40-mesh insect netting", "Barrier crops of 3 rows of maize around the field", "Grow resistant hybrids like Arka Gagan, Arka Kyati"]
+      },
+      {
+        "name": "Anthracnose / Dieback (Colletotrichum capsici)",
+        "type": "fungal",
+        "symptoms": "Tips of branches die backward turning white and dry (dieback); circular sunken spots with concentric rings of black dots on ripening fruits (fruit rot).",
+        "cause": "Seed and air-borne fungus favoured by high humidity (>80%) and temperatures around 28°C during fruit ripening.",
+        "organic_treatment": ["Seed treatment with Trichoderma viride @ 10 g/kg", "Spray Bordeaux mixture 1% or Copper Oxychloride @ 2.5 g/L"],
+        "chemical_treatment_type": ["Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L", "Tebuconazole 25.9% EC @ 1 ml/L", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Use disease-free seed from healthy fruits", "Avoid sprinkler overhead irrigation", "Remove and burn infected twigs and fruits"]
+      },
+      {
+        "name": "Chilli Thrips (Scirtothrips dorsalis)",
+        "type": "pest",
+        "symptoms": "Leaves curl upward from margins; silvery bronze or brown rust-like streaks on underside; brittle leaves; stunted crinkled shoots.",
+        "cause": "Slender yellow microscopic thrips feeding on tender sap, active in dry warm weather.",
+        "organic_treatment": ["Install blue sticky traps @ 25/ha (thrips are attracted to blue)", "Spray spinosad-derived organic formulations or neem oil", "Spray Lecanicillium lecanii @ 5 g/L"],
+        "chemical_treatment_type": ["Spinetoram 11.7% SC @ 0.8 ml/L", "Fipronil 5% SC @ 1.5 ml/L", "Cyantraniliprole 10.26% OD @ 1.2 ml/L"],
+        "prevention": ["Sprinkle water on crop canopy in morning to knock down thrips", "Avoid planting near old cotton or onion fields"]
+      },
+      {
+        "name": "Powdery Mildew (Leveillula taurica)",
+        "type": "fungal",
+        "symptoms": "White powdery patches on underside of leaves with corresponding yellow chlorotic lesions on upper surface; heavy defoliation.",
+        "cause": "Endophytic fungus active in warm, dry weather with high morning humidity.",
+        "organic_treatment": ["Spray wettable sulfur 80% WDG @ 3 g/L", "Spray milk and water mix (1:9) on foliage in bright sun"],
+        "chemical_treatment_type": ["Myclobutanil 10% WP @ 1 g/L", "Hexaconazole 5% EC @ 1 ml/L", "Azoxystrobin 23% SC @ 1 ml/L"],
+        "prevention": ["Maintain wide plant spacing", "Spray sulfur prophylactically when dry warm weather sets in"]
+      },
+      {
+        "name": "Damping Off (Pythium aphanidermatum)",
+        "type": "fungal",
+        "symptoms": "Water-soaked lesions on seedling collar region at soil line; seedlings topple over and rot in nursery beds within 48 hours.",
+        "cause": "Soil-borne oomycete pathogen favoured by heavy seed beds, excess water, and poor drainage.",
+        "organic_treatment": ["Soil solarization of nursery beds with clear polythene sheets for 4 weeks in May", "Seed treatment with Trichoderma harzianum @ 10 g/kg"],
+        "chemical_treatment_type": ["Seed treatment with Metalaxyl 35% WS @ 3 g/kg", "Soil drenching with Copper Oxychloride @ 3 g/L"],
+        "prevention": ["Always prepare raised nursery beds (15 cm high)", "Avoid dense sowing of seed in nursery"]
+      }
+    ]
+  },
+  {
+    "name": "Onion",
+    "local_names": {
+      "hi": "प्याज (Pyaz)",
+      "ta": "வெங்காயம் (Vengayam)",
+      "te": "ఉల్లిపాయ (Ullipaya)",
+      "kn": "ಈರುಳ್ಳಿ (Eerulli)",
+      "ml": "സവാള / ഉള്ളി (Savala / Ulli)"
+    },
+    "scientific_name": "Allium cepa",
+    "category": "vegetable",
+    "how_to_identify_leaf": "Hollow, cylindrical, glaucous bluish-green tubular leaves (fistular) with pointed tips, flattened on the inner side, emerging from a basal bulb neck.",
+    "how_to_identify_seed_or_fruit": "Layered underground tunicated bulb with dry papery outer scales (red, yellow, or white); small angular jet-black wrinkled seeds produced on spherical umbels.",
+    "lookalikes": ["Garlic (flat leaves, not tubular)", "Leek (Allium ampeloprasum)", "Spring onion / Scallion"],
+    "season": "Kharif (sown May-June), Late Kharif (Aug-Sept), Rabi (Oct-Nov; represents 60% of India's output)",
+    "soil": "Friable, fertile sandy loam to light clay loam rich in organic matter; free from stones; pH 6.5-7.5; very sensitive to waterlogging",
+    "water": "350-550 mm; shallow root system demands frequent light irrigations (every 5-7 days in summer); withhold water 15 days before harvest",
+    "seed_rate_and_sowing": "8-10 kg/ha for seedlings; Nursery transplanting at 6-8 weeks old; Spacing: 15x10 cm on flat beds or raised beds",
+    "nutrition_per_100g": {
+      "carbs_g": "9.34",
+      "fiber_g": "1.7",
+      "protein_g": "1.10",
+      "fat_g": "0.10",
+      "calories_kcal": "40",
+      "key_vitamins_minerals": ["Quercetin", "Organosulfur compounds", "Vitamin C", "Folate", "Vitamin B6", "Potassium"]
+    },
+    "benefits": ["Exceptional concentration of quercetin flavonoid for heart health and anti-inflammatory activity", "Organosulfur compounds help lower blood pressure and platelet aggregation", "Prebiotic inulin supports healthy gut bacteria"],
+    "risks_or_cautions": ["Contains fermentable oligo-saccharides (FODMAPs) which may trigger bloating in IBS sufferers", "Toxic to dogs and cats due to thiosulfate content"],
+    "medicinal_uses": ["Fresh onion juice used traditionally as ear drop for mild earache and topical insect bite relief", "Crushed onion inhalation used as folk remedy for congestion"],
+    "diseases": [
+      {
+        "name": "Purple Blotch (Alternaria porri)",
+        "type": "fungal",
+        "symptoms": "Small water-soaked sunken lesions on leaves and seed stalks developing purple or dark centers with broad yellow halos, causing leaves to break over.",
+        "cause": "Fungus favored by warm, humid rainy weather (21-30°C and 80-90% RH).",
+        "organic_treatment": ["Foliar spray of 5% NSKE mixed with adhesive sticker", "Spray Trichoderma harzianum @ 5 g/L"],
+        "chemical_treatment_type": ["Difenoconazole 25% EC @ 1 ml/L", "Mancozeb 75% WP @ 2.5 g/L", "Tebuconazole 25.9% EC @ 1 ml/L"],
+        "prevention": ["Avoid overhead sprinkler irrigation", "Use disease-free sets and certified seeds", "Dip seedlings in Mancozeb (2g/L) for 15 minutes before transplanting"]
+      },
+      {
+        "name": "Onion Thrips (Thrips tabaci)",
+        "type": "pest",
+        "symptoms": "Silvery patches and white blotches on leaves caused by rasping-sucking feeding; leaves curl, turn brown, and wither from tip downwards.",
+        "cause": "Tiny yellowish-brown thrips hiding in inner leaf sheaths, multiplying rapidly during hot dry spells.",
+        "organic_treatment": ["Install blue sticky traps @ 25/ha", "Spray 3% neem oil with mild detergent as wetting agent", "Spray Beauveria bassiana @ 5 g/L"],
+        "chemical_treatment_type": ["Fipronil 5% SC @ 1.5 ml/L", "Spinetoram 11.7% SC @ 0.8 ml/L", "Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Maintain border crop of two rows of maize or barrier netting", "Sprinkler irrigation helps wash thrips off tubular foliage"]
+      },
+      {
+        "name": "Stemphylium Leaf Blight (Stemphylium vesicarium)",
+        "type": "fungal",
+        "symptoms": "Small yellow to pale orange oval spots on leaves, rapidly expanding into elongated dark olive-brown patches covered with black soot-like conidia.",
+        "cause": "Fungus active in warm humid conditions; commonly follows thrips injury or purple blotch infection.",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Pseudomonas fluorescens @ 10 g/L"],
+        "chemical_treatment_type": ["Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L", "Chlorothalonil 75% WP @ 2 g/L"],
+        "prevention": ["Control thrips early as wounds promote entry", "Ensure proper balanced potassium fertilization"]
+      },
+      {
+        "name": "Basal Rot / Fusarium Wilt (Fusarium oxysporum f. sp. cepae)",
+        "type": "fungal",
+        "symptoms": "Progressive yellowing and dying back of leaves from tip; roots rot and turn pinkish-brown; bulb base becomes soft, decayed and watery.",
+        "cause": "Soil-borne pathogen entering through root wounds or basal plate, active in warm soil (>28°C).",
+        "organic_treatment": ["Seedling root dip in Trichoderma viride @ 10 g/L for 30 minutes", "Apply Trichoderma enriched FYM @ 5 tonnes/ha to soil"],
+        "chemical_treatment_type": ["Carbendazim 50% WP root dip @ 1 g/L and soil drenching", "Thiophanate Methyl 70% WP @ 1.5 g/L"],
+        "prevention": ["Follow 4-year crop rotation with non-allium crops", "Avoid mechanical damage to roots and bulbs during weeding"]
+      },
+      {
+        "name": "Downy Mildew (Peronospora destructor)",
+        "type": "fungal",
+        "symptoms": "Pale greenish-yellow oval patches on leaves covered with violet-gray fuzzy down in moist mornings; leaves collapse and dry up.",
+        "cause": "Oomycete favored by cool, foggy, humid nights followed by mild days.",
+        "organic_treatment": ["Prophylactic spray of Copper Hydroxide @ 2 g/L", "Avoid dense seedling stands"],
+        "chemical_treatment_type": ["Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L", "Dimethomorph 50% WP @ 1 g/L"],
+        "prevention": ["Proper spacing to allow wind circulation", "Avoid planting downwind of old infected onion fields"]
+      }
+    ]
+  },
+  {
+    "name": "Mango",
+    "local_names": {
+      "hi": "आम (Aam)",
+      "ta": "மாம்பழம் (Maambazham)",
+      "te": "మామిడి (Mamidi)",
+      "kn": "ಮಾವಿನಹಣ್ಣು (Maavinahannu)",
+      "ml": "മാങ്ങ (Maanga)"
+    },
+    "scientific_name": "Mangifera indica",
+    "category": "fruit",
+    "how_to_identify_leaf": "Simple, alternate, oblong-lanceolate leathery evergreen leaves (15-30 cm); tender new leaves copper-red or pinkish, turning dark glossy green with prominent light green veins; aromatic resinous odor when crushed.",
+    "how_to_identify_seed_or_fruit": "Large fleshy asymmetric drupe with smooth skin (green turning golden-yellow or flushed with red); juicy orange-yellow sweet flesh enclosing a large flat fibrous woody endocarp stone.",
+    "lookalikes": ["Neem leaf (pinnate compound, vs mango simple)", "Cashew foliage", "Jamun (Syzygium cumini)"],
+    "season": "Flowering in Dec-Feb; Fruit harvest in March-July depending on zone",
+    "soil": "Deep, well-drained alluvial or red loamy soil with minimum 2m root depth; pH 5.5-7.5; water table below 2.5m",
+    "water": "Rainfed in high rainfall regions; 2-3 irrigations between fruit set and maturity dramatically increases fruit size; withhold irrigation 2 months prior to flowering",
+    "seed_rate_and_sowing": "Propagated vegetatively via epicotyl/wedge grafting onto local rootstocks; Spacing: 10x10 m (traditional) or 5x5 m (High Density Planting); Planting in monsoon",
+    "nutrition_per_100g": {
+      "carbs_g": "14.98",
+      "fiber_g": "1.6",
+      "protein_g": "0.82",
+      "fat_g": "0.38",
+      "calories_kcal": "60",
+      "key_vitamins_minerals": ["Vitamin C (36.4 mg - 44% DV)", "Vitamin A (Beta-carotene)", "Folate", "Vitamin B6", "Potassium", "Mangiferin"]
+    },
+    "benefits": ["Mangiferin polyphenol provides powerful antioxidant and anti-inflammatory activity", "High beta-carotene and vitamin A promote visual and skin health", "Rich enzymes aid digestive processes"],
+    "risks_or_cautions": ["Sap and skin contains urushiol traces which can cause contact dermatitis ('mango mouth') in sensitive people", "High fructose requires portion management in diabetic diets"],
+    "medicinal_uses": ["Tender mango leaves brewed into decoction traditionally in Ayurveda to manage blood sugar", "Dried mango seed kernel powder (Amchur/gutka) used for diarrhea and intestinal worms"],
+    "diseases": [
+      {
+        "name": "Anthracnose (Colletotrichum gloeosporioides)",
+        "type": "fungal",
+        "symptoms": "Dark brown to black sunken circular spots with tear-stain patterns on leaves, blossoms, and fruits; blossom blight causes complete flower drop.",
+        "cause": "Fungus thriving during warm, misty, rainy weather during flowering and fruit development.",
+        "organic_treatment": ["Prune dead twigs and spray 1% Bordeaux mixture before flowering", "Foliar spray of Trichoderma harzianum @ 5 g/L"],
+        "chemical_treatment_type": ["Azoxystrobin 23% SC @ 1 ml/L", "Carbendazim 50% WP @ 1 g/L", "Copper Oxychloride @ 3 g/L"],
+        "prevention": ["Post-harvest hot water treatment of fruits at 52°C for 5 minutes", "Prune inner branches to open canopy to sunlight"]
+      },
+      {
+        "name": "Powdery Mildew (Oidium mangiferae)",
+        "type": "fungal",
+        "symptoms": "White powdery fungal growth covering panicles, flowers, and tiny fruitlets; causes total fruitlet dropping and floral mummification.",
+        "cause": "Airborne spores favoured by cool nights and warm dry days with cloudy morning weather in Dec-Feb.",
+        "organic_treatment": ["Dusting sulfur powder @ 350 mesh or spray Wettable Sulfur 80% WDG @ 3 g/L", "Spray potassium bicarbonate @ 5 g/L"],
+        "chemical_treatment_type": ["Hexaconazole 5% EC @ 1 ml/L", "Dinocap 48% EC @ 1 ml/L", "Penconazole 10% EC @ 0.5 ml/L"],
+        "prevention": ["First spray at panicle emergence, second at full bloom, third at pea-stage"]
+      },
+      {
+        "name": "Mango Hopper (Idioscopus clypealis / Amritodus atkinsoni)",
+        "type": "pest",
+        "symptoms": "Wedge-shaped tiny hoppers suck sap from tender panicles and leaves; panicles turn brown and dry; copious sticky honeydew causes heavy sooty mold.",
+        "cause": "Cicadellid insect multiplying in hundreds on mango panicles during flowering season.",
+        "organic_treatment": ["Spray 5% NSKE at panicle emergence", "Spray Beauveria bassiana @ 5 g/L on tree trunk and branches where adults hide", "Neem oil 1500 ppm @ 3 ml/L"],
+        "chemical_treatment_type": ["Imidacloprid 17.8% SL @ 0.3 ml/L", "Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Prune dense criss-cross branches to allow sunlight into interior canopy", "Avoid spraying chemicals during peak pollinator bee activity hours (morning)"]
+      },
+      {
+        "name": "Mango Fruit Fly (Bactrocera dorsalis)",
+        "type": "pest",
+        "symptoms": "Punctures with brown resinous oozing on maturing fruit skin; white maggots feed inside pulp causing soft, foul-smelling rotting and premature drop.",
+        "cause": "Tephritid fly inserting eggs below fruit epidermis during fruit maturity (April-June).",
+        "organic_treatment": ["Install Methyl Eugenol pheromone traps @ 10 traps/ha from fruit marble stage", "Bait spray: Jaggery 100g + Malathion 10ml in 10L water on lower canopy"],
+        "chemical_treatment_type": ["Spray Deltamethrin 2.8% EC @ 1 ml/L (respect harvest waiting period of 7 days)"],
+        "prevention": ["Collect and bury fallen infested fruits at least 2 feet underground", "Plough tree basin in summer to expose pupae to predatory ants and birds"]
+      },
+      {
+        "name": "Mango Malformation (Fusarium mangiferae)",
+        "type": "fungal",
+        "symptoms": "Vegetative malformation: bunchy compact shoots with tiny leaves ('bunchy top'); Floral malformation: compact, thick, hypertrophied panicles without fruit setting.",
+        "cause": "Fungal pathogen transmitted and aggravated by the mango bud mite (Aceria mangiferae).",
+        "organic_treatment": ["Prune and burn malformed panicles along with 15 cm of healthy wood below the cluster", "Spray neem oil on buds"],
+        "chemical_treatment_type": ["Spray NAA (Naphthalene Acetic Acid) @ 200 ppm in October", "Acaricide spray (Dicofol or Wettable sulfur) to control bud mite"],
+        "prevention": ["Sterilize pruning shears with ethanol between cuts", "Use disease-free scion wood for grafting"]
+      }
+    ]
+  },
+  {
+    "name": "Banana",
+    "local_names": {
+      "hi": "केला (Kela)",
+      "ta": "வாழைப்பழம் (Vazhaipazham)",
+      "te": "అరటిపండు (Aratipandu)",
+      "kn": "ಬಾಳೆಹಣ್ಣು (Baalehannu)",
+      "ml": "വാഴപ്പഴം (Vazhappazham)"
+    },
+    "scientific_name": "Musa acuminata / Musa balbisiana",
+    "category": "fruit",
+    "how_to_identify_leaf": "Giant, spirally arranged, oblong paddle-shaped leaves (up to 2-3 m long, 60 cm wide) with thick central midrib, parallel lateral veins, easily tearing along veins in wind.",
+    "how_to_identify_seed_or_fruit": "Hanging bunch consisting of tiers ('hands') of elongated, slightly curved, cylindrical berries with thick yellow or green peel and creamy seedless pulp; large pendant purple terminal bud.",
+    "lookalikes": ["Plantain (cooking banana)", "Ensete ventricosum (False banana)", "Heliconia foliage", "Bird of Paradise"],
+    "season": "Planted year-round in South/Coastal India; peak harvest 11-13 months after planting",
+    "soil": "Deep, fertile, well-drained loamy soil with rich humus; pH 6.0-7.5; water table below 1m; highly sensitive to poor drainage and salinity",
+    "water": "1800-2200 mm; high water demand; requires 15-20 liters/plant/day through drip irrigation; sensitive to drought at flowering",
+    "seed_rate_and_sowing": "Propagated via sword suckers (1.5-2.0 kg) or tissue culture plantlets; Population: 2500-3000 plants/ha; Spacing: 1.8x1.8 m or 1.5x1.5 m",
+    "nutrition_per_100g": {
+      "carbs_g": "22.84",
+      "fiber_g": "2.6",
+      "protein_g": "1.09",
+      "fat_g": "0.33",
+      "calories_kcal": "89",
+      "key_vitamins_minerals": ["Potassium (358 mg)", "Vitamin B6 (0.37 mg - 28% DV)", "Vitamin C", "Magnesium", "Manganese"]
+    },
+    "benefits": ["Rapid natural carbohydrate energy release ideal for physical recovery", "Rich potassium helps regulate blood pressure and counter sodium", "Vitamin B6 supports neurotransmitter synthesis"],
+    "risks_or_cautions": ["High glycemic index in overripe bananas warrants moderation in strict diabetic diets", "High potassium intake caution for advanced renal failure patients"],
+    "medicinal_uses": ["Banana stem juice consumed traditionally for renal calculi (kidney stone) dissolution", "Raw green banana flour utilized for resistant starch gut healing"],
+    "diseases": [
+      {
+        "name": "Panama Wilt / Fusarium Wilt (Fusarium oxysporum f. sp. cubense - TR4 & race 1)",
+        "type": "fungal",
+        "symptoms": "Yellowing of lower leaf margins progressing inward; leaves buckle at petiole and hang down forming a skirt around pseudostem; reddish-brown vascular discolouration inside stem.",
+        "cause": "Soil-borne chlamydospores persisting for 30+ years; TR4 affects Cavendish clones; spreads via infected suckers and running water.",
+        "organic_treatment": ["Soil application of bioagent Trichoderma viride / harzianum @ 50g/plant with 5 kg neem cake", "Drench with Pseudomonas fluorescens"],
+        "chemical_treatment_type": ["Capsule application of 2,4-D or glyphosate to kill infected mats; no chemical cure exists once infected"],
+        "prevention": ["Strict quarantine on suckers; use certified tissue-culture plantlets only", "Dip suckers in Carbendazim 2g/L before planting", "Crop rotation with paddy or sugarcane"]
+      },
+      {
+        "name": "Sigatoka Leaf Spot (Pseudocercospora fijiensis / musicola)",
+        "type": "fungal",
+        "symptoms": "Small yellowish streaks parallel to leaf veins turning dark reddish-brown with sunken gray centers and yellow halos; extensive leaf death.",
+        "cause": "Ascomycete fungus spread by rain splash and wind in warm, rainy, humid tropical conditions.",
+        "organic_treatment": ["Deleafing: cut and burn severely infected leaf strips", "Foliar spray of mineral oil / petroleum spray oil @ 10 ml/L", "Bordeaux mixture 1%"],
+        "chemical_treatment_type": ["Propiconazole 25% EC @ 1 ml/L", "Azoxystrobin 23% SC @ 1 ml/L", "Trifloxystrobin 25% + Tebuconazole 50% WG @ 0.5 g/L"],
+        "prevention": ["Maintain efficient drainage channels to reduce canopy humidity", "Avoid overhead sprinkler irrigation", "Maintain proper spacing"]
+      },
+      {
+        "name": "Banana Bunchy Top Virus (BBTV)",
+        "type": "viral",
+        "symptoms": "Dark green 'Morse-code' dots and dashes along secondary leaf veins and petiole; leaves become upright, narrow, brittle, and crowded in a rosette bunch at the crown; zero bunch production.",
+        "cause": "Nanovirus transmitted by the banana black aphid (Pentalonia nigronervosa).",
+        "organic_treatment": ["Inject infected pseudostem with kerosene or 2,4-D to kill plant", "Spray 3% neem oil on aphids around leaf axils"],
+        "chemical_treatment_type": ["Vector control: Imidacloprid 17.8% SL @ 0.3 ml/L directed into leaf axils and base of suckers"],
+        "prevention": ["Never source suckers from areas where bunchy top exists", "Rogue out and destroy infected mats immediately to prevent vector spread"]
+      },
+      {
+        "name": "Pseudostem Weevil / Borer (Odoiporus longicollis)",
+        "type": "pest",
+        "symptoms": "Pin-head sized holes on pseudostem with transparent jelly-like resin oozing out; rotting internal stem tissue leading to snapping and lodging in wind.",
+        "cause": "Curculionid weevil larva tunneling extensively inside the false stem.",
+        "organic_treatment": ["Install split pseudostem longitudinal traps @ 60-70 traps/ha smeared with Beauveria bassiana", "Cosmopolites pheromone traps"],
+        "chemical_treatment_type": ["Pseudostem injection of Monocrotophos / Chlorpyrifos @ 1 ml/plant", "Stem swabbing with Chlorpyrifos 20% EC @ 2.5 ml/L"],
+        "prevention": ["Clean cultivation; remove dry hanging leaf sheaths periodically", "Chop and destroy harvested pseudostems down to rhizome level"]
+      },
+      {
+        "name": "Banana Rhizome Weevil (Cosmopolites sordidus)",
+        "type": "pest",
+        "symptoms": "Larvae tunnel throughout the corm/rhizome, riddling it with blackened galleries; roots decay; plants are easily blown over by mild breeze.",
+        "cause": "Weevil active in moist soil and decaying plant debris around the corm.",
+        "organic_treatment": ["Sucker paring (trimming outer tissue) and pralinage: dip sucker in mud slurry mixed with neem cake powder", "Apply Beauveria bassiana to sucker basin"],
+        "chemical_treatment_type": ["Carbofuran 3% G @ 20g per sucker placed in planting pit", "Drenching with Fipronil 5% SC @ 2 ml/L"],
+        "prevention": ["Select healthy suckers free from black tunnel marks", "Hot water treatment of suckers at 50°C for 20 minutes before planting"]
+      }
+    ]
+  },
+  {
+    "name": "Papaya",
+    "local_names": {
+      "hi": "पपीता (Papita)",
+      "ta": "பப்பாளி (Pappali)",
+      "te": "బొప్పాయి (Boppayi)",
+      "kn": "ಪಪ್ಪಾಯಿ (Pappayi)",
+      "ml": "പപ്പായ (Pappaya)"
+    },
+    "scientific_name": "Carica papaya",
+    "category": "fruit",
+    "how_to_identify_leaf": "Large, palmately 7-9 lobed deeply cut leaves (50-70 cm wide) on long hollow petioles (up to 1 m), radiating spirally from the crown top of an unbranched soft-wood trunk.",
+    "how_to_identify_seed_or_fruit": "Large oval, oblong, or pear-shaped melon-like berry with thin green skin turning yellow-orange; orange-red soft flesh with sweet musky taste and large central cavity filled with black peppery mucilaginous seeds.",
+    "lookalikes": ["Castor leaf (Ricinus communis)", "Cassava foliage", "Wild papaya (Vasconcellea)"],
+    "season": "Planted in Monsoon (June-July) or Spring (Feb-March); fruits harvested 9-10 months later",
+    "soil": "Well-drained rich sandy loam with high organic matter; highly vulnerable to collar rot in heavy clay; pH 6.0-6.8",
+    "water": "Regular moderate irrigation; strictly cannot tolerate standing water around trunk even for a few hours (causes collar rot); drip irrigation ideal",
+    "seed_rate_and_sowing": "500 g/ha (varieties) or 100-150 g/ha (gynodioecious hybrids like Red Lady 786); Transplant 45-day seedlings at 2.0x2.0 m or 1.8x1.8 m",
+    "nutrition_per_100g": {
+      "carbs_g": "10.82",
+      "fiber_g": "1.7",
+      "protein_g": "0.47",
+      "fat_g": "0.26",
+      "calories_kcal": "43",
+      "key_vitamins_minerals": ["Papain enzyme", "Vitamin C (60.9 mg - 73% DV)", "Vitamin A (Beta-carotene)", "Folate", "Potassium", "Lycopene"]
+    },
+    "benefits": ["Papain proteolytic enzyme supports digestion and alleviates functional dyspepsia", "Exceptionally high natural vitamin C and beta-carotene content", "Carica papaya leaf extract widely researched for increasing platelet count during dengue fever"],
+    "risks_or_cautions": ["Unripe or semi-ripe green papaya contains high latex concentrations that stimulate uterine contractions; contraindicated in pregnancy", "Can provoke latex-fruit allergy cross-reactions"],
+    "medicinal_uses": ["Fresh green papaya leaf juice decoction used traditionally to support thrombocyte (platelet) recovery in dengue", "Crushed black seeds used in folk medicine for intestinal parasites"],
+    "diseases": [
+      {
+        "name": "Papaya Ringspot Virus (PRSV)",
+        "type": "viral",
+        "symptoms": "Yellow mosaic and vein clearing on leaves; intense blistering and reduction of leaf blade ('shoestring' effect); dark green oily water-soaked rings on fruit and green streaks on petiole.",
+        "cause": "Potyvirus transmitted non-persistently by various aphid species (Aphis gossypii, Myzus persicae).",
+        "organic_treatment": ["Spray 2% neem oil or 5% NSKE to deter aphids", "Rogue out infected plants immediately to reduce field inoculum"],
+        "chemical_treatment_type": ["Vector suppression: Imidacloprid 17.8% SL @ 0.3 ml/L or Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Raise seedlings under insect-proof net house", "Intercrop with barrier rows of maize, sorghum or sesbania", "Avoid planting near cucurbits (squash, cucumber, watermelon) which host the virus"]
+      },
+      {
+        "name": "Stem / Foot Rot / Damping Off (Pythium aphanidermatum / Phytophthora palmivora)",
+        "type": "fungal",
+        "symptoms": "Water-soaked dark lesions on trunk base near soil line; stem softens and rots spongy-brown; tree easily topples over during wind.",
+        "cause": "Soil-borne oomycete pathogen exploding in poorly drained waterlogged soils during heavy monsoon rains.",
+        "organic_treatment": ["Scrape rotten bark and apply Bordeaux paste (1:1:10) to the stem base", "Soil application of Trichoderma viride @ 50g/tree with FYM"],
+        "chemical_treatment_type": ["Soil drenching around stem with Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L", "Copper Oxychloride @ 3 g/L drench"],
+        "prevention": ["Plant on raised mounds (30-40 cm high)", "Ensure slope drainage prevents water contact with trunk base", "Never allow irrigation water to touch the stem bark"]
+      },
+      {
+        "name": "Papaya Leaf Curl Virus (PaLCuV)",
+        "type": "viral",
+        "symptoms": "Severe downward rolling and curling of leaves; thickened leathery veins with vein enations (ruffled crests); severely stunted plants with deformed fruits.",
+        "cause": "Begomovirus transmitted by whiteflies (Bemisia tabaci).",
+        "organic_treatment": ["Yellow sticky traps @ 30/ha", "Neem formulation (10,000 ppm) @ 2 ml/L spray every 10 days"],
+        "chemical_treatment_type": ["Diafenthiuron 50% WP @ 1.2 g/L", "Spiromesifen 22.9% SC @ 1 ml/L"],
+        "prevention": ["Destroy solanaceous weed hosts (Solanum nigrum, Datura) in surrounding borders", "Rogue out early diseased trees"]
+      },
+      {
+        "name": "Anthracnose (Colletotrichum gloeosporioides)",
+        "type": "fungal",
+        "symptoms": "Small round water-soaked spots on ripening fruits expanding into circular sunken dark lesions with pinkish spore masses; internal pulp decays.",
+        "cause": "Fungus latent in fruit tissues from flowering, developing rapidly as sugars increase during ripening.",
+        "organic_treatment": ["Hot water dip of harvested fruits at 48°C for 20 minutes", "Spray Copper Hydroxide @ 2 g/L on developing fruits"],
+        "chemical_treatment_type": ["Azoxystrobin 23% SC @ 1 ml/L", "Carbendazim 50% WP @ 1 g/L", "Difenoconazole 25% EC @ 0.5 ml/L"],
+        "prevention": ["Spray fruit bunches periodically during rainy periods", "Handle fruits with clean gloves during harvest to prevent skin abrasions"]
+      },
+      {
+        "name": "Papaya Mealybug (Paracoccus marginatus)",
+        "type": "pest",
+        "symptoms": "Clusters of small, soft, oval insects covered with white waxy mealy powder on undersides of leaves, fruits and stems; crinkled deformed leaves covered with black sooty mold.",
+        "cause": "Invasive pseudococcid bug multiplying rapidly in warm dry weather; attended by ants.",
+        "organic_treatment": ["Release classical biological control parasitoid Acerophagus papayae (dramatically successful across India)", "Spray Neem oil 2% mixed with 0.5% liquid soap to strip wax", "Spray Verticillium lecanii @ 5 g/L"],
+        "chemical_treatment_type": ["Profenofos 50% EC @ 2 ml/L", "Buprofezin 25% SC @ 1.5 ml/L", "Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Destroy ant nests around tree base", "Prune and burn heavily encrusted leaves", "Avoid broad spectrum sprays that kill Acerophagus parasitoids"]
+      }
+    ]
+  },
+  {
+    "name": "Guava",
+    "local_names": {
+      "hi": "अमरूद (Amrood)",
+      "ta": "கொய்யாப்பழம் (Koyyapazham)",
+      "te": "జామపండు (Jaamapandu)",
+      "kn": "ಸೀಬೆಹಣ್ಣು (Seebehannu)",
+      "ml": "പേരയ്ക്ക (Perakka)"
+    },
+    "scientific_name": "Psidium guajava",
+    "category": "fruit",
+    "how_to_identify_leaf": "Opposite, simple, elliptic to oblong leaves (7-15 cm) with prominent parallel veins depressed on upper surface and raised beneath; short petiole, aromatic aroma when crushed.",
+    "how_to_identify_seed_or_fruit": "Round, oval, or pyriform fleshy berry crowned by persistent calyx lobes; thin pale green to yellowish skin; white, pink, or red aromatic flesh studded with numerous small hard bony seeds.",
+    "lookalikes": ["Jamun (Syzygium cumini)", "Eucalyptus leaves (in seedling stage)", "Feijoa (Pineapple guava)"],
+    "season": "Bahar treatment determines crop: Mrig Bahar (harvest in winter: Nov-Jan, highest quality); Ambe Bahar (harvest in rainy season: July-Aug)",
+    "soil": "Highly adaptable; grows from sandy to clay soils; tolerates pH from 5.5 to 8.5; tolerates moderate salinity and alkalinity",
+    "water": "Rainfed in high rainfall regions; 6-8 irrigations during fruit growth; withhold irrigation for 2 months to induce flowering (Bahar regulation)",
+    "seed_rate_and_sowing": "Propagated by air-layering (guthi) or wedge grafting; Spacing: 6x6 m (traditional) or 3x3 m (Meadow orchard system); Planting in July-August",
+    "nutrition_per_100g": {
+      "carbs_g": "14.32",
+      "fiber_g": "5.4",
+      "protein_g": "2.55",
+      "fat_g": "0.95",
+      "calories_kcal": "68",
+      "key_vitamins_minerals": ["Vitamin C (228.3 mg - over 300% DV)", "Lycopene (in pink varieties)", "Potassium", "Folate", "Vitamin A", "Copper"]
+    },
+    "benefits": ["Unrivaled natural vitamin C density (over 4 times higher than orange)", "High soluble dietary pectin fiber supports glycemic control and healthy digestion", "Rich in lycopene and polyphenols"],
+    "risks_or_cautions": ["Hard seeds may pose discomfort for diverticulosis sufferers; chew thoroughly", "Overeating unripe guava may cause constipation due to high astringent tannin content"],
+    "medicinal_uses": ["Tender guava leaf decoction widely used as antimicrobial mouth rinse for gingivitis and oral ulcers", "Leaf tea used in traditional medicine for acute watery diarrhea"],
+    "diseases": [
+      {
+        "name": "Guava Wilt (Fusarium oxysporum f. sp. psidii)",
+        "type": "fungal",
+        "symptoms": "Yellowing and wilting of leaves starting on one branch and spreading to whole tree; leaves dry up and hang; internal xylem vessels turn dark brownish-purple.",
+        "cause": "Soil-borne vascular fungus favored by alkaline soils (pH > 7.5) and high summer heat; enter roots damaged by nematodes.",
+        "organic_treatment": ["Soil application of Trichoderma viride @ 50g mixed with 5 kg neem cake per tree basin", "Maintain soil pH around 6.5 with organic amendments"],
+        "chemical_treatment_type": ["Drenching tree basin with Carbendazim 50% WP @ 2 g/L or Propiconazole 25% EC @ 1 ml/L"],
+        "prevention": ["Graft scions onto wilt-resistant rootstock Psidium friedrichsthalianum (Chinese guava)", "Avoid cultivating roots during weeding"]
+      },
+      {
+        "name": "Fruit Fly (Bactrocera correcta / B. dorsalis)",
+        "type": "pest",
+        "symptoms": "Oviposition puncture marks with rotting and brown discoloration; internal pulp riddled with wriggling white larvae; premature fruit drop.",
+        "cause": "Tephritid fly laying eggs under fruit skin, rampant during monsoon (Ambe Bahar crop).",
+        "organic_treatment": ["Bagging individual fruits with non-woven paper/polythene bags when marble sized (100% protection)", "Install Methyl Eugenol pheromone traps @ 15/ha"],
+        "chemical_treatment_type": ["Bait spray: Protein hydrolysate / Jaggery 100g + Malathion 50% EC 10ml in 10L water"],
+        "prevention": ["Harvest fruits at firm mature-green stage before ripening on tree", "Deep ploughing in tree basins to expose puparia"]
+      },
+      {
+        "name": "Anthracnose / Dieback (Colletotrichum gloeosporioides)",
+        "type": "fungal",
+        "symptoms": "Shoots die back from top downward; small pin-point circular dark brown sunken spots on fruit that enlarge and coalesce into dark scabby patches.",
+        "cause": "Fungus spreading through rain splashes in warm humid weather during July-September.",
+        "organic_treatment": ["Prune dead twigs 5 cm below infected area and apply copper paste", "Bordeaux mixture 1% spray"],
+        "chemical_treatment_type": ["Copper Oxychloride @ 3 g/L", "Difenoconazole 25% EC @ 0.5 ml/L", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Prune internal dense canopy for ventilation", "Disinfect pruning secateurs"]
+      },
+      {
+        "name": "Canker (Pestalotiopsis psidii)",
+        "type": "fungal",
+        "symptoms": "Small brown angular necrotic spots on leaves; on green fruits, circular raised corky pustules with ruptured epidermis forming characteristic crater-like cankers.",
+        "cause": "Fungus entering through fruit abrasions, insect punctures, and hail wounds.",
+        "organic_treatment": ["Spray Copper Hydroxide @ 2 g/L", "Neem seed kernel extract 5%"],
+        "chemical_treatment_type": ["Chlorothalonil 75% WP @ 2 g/L", "Carbendazim 50% WP @ 1 g/L"],
+        "prevention": ["Protect fruits from mechanical wind abrasions by planting windbreaks", "Control insect pests that puncture fruit rind"]
+      },
+      {
+        "name": "Tea Mosquito Bug (Helopeltis antonii)",
+        "type": "pest",
+        "symptoms": "Reddish-brown necrotic spot punctures on tender shoots and fruit rind; fruits become scabby, deformed, hard, and stunted with black corky spots.",
+        "cause": "Mirid bug nymph and adult sucking sap from young shoots and developing fruitlets.",
+        "organic_treatment": ["Spray 3% neem oil with soap", "Conserve predatory spiders and reduviid bugs"],
+        "chemical_treatment_type": ["Thiamethoxam 25% WG @ 0.3 g/L", "Clothianidin 50% WDG @ 0.2 g/L", "Profenofos 50% EC @ 1.5 ml/L"],
+        "prevention": ["Prune canopy to avoid damp dense microclimates", "Spray at flushing and fruitlet setting stages"]
+      }
+    ]
+  },
+  {
+    "name": "Neem",
+    "local_names": {
+      "hi": "नीम (Neem)",
+      "ta": "வேப்பமரம் (Veppamaram)",
+      "te": "వేప చెట్టు (Vepa Chettu)",
+      "kn": "ಬೇವಿನ ಮರ (Bevina Mara)",
+      "ml": "ആര്യവേപ്പ് (Aryaveppu)"
+    },
+    "scientific_name": "Azadirachta indica",
+    "category": "medicinal",
+    "how_to_identify_leaf": "Imparipinnate compound leaves (20-40 cm) with 20-30 distinctly asymmetric, curved, sickle-shaped lanceolate leaflets with sharply serrated (toothed) margins and bitter taste.",
+    "how_to_identify_seed_or_fruit": "Smooth oval or ellipsoid drupe (1.5-2.0 cm), green turning bright greenish-yellow when ripe; thin sweetish pulp enclosing a white hard bony shell with an oily kernel.",
+    "lookalikes": ["Mahanimb / Bakayan (Melia azedarach - bipinnate leaves, round drupes, toxic seeds)", "Curry leaf (Murraya koenigii)", "Ailanthus excelsa (Mahanukh)"],
+    "season": "Flowering in March-May; Fruit maturity in June-August during monsoon",
+    "soil": "Thrives on dry, stony, shallow, alkaline soils; deep taproot system; cannot tolerate freezing temperatures or waterlogged soils",
+    "water": "Highly drought-hardy; survives on 150-500 mm annual rainfall; virtually no supplemental irrigation needed once established",
+    "seed_rate_and_sowing": "Propagated via fresh seeds (viability lost within 2-3 weeks); sow in nursery in July; Spacing: 8x8 m or 10x10 m for plantation/agroforestry",
+    "nutrition_per_100g": {
+      "carbs_g": "15.0",
+      "fiber_g": "6.2",
+      "protein_g": "7.1",
+      "fat_g": "1.0",
+      "calories_kcal": "95",
+      "key_vitamins_minerals": ["Azadirachtin", "Nimbin", "Nimbidin", "Calcium", "Phosphorus", "Iron", "Vitamin C"]
+    },
+    "benefits": ["Unrivaled natural botanical pesticide and insect repellent (azadirachtin)", "Potent antifungal, antibacterial, and antiviral properties across agriculture and health", "Neem cake enriches soil nitrogen retention by inhibiting nitrification"],
+    "risks_or_cautions": ["Neem seed oil is toxic for internal consumption in infants and children (can cause Reye-like syndrome)", "Excessive internal consumption can impair fertility"],
+    "medicinal_uses": ["Leaf paste used across Ayurveda for dermatological ailments (eczema, ringworm, acne, psoriasis)", "Fresh tender twigs used traditionally as antibacterial datun toothbrushes"],
+    "diseases": [
+      {
+        "name": "Tea Mosquito Bug / Blight (Helopeltis antonii)",
+        "type": "pest",
+        "symptoms": "Black sunken necrotic spots on young tender shoots and leaves; shoot tip blight with drying and dieback of young flush.",
+        "cause": "Mirid bug sucking sap from tender growing tips during post-monsoon flush.",
+        "organic_treatment": ["Foliar spray of 5% NSKE (ironically, neem extract repels its own pests!)", "Spray Beauveria bassiana @ 5 g/L"],
+        "chemical_treatment_type": ["Thiamethoxam 25% WG @ 0.3 g/L", "Imidacloprid 17.8% SL @ 0.3 ml/L"],
+        "prevention": ["Prune and remove severely affected shoots before spring"]
+      },
+      {
+        "name": "Powdery Mildew (Oidium azadirachtae)",
+        "type": "fungal",
+        "symptoms": "White talcum-like powdery patches on upper leaf surfaces and young shoots causing leaf distortion, yellowing, and premature leaf drop.",
+        "cause": "Ectophytic fungus thriving in cool dry weather with high morning humidity in Dec-Feb.",
+        "organic_treatment": ["Spray Wettable Sulfur 80% WDG @ 3 g/L", "Foliar spray of cow urine (10%)"],
+        "chemical_treatment_type": ["Hexaconazole 5% EC @ 1 ml/L", "Dinocap 48% EC @ 1 ml/L"],
+        "prevention": ["Prune dense branches to allow light penetration into tree center"]
+      },
+      {
+        "name": "Neem Scale / White Scale (Aonidiella orientalis / Parlatoria crypta)",
+        "type": "pest",
+        "symptoms": "Crusts of tiny circular yellow or white waxy scale insects on stems, petioles and leaves; leaves turn yellow and drop; dieback of branches.",
+        "cause": "Diaspidid scale insect sucking sap under protective waxy armour.",
+        "organic_treatment": ["Prune heavily encrusted twigs", "Spray 2% horticultural mineral oil with soap to suffocate scales", "Conserve Chilocorus nigrita predatory ladybird beetles"],
+        "chemical_treatment_type": ["Buprofezin 25% SC @ 1.5 ml/L", "Profenofos 50% EC @ 2 ml/L"],
+        "prevention": ["Avoid planting neem in overcrowded monocultures in low-sunlight locations"]
+      },
+      {
+        "name": "Leaf Spot / Anthracnose (Colletotrichum gloeosporioides / Pseudocercospora)",
+        "type": "fungal",
+        "symptoms": "Circular to irregular dark brown spots with darker margins on leaflets; coalescing into extensive necrotic blighted areas during monsoon.",
+        "cause": "Fungal pathogen active during heavy monsoon cloud cover and constant leaf wetness.",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Copper Oxychloride @ 3 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Carbendazim 50% WP @ 1 g/L"],
+        "prevention": ["Ensure wide spacing between trees", "Collect and burn fallen diseased leaves"]
+      },
+      {
+        "name": "Damping Off in Nursery (Rhizoctonia solani / Pythium)",
+        "type": "fungal",
+        "symptoms": "Seedling collar rot at soil line causing newly emerged seedlings to topple and rot rapidly in nursery polybags.",
+        "cause": "Soil-borne fungi favored by overwatering and dense nursery shading.",
+        "organic_treatment": ["Trichoderma harzianum @ 10 g/kg potting soil mix", "Drench with Pseudomonas fluorescens @ 10 g/L"],
+        "chemical_treatment_type": ["Copper Oxychloride 50% WP drench @ 3 g/L"],
+        "prevention": ["Use sand-rich porous potting mix", "Avoid excess shade and overwatering in seedling beds"]
+      }
+    ]
+  },
+  {
+    "name": "Tulsi",
+    "local_names": {
+      "hi": "तुलसी (Tulsi)",
+      "ta": "துளசி (Thulasi)",
+      "te": "తులసి (Tulasi)",
+      "kn": "ತುಳಸಿ (Tulasi)",
+      "ml": "തുളസി (Thulasi)"
+    },
+    "scientific_name": "Ocimum tenuiflorum / Ocimum sanctum",
+    "category": "medicinal",
+    "how_to_identify_leaf": "Simple, opposite decussate ovate leaves (2-5 cm) with serrated margins, acute apex, covered with fine glandular hairs that exude a powerful sweet clove-like spicy aroma when rubbed.",
+    "how_to_identify_seed_or_fruit": "Terminal spicate racemes with whorls of tiny purplish-pink or white bilabiate flowers; four tiny smooth nutlet seeds enclosed in persistent papery calyx.",
+    "lookalikes": ["Sweet Basil (Ocimum basilicum - larger, smoother leaves, anise aroma)", "Mint / Pudina (Mentha arvensis - spreading runners)", "Ajwain leaf (Coleus amboinicus)"],
+    "season": "Planted year-round; thrives in warm tropical summer and monsoon; sensitive to extreme winter frost",
+    "soil": "Fertile, well-drained loamy soil with good organic content; pH 6.0-7.5; water stagnation causes root rot within days",
+    "water": "Moderate moisture; water when top inch of soil is dry; avoid wetting foliage in evening",
+    "seed_rate_and_sowing": "Direct sowing: 1 kg/ha; Nursery transplanting: 250-300 g/ha; Spacing: 45x45 cm; Seeds are tiny, sow at 0.5 cm depth",
+    "nutrition_per_100g": {
+      "carbs_g": "2.65",
+      "fiber_g": "1.6",
+      "protein_g": "3.15",
+      "fat_g": "0.64",
+      "calories_kcal": "23",
+      "key_vitamins_minerals": ["Eugenol", "Ursolic acid", "Rosmarinic acid", "Vitamin K", "Vitamin A", "Vitamin C", "Calcium", "Iron"]
+    },
+    "benefits": ["Premier adaptogen supporting balanced cortisol response and psychological stress resilience", "Eugenol provides powerful antimicrobial and bronchodilator activity", "Enhances cellular immune defense"],
+    "risks_or_cautions": ["May lower blood sugar and thin blood; exercise caution before scheduled surgeries or with anti-coagulant medications", "Excessive intake of concentrated oil not recommended in pregnancy"],
+    "medicinal_uses": ["Fresh leaf decoction with black pepper and ginger taken for viral fever, bronchitis, and upper respiratory catarrh", "Crushed leaves applied topically to calm insect stings and ringworm"],
+    "diseases": [
+      {
+        "name": "Powdery Mildew (Oidium spp.)",
+        "type": "fungal",
+        "symptoms": "White powdery fungal growth spreading over both leaf surfaces; leaves turn chlorotic, curl, and wither prematurely.",
+        "cause": "Airborne fungus favored by moderate temperatures (20-25°C) and shade with high humidity.",
+        "organic_treatment": ["Foliar spray of baking soda (sodium bicarbonate) 5 g/L with few drops of liquid soap", "Spray diluted milk (1 part milk : 9 parts water) in morning sun", "Wettable sulfur @ 2 g/L"],
+        "chemical_treatment_type": ["Avoid synthetic systemic chemicals on medicinal tulsi; use Azoxystrobin @ 0.5 ml/L only if non-consumable crop"],
+        "prevention": ["Place plants in full sun (at least 6 hours daily)", "Avoid overhead watering; water at base only"]
+      },
+      {
+        "name": "Root Rot / Collar Rot (Rhizoctonia solani / Pythium)",
+        "type": "fungal",
+        "symptoms": "Yellowing and wilting of whole plant; stem base at soil line turns dark brown, soft and water-soaked; root system completely decays.",
+        "cause": "Excess watering and poorly drained potting soil/beds during monsoon.",
+        "organic_treatment": ["Drench root zone with Trichoderma harzianum @ 5 g/L", "Incorporate neem cake into soil", "Withhold irrigation until soil dries"],
+        "chemical_treatment_type": ["Copper Oxychloride @ 2.5 g/L drench"],
+        "prevention": ["Use sand and perlite mixed potting soil with drainage holes", "Never allow water to stand in saucers"]
+      },
+      {
+        "name": "Aphids / Tulsi Lace Bug (Monanthia globulifera)",
+        "type": "pest",
+        "symptoms": "Tiny black and white lace-winged bugs on leaf undersides; leaves develop fine white stipples, turn yellow, and dry; black tar-like frass on leaf backs.",
+        "cause": "Tingid bug sucking sap from leaf undersides in warm weather.",
+        "organic_treatment": ["Spray cold water jet on undersides of leaves", "Spray 2% neem oil mixed with organic soap", "Spray garlic-chilli extract solution"],
+        "chemical_treatment_type": ["Avoid toxic chemical sprays on home tulsi; use potassium salts of fatty acids (insecticidal soap)"],
+        "prevention": ["Prune overcrowded shoots regularly to promote air flow", "Encourage ladybird beetles"]
+      },
+      {
+        "name": "Leaf Spot (Cercospora ocimicola / Alternaria)",
+        "type": "fungal",
+        "symptoms": "Small, dark brown to black circular necrotic spots on leaves with pale yellow halos; leaves turn yellow and drop off.",
+        "cause": "Fungal spores spread by rain splashes and overhead watering.",
+        "organic_treatment": ["Spray sour buttermilk solution (5%)", "Spray Pseudomonas fluorescens @ 5 g/L", "Bordeaux mixture 0.5%"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2 g/L (observe 14-day harvest wait)"],
+        "prevention": ["Pluck and destroy spotted leaves immediately", "Water early in morning so leaves dry quickly in sun"]
+      },
+      {
+        "name": "Iron Deficiency (Nutrient)",
+        "type": "deficiency",
+        "symptoms": "Interveinal chlorosis on youngest leaves; veins remain sharply dark green while leaf tissue between veins turns creamy yellow or white.",
+        "cause": "Alkaline soil/water (pH > 7.5) rendering iron insoluble; overwatering causing root hypoxia.",
+        "organic_treatment": ["Apply composted vermicompost enriched with iron sulfate", "Mulch with acidic pine needles or peat"],
+        "chemical_treatment_type": ["Foliar spray of Chelated Iron (Fe-EDTA 12%) @ 1.0 g/L"],
+        "prevention": ["Maintain potting soil pH between 6.0 and 6.8", "Avoid hard water deposits in pots"]
+      }
+    ]
+  },
+  {
+    "name": "Aloe vera",
+    "local_names": {
+      "hi": "घृतकुमारी / एलोवेरा (Ghritkumari)",
+      "ta": "கற்றாழை (Kattralai)",
+      "te": "కలబంద (Kalabanda)",
+      "kn": "ಲೋಳೆಸರ (Lolesara)",
+      "ml": "കറ്റാർവാഴ (Kattarvazha)"
+    },
+    "scientific_name": "Aloe barbadensis Miller",
+    "category": "medicinal",
+    "how_to_identify_leaf": "Thick, fleshy, succulent lanceolate rosettes (30-50 cm long, 5-8 cm wide) with sharp pale triangular teeth on margins; smooth glaucous grayish-green skin; interior filled with clear viscous gelatinous mucilage.",
+    "how_to_identify_seed_or_fruit": "Hanging tubular yellow or orange-red flowers produced on tall upright terminal scapes (up to 90 cm); triangular capsules with winged seeds; rarely sets viable seed under cultivation.",
+    "lookalikes": ["Agave americana (century plant - fibrous, toxic sap, huge sharp end spine)", "Haworthia", "Aloe ferox"],
+    "season": "Planted year-round; best established during monsoon (July-August)",
+    "soil": "Extremely well-drained sandy or gravelly loam; cannot tolerate any standing water; thrives in pH 6.5-8.0; highly drought and salt tolerant",
+    "water": "Very low water requirement; water only when soil is completely bone dry; overwatering is the #1 cause of plant death",
+    "seed_rate_and_sowing": "Propagated exclusively by vegetative root suckers (pups); Population: 25,000 suckers/ha; Spacing: 60x60 cm or 60x45 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "0.75",
+      "fiber_g": "0.2",
+      "protein_g": "0.04",
+      "fat_g": "0.02",
+      "calories_kcal": "4",
+      "key_vitamins_minerals": ["Acemannan (polysaccharide)", "Aloin (anthraquinone in rind)", "Vitamin E", "Vitamin C", "Zinc", "Choline"]
+    },
+    "benefits": ["Acemannan accelerates cutaneous wound healing, collagen synthesis and thermal burn recovery", "Topical anti-inflammatory, soothing and moisturizing agent for skin and hair", "Supports gastrointestinal mucosal integrity"],
+    "risks_or_cautions": ["Yellow latex directly beneath the rind contains aloin (anthraquinone) which is a harsh cathartic laxative causing abdominal cramps; discard yellow latex before consuming clear gel", "Avoid ingestion during pregnancy"],
+    "medicinal_uses": ["Fresh inner clear gel applied directly to minor sunburns, thermal burns, cuts, and irritated skin", "Processed clear gel taken orally in traditional medicine to soothe peptic ulcers and acid reflux"],
+    "diseases": [
+      {
+        "name": "Basal Stem and Root Rot (Pythium ultimum / Phytophthora nicotianae)",
+        "type": "fungal",
+        "symptoms": "Leaf bases near soil line turn soft, water-soaked, black and mushy; outer leaves collapse and detach easily; foul odor.",
+        "cause": "Overwatering and poorly drained clay soils; fungi thrive in wet, poorly aerated root environments.",
+        "organic_treatment": ["Withhold water completely; unpot, trim off black rotten roots, dust with cinnamon powder/charcoal, air-dry for 3 days and repot in dry sandy soil", "Trichoderma viride drench"],
+        "chemical_treatment_type": ["Drenching with Metalaxyl 35% WS @ 2 g/L or Copper Oxychloride @ 3 g/L"],
+        "prevention": ["Use porous succulent potting mix (50% coarse sand/perlite, 50% soil)", "Never let water pool in central leaf rosette"]
+      },
+      {
+        "name": "Aloe Rust (Uromyces aloes)",
+        "type": "fungal",
+        "symptoms": "Small, raised, round, dark brown to black circular lesions surrounded by yellow halos on both leaf surfaces; lesions harden into black corky spots.",
+        "cause": "Obligate fungal pathogen favoured by cool damp air and overhead irrigation.",
+        "organic_treatment": ["Prune and destroy severely spotted outer leaves", "Spray 3% neem oil or wettable sulfur @ 2 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Propiconazole 25% EC @ 1 ml/L"],
+        "prevention": ["Water at soil level without splashing leaves", "Place in full bright sun with good ventilation"]
+      },
+      {
+        "name": "Anthracnose / Leaf Spot (Colletotrichum gloeosporioides)",
+        "type": "fungal",
+        "symptoms": "Round, sunken, dark brown to black spots on leaves; spots dry out, crack, and turn leathery; ruins aesthetic and gel quality.",
+        "cause": "Fungal spores spread by rain and overhead water in warm humid conditions.",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Pseudomonas fluorescens foliar spray @ 5 g/L"],
+        "chemical_treatment_type": ["Carbendazim 50% WP @ 1 g/L", "Chlorothalonil 75% WP @ 2 g/L"],
+        "prevention": ["Avoid overhead irrigation", "Ensure wide spacing (60 cm) between plants"]
+      },
+      {
+        "name": "Aloe Mite / Gall Mite (Aceria aloinis)",
+        "type": "pest",
+        "symptoms": "Bizarre, grotesque, cauliflower-like tumorous warty outgrowths (galls) on flower stems and leaves ('aloe cancer'); stunting of plant.",
+        "cause": "Microscopic eriophyid mite injecting toxins while feeding.",
+        "organic_treatment": ["Cut off the entire gall tissue with a sterile knife and destroy by burning; treat wound with sulfur paste", "Isolate infested plants immediately"],
+        "chemical_treatment_type": ["Acaricide spray: Spiromesifen 22.9% SC @ 1 ml/L", "Dicofol 18.5% EC @ 2 ml/L"],
+        "prevention": ["Never propagate from mite-infested parent plants; quarantine new accessions"]
+      },
+      {
+        "name": "Mealybugs (Pseudococcus spp.)",
+        "type": "pest",
+        "symptoms": "White cottony waxy clusters deep in the leaf axils and crevices between leaves; leaves turn yellow, weaken, and develop sooty mold.",
+        "cause": "Sap-sucking insects thriving in dry sheltered leaf bases.",
+        "organic_treatment": ["Dab individual clusters with cotton swab dipped in 70% isopropyl alcohol", "Spray 2% neem oil mixed with soap spray directed deep into leaf axils"],
+        "chemical_treatment_type": ["Imidacloprid 17.8% SL @ 0.3 ml/L drench around root zone"],
+        "prevention": ["Inspect crevices of new suckers before transplanting"]
+      }
+    ]
+  },
+  {
+    "name": "Turmeric",
+    "local_names": {
+      "hi": "हल्दी (Haldi)",
+      "ta": "மஞ்சள் (Manjal)",
+      "te": "పసుపు (Pasupu)",
+      "kn": "ಅರಿಶಿನ (Arishina)",
+      "ml": "മഞ്ഞൾ (Manjal)"
+    },
+    "scientific_name": "Curcuma longa",
+    "category": "spice",
+    "how_to_identify_leaf": "Large, oblong-lanceolate smooth leaves (70-100 cm long, 15-20 cm wide) emerging directly from underground rhizome on long petioles; prominent parallel veins; aromatic ginger-like scent when bruised.",
+    "how_to_identify_seed_or_fruit": "Fleshy branched underground tuberous rhizome ('fingers' and 'mother bulbs'); rough brownish skin, bright golden-orange internal flesh; flowers produced on central spike with greenish-pink bracts; rarely sets seed.",
+    "lookalikes": ["Wild Turmeric / Kasturi Manjal (Curcuma aromatica)", "Ginger (Zingiber officinale - much narrower leaves)", "Arrowroot (Maranta arundinacea)"],
+    "season": "Planted in May-June (Kharif); harvested in Jan-March (8-9 month crop duration)",
+    "soil": "Well-drained rich loamy or alluvial soil high in organic matter; pH 5.5-7.5; highly sensitive to waterlogging which causes rhizome rot",
+    "water": "1500-2000 mm; requires 15-20 irrigations in plains; critical during rhizome development stage; withhold water 15-20 days before harvest",
+    "seed_rate_and_sowing": "Whole or split healthy rhizome fingers (20-30g): 2000-2500 kg/ha; Planted on ridges or raised beds; Spacing: 30x20 cm; Depth: 4-5 cm; Mulching immediately with green leaves (15 t/ha) is mandatory",
+    "nutrition_per_100g": {
+      "carbs_g": "64.93",
+      "fiber_g": "21.1",
+      "protein_g": "7.83",
+      "fat_g": "9.88",
+      "calories_kcal": "354",
+      "key_vitamins_minerals": ["Curcumin (2-6%)", "Iron (41.4 mg - over 200% DV)", "Manganese", "Potassium", "Vitamin B6", "Vitamin C"]
+    },
+    "benefits": ["Curcumin provides clinically demonstrated antioxidant, anti-inflammatory, and hepatoprotective properties", "Extremely dense dietary source of iron and trace minerals", "Natural food preservative and golden colorant"],
+    "risks_or_cautions": ["High intake of curcumin supplements contraindicated for individuals with gallstones or bile duct obstruction", "May enhance effects of blood thinners"],
+    "medicinal_uses": ["Turmeric milk (Haldi doodh) consumed traditionally across India for acute inflammation, wounds, and colds", "Topical antiseptic paste applied to cuts, burns, and post-partum healing"],
+    "diseases": [
+      {
+        "name": "Rhizome Rot / Soft Rot (Pythium aphanidermatum)",
+        "type": "fungal",
+        "symptoms": "Collar region becomes water-soaked and soft; lower leaves yellow and dry from margins inward; pseudostem easily pulls out from rhizome; rhizome rots into foul-smelling brown mush.",
+        "cause": "Soil-borne oomycete favored by waterlogging, heavy soils, and continuous rainy spells (28-30°C).",
+        "organic_treatment": ["Rhizome seed treatment with Trichoderma viride @ 10 g/kg", "Soil application of Trichoderma enriched neem cake (2 tonnes/ha)", "Drench with Pseudomonas fluorescens @ 10 g/L"],
+        "chemical_treatment_type": ["Rhizome dip and soil drench with Metalaxyl-M 4% + Mancozeb 64% WP @ 2.5 g/L", "Copper Oxychloride @ 3 g/L"],
+        "prevention": ["Always plant on raised beds (15-20 cm high) with deep drainage channels", "Select disease-free seed rhizomes from healthy plots", "Crop rotation with non-hosts like maize or paddy"]
+      },
+      {
+        "name": "Leaf Blotch (Taphrina maculans)",
+        "type": "fungal",
+        "symptoms": "Numerous small, circular or oval yellow-brown spots (1-2 mm) appearing in clusters on upper leaf surface, coalescing into large dirty-yellow patches.",
+        "cause": "Airborne fungal ascospores active in cool humid conditions (20-25°C).",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Foliar spray of 5% NSKE"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Carbendazim 50% WP @ 1 g/L", "Propiconazole 25% EC @ 1 ml/L"],
+        "prevention": ["Collect and burn diseased foliage after harvest", "Avoid dense shade in intercropped orchards"]
+      },
+      {
+        "name": "Leaf Spot (Colletotrichum capsici)",
+        "type": "fungal",
+        "symptoms": "Large, elliptical or oblong brown spots with greyish-white centers and dark brown margins; central area develops concentric rings of black dots (acervuli).",
+        "cause": "Fungus favored by warm, rainy, overcast weather in August-September.",
+        "organic_treatment": ["Spray Trichoderma harzianum @ 5 g/L", "Spray fresh cow urine solution (10%)"],
+        "chemical_treatment_type": ["Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Spray at first onset of spots during monsoon", "Follow crop rotation"]
+      },
+      {
+        "name": "Shoot Borer (Conogethes punctiferalis)",
+        "type": "pest",
+        "symptoms": "Central shoots turn yellow and dry up ('dead heart'); bore holes plugged with dark extruded frass visible on the pseudostem.",
+        "cause": "Crambid moth caterpillar boring into pseudostem to feed on internal vascular core.",
+        "organic_treatment": ["Prune and destroy bored pseudostems containing larvae", "Spray Bacillus thuringiensis (Bt) @ 2 g/L", "Spray 3% neem oil @ 3 ml/L"],
+        "chemical_treatment_type": ["Chlorantraniliprole 18.5% SC @ 0.3 ml/L", "Spinetoram 11.7% SC @ 0.8 ml/L"],
+        "prevention": ["Monitor for adult moths in August-October", "Light traps to attract adult moths"]
+      },
+      {
+        "name": "Turmeric Thrips (Panchaetothrips indicus)",
+        "type": "pest",
+        "symptoms": "Leaves roll up from margins; yellowing and gradual drying of leaf tips; silvery streaks on leaf surface.",
+        "cause": "Thrips active during dry spells following monsoon.",
+        "organic_treatment": ["Spray neem oil 1500 ppm @ 3 ml/L with soap", "Blue sticky traps @ 20/ha"],
+        "chemical_treatment_type": ["Fipronil 5% SC @ 1.5 ml/L", "Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Maintain optimum soil moisture; avoid water stress during dry spells"]
+      }
+    ]
+  },
+  {
+    "name": "Ginger",
+    "local_names": {
+      "hi": "अदरक (Adrak)",
+      "ta": "இஞ்சி (Inji)",
+      "te": "అల్లం (Allam)",
+      "kn": "ಶುಂಠಿ (Shunti)",
+      "ml": "ഇഞ്ചി (Inchi)"
+    },
+    "scientific_name": "Zingiber officinale",
+    "category": "spice",
+    "how_to_identify_leaf": "Slender, reed-like pseudostem bearing alternate, narrow, linear-lanceolate smooth leaves (15-20 cm long, 2 cm wide) with sheathing bases; spicy pungent aromatic fragrance when crushed.",
+    "how_to_identify_seed_or_fruit": "Knobby, palmate, fibrous subterranean branched rhizome ('hands'); beige to pale yellowish-brown corky skin; pale yellow pungent spicy interior flesh; sterile triploid, produces no seeds.",
+    "lookalikes": ["Turmeric (Curcuma longa - much broader paddle leaves)", "Galangal (Alpinia galanga - larger, harder rhizome)", "Wild Ginger (Zingiber zerumbet)"],
+    "season": "Planted in April-May (pre-monsoon); harvested in Dec-Feb (8-9 months after planting)",
+    "soil": "Rich, loose, well-aerated sandy loam, clay loam or laterite soil rich in humus; pH 5.5-6.5; extremely sensitive to poor drainage",
+    "water": "1500-2000 mm; requires steady moisture; 4-6 leaf mulches applied during growth to retain moisture; withhold water 1 month before harvest",
+    "seed_rate_and_sowing": "Carefully selected disease-free seed rhizome pieces (20-25g with at least 1-2 good buds): 1500-1800 kg/ha; Raised beds (15 cm high, 1 m wide); Spacing: 25x20 cm; Depth: 4-5 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "17.77",
+      "fiber_g": "2.0",
+      "protein_g": "1.82",
+      "fat_g": "0.75",
+      "calories_kcal": "80",
+      "key_vitamins_minerals": ["Gingerol", "Shogaol", "Zingiberene", "Potassium", "Vitamin B6", "Magnesium", "Vitamin C"]
+    },
+    "benefits": ["Gingerol compounds exert clinically proven anti-emetic actions for nausea, motion sickness and pregnancy sickness", "Strong anti-inflammatory activity alleviates muscle soreness and osteoarthritic discomfort", "Promotes gastric emptying and reduces dyspepsia"],
+    "risks_or_cautions": ["High doses may cause mild heartburn or diarrhea in sensitive stomachs", "Mild anti-platelet aggregation; consult physician if on blood thinners"],
+    "medicinal_uses": ["Fresh ginger juice with honey used traditionally for coughs, sore throat, and digestive sluggishness", "Dry ginger powder (Sunthi) used in Ayurveda for joint stiffness and indigestion"],
+    "diseases": [
+      {
+        "name": "Soft Rot / Rhizome Rot (Pythium aphanidermatum / P. myriotylum)",
+        "type": "fungal",
+        "symptoms": "Water-soaked lesions on pseudostem collar; leaves yellow rapidly from base upward; pseudostem easily slips out of the rhizome; rhizome rots into foul-smelling soft watery decay.",
+        "cause": "Soil-borne oomycete pathogen exploding in waterlogged, poorly drained beds during heavy monsoon.",
+        "organic_treatment": ["Rhizome seed treatment with Trichoderma harzianum @ 10 g/kg", "Soil application of Trichoderma enriched neem cake (2.5 t/ha)", "Drenching with Pseudomonas fluorescens @ 10 g/L"],
+        "chemical_treatment_type": ["Seed rhizome dip and drench with Metalaxyl-M 4% + Mancozeb 64% WP @ 2.5 g/L", "Copper Oxychloride @ 3 g/L"],
+        "prevention": ["Mandatory planting on raised beds (15 cm high)", "Never plant in water-stagnant plots", "Strict selection of rot-free seed rhizomes; 3-year crop rotation"]
+      },
+      {
+        "name": "Bacterial Wilt (Ralstonia solanacearum)",
+        "type": "bacterial",
+        "symptoms": "Lower leaves curl and droop; bronze-green wilting followed by rapid yellowing; vascular rings in rhizome turn dark brown; milky white bacterial ooze flows when cut stem is dipped in clean water.",
+        "cause": "Bacterium surviving in soil and infected seed rhizomes; spreads through irrigation water.",
+        "organic_treatment": ["Soil solarization of beds for 30 days in summer", "Drench with fresh cow dung extract + Pseudomonas", "Apply bleaching powder @ 15 kg/ha before planting"],
+        "chemical_treatment_type": ["Drenching with Streptocycline 1g + Copper Oxychloride 25g in 10L water"],
+        "prevention": ["Use certified disease-free seed rhizomes", "Maintain dedicated isolation channels between beds to stop runoff"]
+      },
+      {
+        "name": "Shoot Borer (Conogethes punctiferalis)",
+        "type": "pest",
+        "symptoms": "Yellowing and drying of central shoot ('dead heart'); bore hole with frass visible on pseudostem.",
+        "cause": "Larva boring into pseudostem.",
+        "organic_treatment": ["Prune and destroy bored pseudostems", "Spray Bacillus thuringiensis @ 2 g/L", "Spray 3% neem oil"],
+        "chemical_treatment_type": ["Chlorantraniliprole 18.5% SC @ 0.3 ml/L", "Flubendiamide 39.35% SC @ 0.3 ml/L"],
+        "prevention": ["Pheromone traps in September-October", "Destroy wild host plants around borders"]
+      },
+      {
+        "name": "Leaf Spot / Phyllosticta Blight (Phyllosticta zingiberi)",
+        "type": "fungal",
+        "symptoms": "Small, oval to elongated yellowish spots with white papery centers and dark brown margins; centers often tear into shot holes.",
+        "cause": "Fungus spreading during continuous rainy spells in July-August.",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Copper Oxychloride @ 2.5 g/L"],
+        "chemical_treatment_type": ["Mancozeb 75% WP @ 2.5 g/L", "Carbendazim 50% WP @ 1 g/L"],
+        "prevention": ["Apply heavy leaf mulch (green leaf mulching) to protect foliage from soil splash", "Spray before heavy monsoon sets in"]
+      },
+      {
+        "name": "Root Knot Nematode (Meloidogyne incognita)",
+        "type": "pest",
+        "symptoms": "Galls and swellings on roots; brown water-soaked lesions on rhizome surface; leaves turn pale yellow; plants are stunted and unthrifty.",
+        "cause": "Microscopic endoparasitic roundworm creating entry wounds for soft rot and bacterial wilt.",
+        "organic_treatment": ["Apply Paecilomyces lilacinus (nematode-egg parasitic fungus) @ 10 g/m² in beds", "Apply neem cake @ 1 t/ha in soil"],
+        "chemical_treatment_type": ["Fluensulfone 2% G @ 10 kg/ha or Carbofuran 3% G in planting furrows"],
+        "prevention": ["Intercrop with marigold (Tagetes erecta)", "Hot water treatment of seed rhizomes at 48°C for 20 minutes"]
+      }
+    ]
+  },
+  {
+    "name": "Mustard",
+    "local_names": {
+      "hi": "सरसों / राई (Sarson / Rai)",
+      "ta": "கடுகு (Kadugu)",
+      "te": "ఆవాలు (Aavalu)",
+      "kn": "ಸಾಸಿವೆ (Saasive)",
+      "ml": "കടുക് (Kaduku)"
+    },
+    "scientific_name": "Brassica juncea",
+    "category": "oilseed",
+    "how_to_identify_leaf": "Lyrate-pinnatifid lower leaves with large terminal lobe and smaller lateral lobes; upper leaves lanceolate, sessile, entire; bright green with pungent wasabi-like glucosinolate taste.",
+    "how_to_identify_seed_or_fruit": "Slender, cylindrical, two-valved pods (siliqua) 3-5 cm long with a prominent conical beak; containing 10-20 tiny, spherical, smooth, reddish-brown to black pungent seeds.",
+    "lookalikes": ["Rapeseed / Toria (Brassica campestris - leaves clasp the stem)", "Wild radish (Raphanus raphanistrum)", "Wild turnip"],
+    "season": "Rabi (sown Sept-Oct; harvested Feb-March)",
+    "soil": "Light to heavy loams with good drainage; pH 6.0-7.5; thrives on conserved winter moisture in northern alluvial plains",
+    "water": "200-300 mm; 2-3 irrigations (Pre-sowing, flowering, and pod filling stages); highly drought-tolerant compared to wheat",
+    "seed_rate_and_sowing": "4-5 kg/ha; Spacing: 30x10 cm; Depth: 2-3 cm (sowing deeper than 3 cm severely impedes germination)",
+    "nutrition_per_100g": {
+      "carbs_g": "28.09",
+      "fiber_g": "12.2",
+      "protein_g": "26.08",
+      "fat_g": "36.24",
+      "calories_kcal": "508",
+      "key_vitamins_minerals": ["Allyl isothiocyanate", "Erucic acid", "Omega-3 (Alpha-linolenic acid)", "Selenium", "Magnesium", "Calcium", "Zinc"]
+    },
+    "benefits": ["Major domestic edible oil source across North and Eastern India", "High smoke point mustard oil ideal for traditional Indian cooking", "Glucosinolates and isothiocyanates exhibit potent antimicrobial action"],
+    "risks_or_cautions": ["Raw cold-pressed high-erucic acid mustard oil requires moderation", "Can cause skin blistering if applied neat under occlusion"],
+    "medicinal_uses": ["Warm mustard oil massage traditionally used for chest congestion, arthritic joints, and muscular soreness", "Warm mustard seed foot baths used for relieving winter chills"],
+    "diseases": [
+      {
+        "name": "Mustard Aphid (Lipaphis erysimi)",
+        "type": "pest",
+        "symptoms": "Devastating clusters of greenish-white tiny lice smothering inflorescence, buds, and pods; plants turn pale, wilt, and set zero seeds; sticky honeydew causes black sooty mold.",
+        "cause": "Homopteran pest multiplying exponentially in cloudy, cold, humid weather (15-20°C) during Jan-Feb.",
+        "organic_treatment": ["Foliar spray of 5% NSKE at first sight of aphid colonies", "Spray 3% neem oil or insecticidal soap solution", "Conserve Coccinella septempunctata ladybird beetles"],
+        "chemical_treatment_type": ["Dimethoate 30% EC @ 1.5 ml/L", "Oxydemeton-methyl 25% EC @ 1 ml/L", "Thiamethoxam 25% WG @ 0.3 g/L"],
+        "prevention": ["Timely early sowing (before October 15) escapes peak aphid population", "Avoid excessive nitrogen application"]
+      },
+      {
+        "name": "White Rust (Albugo candida)",
+        "type": "fungal",
+        "symptoms": "Prominent, shiny, white or creamy blister-like pustules on leaf undersides; hypertrophy and staghead malformation of floral parts causing complete sterility.",
+        "cause": "Oomycete favored by moist cool conditions (10-18°C) with heavy morning dew.",
+        "organic_treatment": ["Spray Bordeaux mixture 1%", "Seed treatment with Trichoderma @ 10 g/kg"],
+        "chemical_treatment_type": ["Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Use resistant varieties like Pusa Mustard 25, RH-406", "Destroy infected staghead panicles", "Clean seedbed"]
+      },
+      {
+        "name": "Alternaria Leaf Blight (Alternaria brassicae)",
+        "type": "fungal",
+        "symptoms": "Small brown to black spots with concentric rings on leaves, stems and pods; spots coalesce, pods turn brittle and shatter prematurely; shriveled seeds.",
+        "cause": "Air and seed-borne fungus active in damp weather with intermittent rains (15-25°C).",
+        "organic_treatment": ["Spray 10% cow urine extract", "Foliar spray of Copper Oxychloride @ 2.5 g/L"],
+        "chemical_treatment_type": ["Iprodione 50% WP @ 2 g/L", "Mancozeb 75% WP @ 2.5 g/L"],
+        "prevention": ["Seed treatment with Captan or Thiram @ 3 g/kg", "Burn crop residue after harvest"]
+      },
+      {
+        "name": "Downy Mildew (Hyaloperonospora parasitica)",
+        "type": "fungal",
+        "symptoms": "Yellowish angular patches on upper leaf surface with white to grayish downy fungal growth on corresponding undersides; often occurs together with white rust.",
+        "cause": "Oomycete pathogen exploding in cold foggy mornings.",
+        "organic_treatment": ["Spray Copper Hydroxide @ 2 g/L", "Spray fresh buttermilk extract (50 ml/L)"],
+        "chemical_treatment_type": ["Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L", "Cymoxanil 8% + Mancozeb 64% WP"],
+        "prevention": ["Seed treatment with Metalaxyl 35% WS @ 4 g/kg", "Wider row spacing to reduce humidity in canopy"]
+      },
+      {
+        "name": "Sclerotinia Stem Rot (Sclerotinia sclerotiorum)",
+        "type": "fungal",
+        "symptoms": "Water-soaked lesions on main stem near soil line turning bleached chalky-white; stem splits open revealing large, hard, black rat-dropping-like sclerotia inside.",
+        "cause": "Soil-borne fungus surviving as sclerotia in soil for 5+ years; favoured by high plant density and heavy canopy.",
+        "organic_treatment": ["Deep summer ploughing to bury sclerotia", "Soil application of Coniothyrium minitans or Trichoderma @ 5 kg/ha"],
+        "chemical_treatment_type": ["Carbendazim 50% WP @ 1 g/L", "Thiophanate Methyl 70% WP @ 1 g/L"],
+        "prevention": ["Avoid excessive flood irrigation", "Crop rotation with non-host crops like wheat, barley, or gram", "Avoid dense plant populations"]
+      }
+    ]
+  },
+  {
+    "name": "Groundnut",
+    "local_names": {
+      "hi": "मूंगफली (Moongphali)",
+      "ta": "வேர்க்கடலை / நிலக்கடலை (Verkadalai)",
+      "te": "వేరుశనగ (Verusanaga)",
+      "kn": "ಕಡಲೆಕಾಯಿ (Kadalekaayi)",
+      "ml": "നിലക്കടല (Nilakkadala)"
+    },
+    "scientific_name": "Arachis hypogaea",
+    "category": "oilseed",
+    "how_to_identify_leaf": "Evenly pinnate compound leaves with 4 oval to obovate leaflets arranged in two opposite pairs; leaflets fold together at night (nyctinastic movements).",
+    "how_to_identify_seed_or_fruit": "Underground indehiscent reticulated cylindrical pod (peg burrows into soil after pollination) containing 1-4 oval seeds with reddish-brown or pink papery seed coat and two large oily cotyledons.",
+    "lookalikes": ["Soybean (Glycine max - trifoliate leaves)", "Bambara groundnut", "Pigeon pea seedlings"],
+    "season": "Kharif (sown June-July; 80% area), Rabi / Summer (sown Nov-Dec or Jan-Feb under irrigation)",
+    "soil": "Well-drained loose, friable sandy loam or red sandy loam rich in calcium; pH 6.0-7.0; heavy clay severely hinders peg penetration and causes pod breakage during harvest",
+    "water": "450-650 mm; critical stages: Flowering, Pegging (30-45 DAS), and Pod formation (50-70 DAS); avoid water stress at pegging",
+    "seed_rate_and_sowing": "Bunch varieties: 100-110 kg kernels/ha; Spreading varieties: 90-100 kg kernels/ha; Spacing: 30x10 cm; Depth: 4-5 cm in moist soil",
+    "nutrition_per_100g": {
+      "carbs_g": "16.13",
+      "fiber_g": "8.5",
+      "protein_g": "25.80",
+      "fat_g": "49.24",
+      "calories_kcal": "567",
+      "key_vitamins_minerals": ["Niacin (B3 - 12.1 mg)", "Folate", "Magnesium", "Phosphorus", "Resveratrol", "Biotin", "Copper"]
+    },
+    "benefits": ["Exceptionally protein-dense plant food; fundamental in rural diets and malnutrition recovery (RUTF)", "Heart-healthy mono- and polyunsaturated fatty acids", "Resveratrol and phytosterols support vascular health"],
+    "risks_or_cautions": ["Common severe food allergen capable of triggering life-threatening anaphylaxis", "Improper drying and storage invites Aspergillus flavus producing carcinogenic aflatoxins"],
+    "medicinal_uses": ["Groundnut oil (arachis oil) used as pharmaceutical vehicle for oil-based injections and therapeutic skin emollients", "Peanut paste utilized in enriched therapeutic feeding protocols"],
+    "diseases": [
+      {
+        "name": "Tikka Disease / Early & Late Leaf Spot (Cercospora arachidicola & Phaeoisariopsis personata)",
+        "type": "fungal",
+        "symptoms": "Early spot: circular reddish-brown spots with prominent bright yellow halos; Late spot: smaller, darker, carbon-black circular spots without prominent halos; heavy defoliation.",
+        "cause": "Air and seed-borne fungi rampant during warm rainy spells (25-30°C and >80% RH).",
+        "organic_treatment": ["Foliar spray of 5% neem seed kernel extract (NSKE)", "Spray fermented butter-milk (50 ml/L) mixed with copper oxychloride"],
+        "chemical_treatment_type": ["Tebuconazole 25.9% EC @ 1 ml/L", "Hexaconazole 5% EC @ 1 ml/L", "Mancozeb 75% WP @ 2 g/L"],
+        "prevention": ["Intercrop with pearl millet or pigeon pea (6:1 ratio)", "Use resistant varieties like Kadiri-6, TAG-24, GPBD-4", "Seed treatment with Carbendazim 2g/kg"]
+      },
+      {
+        "name": "Groundnut Rust (Puccinia arachidis)",
+        "type": "fungal",
+        "symptoms": "Small, orange-brown pustules on leaf undersides, rupturing to release powdery urediniospores; leaves curl, dry up, and remain attached without falling.",
+        "cause": "Airborne spores blown by monsoon winds, often appearing alongside late leaf spot.",
+        "organic_treatment": ["Spray 3% neem oil @ 3 ml/L", "Spray Trichoderma harzianum @ 5 g/L"],
+        "chemical_treatment_type": ["Chlorothalonil 75% WP @ 2 g/L", "Propiconazole 25% EC @ 1 ml/L", "Wettable sulfur @ 3 g/L"],
+        "prevention": ["Combined spray for leaf spot and rust with Tebuconazole + Trifloxystrobin", "Destroy volunteer groundnut plants"]
+      },
+      {
+        "name": "Collar Rot / Crown Rot (Aspergillus niger)",
+        "type": "fungal",
+        "symptoms": "Collar region rots at soil line covered with black sooty fungal powder; seedlings topple over; mature plants wilt rapidly.",
+        "cause": "Seed and soil-borne fungus active in high soil temperatures and drought stress at germination.",
+        "organic_treatment": ["Seed bio-priming with Trichoderma viride @ 10 g/kg", "Soil application of neem cake @ 250 kg/ha"],
+        "chemical_treatment_type": ["Seed treatment with Thiram 37.5% + Carboxin 37.5% WS @ 2 g/kg seed", "Mancozeb @ 3 g/kg seed"],
+        "prevention": ["Deep summer ploughing", "Avoid planting damaged, cracked or shriveled seed kernels"]
+      },
+      {
+        "name": "White Grub (Holotrichia consanguinea)",
+        "type": "pest",
+        "symptoms": "C-shaped white grubs chew off tap roots and developing root pods; plants wilt and dry up in patches across the field.",
+        "cause": "Scarabaeid beetle larva active in sandy soils during monsoon rains (July-August).",
+        "organic_treatment": ["Install light traps at first monsoon rain to catch adult beetles on neem and ber trees", "Soil application of Metarhizium anisopliae @ 5 kg/ha with FYM"],
+        "chemical_treatment_type": ["Seed treatment with Chlorpyrifos 20% EC @ 25 ml/kg or Imidacloprid 600 FS @ 6.5 ml/kg seed", "Soil application of Fipronil 0.3% G @ 20 kg/ha"],
+        "prevention": ["Deep summer ploughing exposes grubs to birds", "Spray surrounding host trees (neem, ber, acacia) with monocrotophos at first monsoon shower"]
+      },
+      {
+        "name": "Spodoptera / Tobacco Caterpillar (Spodoptera litura)",
+        "type": "pest",
+        "symptoms": "Gregarious young larvae skeletonize leaves into papery white webs; older solitary caterpillars voraciously defoliate canopy overnight.",
+        "cause": "Polyphagous noctuid moth active during warm humid monsoon weather.",
+        "organic_treatment": ["Hand-pick and destroy egg masses and skeletonized leaves with young clusters", "Install pheromone traps with Spodolure @ 10/ha", "Spray SlNPV @ 250 LE/ha with 0.5% jaggery"],
+        "chemical_treatment_type": ["Chlorantraniliprole 18.5% SC @ 0.3 ml/L", "Novaluorn 10% EC @ 1 ml/L", "Emamectin Benzoate 5% SG @ 0.4 g/L"],
+        "prevention": ["Grow castor (Ricinus communis) as border/trap crop around the groundnut field", "Collect larvae under soil clods during daytime"]
+      }
+    ]
+  },
+  {
+    "name": "Cotton",
+    "local_names": {
+      "hi": "कपास (Kapas)",
+      "ta": "பருத்தி (Paruthi)",
+      "te": "ప్రత్తి (Pratti)",
+      "kn": "ಹತ್ತಿ (Hatti)",
+      "ml": "പരുത്തി (Paruthi)"
+    },
+    "scientific_name": "Gossypium hirsutum / Gossypium arboreum",
+    "category": "cash_crop",
+    "how_to_identify_leaf": "Large, alternate, palmately 3-5 lobed leaves with cordate base, prominent nectary glands on underside of main veins, and stipules at petiole base.",
+    "how_to_identify_seed_or_fruit": "Ovoid, 3-5 locular leathery capsule ('boll') with smooth green rind with oil glands; splits open at maturity into 3-5 locks revealing fluffy white lint fibers adhering to dark brown fuzzy seeds.",
+    "lookalikes": ["Okra / Bhindi (Abelmoschus esculentus foliage)", "Hibiscus leaves", "Kenaf / Roselle (Hibiscus sabdariffa)"],
+    "season": "Kharif (sown April-May in North India, June-July in Central & South India; 150-180 day crop)",
+    "soil": "Deep, fertile Black Cotton Soils (Vertisols) with high clay content and moisture retention; pH 7.0-8.5; can also grow on deep alluvial soils with irrigation",
+    "water": "700-1200 mm; critical stages: Square formation, Flowering, and Boll development; water stress at flowering causes severe square/boll drop",
+    "seed_rate_and_sowing": "Bt Hybrid cotton: 2.0-2.5 kg/ha (with 120g non-Bt refuge); Spacing: 90x60 cm or 120x60 cm; Depth: 4-5 cm in ridges and furrows",
+    "nutrition_per_100g": {
+      "carbs_g": "23.0",
+      "fiber_g": "15.0",
+      "protein_g": "23.0",
+      "fat_g": "19.5",
+      "calories_kcal": "480",
+      "key_vitamins_minerals": ["Gossypol (in raw seed)", "Linoleic acid", "Vitamin E", "Magnesium", "Phosphorus", "Zinc"]
+    },
+    "benefits": ["World's most important natural textile fiber ('White Gold')", "Cottonseed oil is an important domestic edible oil after refining", "Cottonseed cake is an invaluable protein-rich cattle feed"],
+    "risks_or_cautions": ["Raw unrefined cottonseed contains toxic gossypol pigment causing heart and liver damage; safe only after commercial refining or for ruminants with bacterial detox"],
+    "medicinal_uses": ["Cotton root bark decoction used historically in folk medicine as uterine stimulant (oxytocic)", "Sterile cotton lint is the universal medical standard for surgical dressing and absorbent swabs"],
+    "diseases": [
+      {
+        "name": "Pink Bollworm (Pectinophora gossypiella)",
+        "type": "pest",
+        "symptoms": "Rosetted flowers that fail to open properly; bore holes sealed with silk; larvae burrow inside developing green bolls feeding directly on seeds, staining lint pinkish-brown and ruining fiber.",
+        "cause": "Gelechiid moth whose pink larva developed resistance to Cry1Ac and Cry2Ab Bt proteins in Central and Western India.",
+        "organic_treatment": ["Install Gossyplure pheromone traps @ 10 traps/ha for monitoring and 25/ha for mass trapping", "Trichogrammatoidea bactrae egg parasitoid release @ 150,000/ha", "Neem oil 1500 ppm @ 3 ml/L"],
+        "chemical_treatment_type": ["Emamectin benzoate 5% SG @ 0.5 g/L", "Chlorantraniliprole 18.5% SC @ 0.4 ml/L", "Profenofos 50% EC @ 2 ml/L"],
+        "prevention": ["Strictly terminate the crop by December-January; do not allow ratoon cotton", "Deep summer ploughing to destroy overwintering diapausing larvae in double seeds", "Comply with non-Bt refuge sowing requirements"]
+      },
+      {
+        "name": "Cotton Leaf Curl Virus (CLCuV)",
+        "type": "viral",
+        "symptoms": "Upward or downward leaf curling with thick swollen veins; leafy enations (outgrowths) on underside of main veins; severe stunting of plant with minimal boll formation.",
+        "cause": "Begomovirus complex with DNA-beta satellite transmitted exclusively by whitefly (Bemisia tabaci); rampant in North Indian cotton belt.",
+        "organic_treatment": ["Install yellow sticky traps @ 25/ha", "Spray 5% NSKE or Neem oil (10,000 ppm) @ 2 ml/L", "Rogue out early infected plants"],
+        "chemical_treatment_type": ["Vector management: Diafenthiuron 50% WP @ 1.2 g/L", "Spiromesifen 22.9% SC @ 1 ml/L", "Pyriproxyfen 10% EC @ 2 ml/L"],
+        "prevention": ["Sow CLCuV-tolerant certified hybrids", "Complete sowing before May 15 in North zone", "Eradicate alternate weed hosts like Abutilon indicum and Xanthium strumarium"]
+      },
+      {
+        "name": "Bacterial Blight / Black Arm (Xanthomonas citri pv. malvacearum)",
+        "type": "bacterial",
+        "symptoms": "Angular water-soaked spots bounded by leaf veinlets (angular leaf spot); black lesions on petioles and stems causing snapping (black arm); circular water-soaked sunken spots on bolls (boll rot).",
+        "cause": "Seed and debris-borne bacterium spreading via driving rain splashes and irrigation water.",
+        "organic_treatment": ["Seed acid delinting with concentrated sulfuric acid (100 ml/kg seed) to destroy seed-borne inoculum", "Spray fresh cow dung extract @ 20 g/L"],
+        "chemical_treatment_type": ["Streptocycline 1g + Copper Oxychloride 25g in 10L water foliar spray"],
+        "prevention": ["Use acid-delinted certified seeds only", "Avoid sprinkler overhead irrigation", "Burn harvested cotton stalks"]
+      },
+      {
+        "name": "Cotton Whitefly (Bemisia tabaci)",
+        "type": "pest",
+        "symptoms": "Tiny white moth-like flies flutter when canopy is disturbed; nymph clusters on leaf undersides suck sap causing leaf yellowing and shedding; sticky honeydew produces heavy black sooty mold; vectors CLCuD.",
+        "cause": "Aleyrodid pest favored by hot, humid weather and dry spells in July-September.",
+        "organic_treatment": ["Yellow sticky traps @ 30/ha", "Foliar spray of neem seed kernel extract (NSKE 5%)", "Verticillium lecanii spray @ 5 g/L"],
+        "chemical_treatment_type": ["Afidopyropen 50 g/L GDC @ 2 ml/L", "Diafenthiuron 50% WP @ 1.2 g/L", "Pyriproxyfen 10% EC @ 2 ml/L"],
+        "prevention": ["Avoid excessive application of nitrogen fertilizers", "Avoid early prophylactic synthetic pyrethroid sprays which cause whitefly flare-up"]
+      },
+      {
+        "name": "Grey Mildew / Dahiya Disease (Ramularia areola)",
+        "type": "fungal",
+        "symptoms": "Angular, pale translucent spots bounded by veinlets covered with frosty-white powdery mildew-like growth on leaf undersides; severe premature defoliation.",
+        "cause": "Fungus active in late season under cool, humid conditions (20-25°C) with morning dew.",
+        "organic_treatment": ["Spray wettable sulfur 80% WDG @ 3 g/L", "Spray fermented buttermilk (5%)"],
+        "chemical_treatment_type": ["Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L", "Carbendazim 50% WP @ 1 g/L", "Kresoxim-methyl 44.3% SC @ 1 ml/L"],
+        "prevention": ["Wider spacing to promote canopy aeration", "Prophylactic sulfur spray in October-November"]
+      }
+    ]
+  },
+  {
+    "name": "Sugarcane",
+    "local_names": {
+      "hi": "गन्ना (Ganna)",
+      "ta": "கரும்பு (Karumbu)",
+      "te": "చెరకు (Cheraku)",
+      "kn": "ಕಬ್ಬು (Kabbu)",
+      "ml": "കരിമ്പ് (Karimbu)"
+    },
+    "scientific_name": "Saccharum officinarum",
+    "category": "cash_crop",
+    "how_to_identify_leaf": "Long, narrow, sword-like linear leaves (1-1.5 m long, 4-7 cm wide) with sharp, finely serrated razor-like margins, prominent white fibrous midrib, and overlapping sheaths clasping the solid stem.",
+    "how_to_identify_seed_or_fruit": "Tall, thick, jointed solid cylindrical stalk (2-4 m high, 2-5 cm diameter) with distinct nodes and internodes; skin green, yellow, purple, or striped with white waxy bloom; sweet fibrous sucrose-rich pith; produces large feathery silver plume inflorescence ('arrow').",
+    "lookalikes": ["Sorghum / Sweet Sorghum (Sorghum bicolor)", "Maize (in young stage)", "Elephant grass (Pennisetum purpureum)", "Saccharum spontaneum (Kans grass)"],
+    "season": "Autumn planting (Oct-Nov), Spring planting (Feb-March), Adsali planting in Maharashtra (July-Aug, 18-month crop)",
+    "soil": "Deep, well-drained, fertile loams or clayey loams with high water retention and organic content; pH 6.5-7.5; water table below 1.5m",
+    "water": "1500-2500 mm; high water requirement; requires 20-30 irrigations in tropical zone; critical during formative tillering and grand growth stages; drip saves 40% water",
+    "seed_rate_and_sowing": "Three-budded healthy setts: 40,000-45,000 setts/ha (approx. 6-8 tonnes/ha); Furrow planting at 90 cm or 120 cm (paired row 150 cm); Depth: 7-10 cm",
+    "nutrition_per_100g": {
+      "carbs_g": "26.98",
+      "fiber_g": "0.0",
+      "protein_g": "0.16",
+      "fat_g": "0.16",
+      "calories_kcal": "269",
+      "key_vitamins_minerals": ["Sucrose", "Potassium (in raw juice)", "Calcium", "Magnesium", "Iron (in jaggery)", "Phosphorus"]
+    },
+    "benefits": ["Source of 80% of world's sugar and domestic jaggery (gur)", "Byproducts provide ethanol biofuel (molasses), paper & green power cogeneration (bagasse), and organic fertilizer (pressmud)", "Raw juice provides quick rehydration and glycogen replenishment"],
+    "risks_or_cautions": ["High glycemic index concentrated sucrose requires restriction in diabetic diets", "Unsanitary roadside juice extraction can harbor enteric foodborne pathogens"],
+    "medicinal_uses": ["Fresh sugarcane juice consumed traditionally in Ayurveda to soothe jaundice and support liver recovery", "Black strap molasses used as natural mineral-dense remedy for iron deficiency anemia"],
+    "diseases": [
+      {
+        "name": "Red Rot (Colletotrichum falcatum)",
+        "type": "fungal",
+        "symptoms": "Third or fourth leaf from top shows yellowing and withering; longitudinal split of stalk shows blood-red internal pith with distinct white horizontal patches/bands across red tissue; sour alcoholic odor.",
+        "cause": "Fungus entering through root primordia, node cracks, and borer holes; spread by diseased seed setts and flood irrigation.",
+        "organic_treatment": ["Hot water treatment of setts at 52°C for 30 minutes", "Moist hot air treatment (MHAT) at 54°C for 2.5 hours", "Trichoderma viride sett dip @ 10 g/L"],
+        "chemical_treatment_type": ["Sett treatment: Dip setts in Carbendazim 50% WP @ 2 g/L or Thiophanate Methyl 70% WP for 15 minutes before planting"],
+        "prevention": ["Plant resistant varieties (e.g., Co-0238, Co-86032, CoM-0265)", "Rogue out and burn infected clumps with roots immediately", "Adopt crop rotation with paddy or green manure crops"]
+      },
+      {
+        "name": "Sugarcane Smut (Sporisorium scitamineum)",
+        "type": "fungal",
+        "symptoms": "Terminal growing point produces a long, black, whip-like, curved unbranched structure (up to 1 m long) covered with millions of black sooty teliospores; leaves become narrow, stiff and erect.",
+        "cause": "Internally and externally seed and wind-borne fungal teliospores entering through bud scales.",
+        "organic_treatment": ["Carefully cover whip in a polythene bag, cut off and burn to prevent spore dispersal", "Dip setts in Trichoderma slurry"],
+        "chemical_treatment_type": ["Sett dip in Triadimefon 25% WP @ 1 g/L or Propiconazole 25% EC @ 1 ml/L for 15 minutes"],
+        "prevention": ["Use certified disease-free seed canes from healthy nurseries", "Avoid taking ratoon crops from smut-infected fields", "Plant resistant varieties"]
+      },
+      {
+        "name": "Early Shoot Borer (Chilo infuscatellus)",
+        "type": "pest",
+        "symptoms": "Dead heart in young shoots (1-3 months old); dead shoot pulls out easily emitting a foul rotten odor; horizontal pin-holes at base of shoot.",
+        "cause": "Crambid moth caterpillar boring into young shoot base in hot dry weather (March-June).",
+        "organic_treatment": ["Release egg parasitoid Trichogramma chilonis @ 50,000/ha weekly from 30 to 90 days", "Light earthing up of canes at 30-45 days to bury base", "Trash mulching on furrows (3 t/ha) at 3 days after planting"],
+        "chemical_treatment_type": ["Soil application of Fipronil 0.3% G @ 25 kg/ha or Chlorantraniliprole 0.4% G @ 18 kg/ha at planting in furrows"],
+        "prevention": ["Plant early (February) to establish tillers before peak summer", "Frequent light summer irrigations reduce shoot borer attack"]
+      },
+      {
+        "name": "Internode Borer (Chilo sacchariphagus indicus)",
+        "type": "pest",
+        "symptoms": "Constricted internodes with entrance holes plugged with fresh frass; tissues inside turn red (often confused with red rot); reduction in cane length and juice sucrose.",
+        "cause": "Borer attacking older canes from 4th month onward till harvest.",
+        "organic_treatment": ["Release Trichogramma chilonis @ 50,000/ha fortnightly from 4th month to harvest", "Detrashing: strip and remove lower dry senescent leaves periodically"],
+        "chemical_treatment_type": ["Foliar spray of Chlorantraniliprole 18.5% SC @ 0.3 ml/L directed into leaf sheaths"],
+        "prevention": ["Avoid excessive nitrogen application", "Select clean non-bored seed canes"]
+      },
+      {
+        "name": "Grassy Shoot Disease (GSD)",
+        "type": "viral",
+        "symptoms": "Proliferation of numerous thin, spindly, pale white or chlorotic tillers resembling a tuft of grass; complete absence of cane formation; severe stunting.",
+        "cause": "Phytoplasma transmitted by cane leafhoppers and aphid vectors (Rhopalosiphum maidis); perpetuates through infected seed setts.",
+        "organic_treatment": ["Rogue and destroy diseased clumps immediately", "Hot water treatment of setts at 50°C for 2 hours"],
+        "chemical_treatment_type": ["Vector control: Imidacloprid 17.8% SL @ 0.3 ml/L", "Oxytetracycline sett dip"],
+        "prevention": ["Raise three-tier seed nursery system (breeder, foundation, certified)", "Never use setts from ratoon fields showing GSD symptoms"]
+      }
+    ]
+  }
+]

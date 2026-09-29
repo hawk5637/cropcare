@@ -1,0 +1,279 @@
+import { callGemini, friendly } from "./_gemini.js";
+import { findPlantEntry } from "./_knowledge.js";
+
+export default async function handler(req, res) {
+  // CORS configuration
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-gemini-api-key'
+  );
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed', status: 405 });
+  }
+
+  try {
+    const { image, language = 'en' } = req.body || {};
+
+    if (!image) {
+      return res.status(400).json({
+        error: 'No image provided. Please upload an image or capture a photo.',
+        status: 400
+      });
+    }
+
+    let mimeType = 'image/jpeg';
+    let base64Data = image;
+
+    if (image.startsWith('data:')) {
+      const match = image.match(/^data:([a-zA-Z0-9/+-]+);base64,(.+)$/);
+      if (match) {
+        mimeType = match[1];
+        base64Data = match[2];
+      }
+    }
+
+    const apiKey = 
+      process.env.GEMINI_API_KEY || 
+      req.headers['x-gemini-api-key'] || 
+      process.env.VITE_GEMINI_API_KEY || 
+      'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
+
+    if (!apiKey) {
+      console.error('Server error: GEMINI_API_KEY is not configured in server environment.');
+      return res.status(500).json({
+        error: 'Server configuration error: GEMINI_API_KEY is missing.',
+        status: 500
+      });
+    }
+
+    const langMap = {
+      en: 'English',
+      hi: 'Hindi (हिंदी)',
+      ta: 'Tamil (தமிழ்)',
+      te: 'Telugu (తెలుగు)',
+      kn: 'Kannada (ಕನ್ನಡ)',
+      mr: 'Marathi (मराठी)',
+      bn: 'Bengali (বাংলা)',
+      pa: 'Punjabi (ਪੰਜਾਬੀ)',
+      fr: 'French (Français)'
+    };
+    const targetLang = langMap[language] || 'English';
+
+    const systemPrompt = `You are CropCare AI Doctor, a world-class botanist, plant pathologist, entomologist, agronomist and medicinal-plant expert. You help farmers and students, especially in India.
+
+SCOPE: You can analyze ANY of these from a photo:
+fruits, vegetables, seeds and grains, leaves, flowers, roots, tubers, bark, whole trees and plants, crop fields, herbs and medicinal plants, spices, pulses, oilseeds, cash crops, ornamental plants, weeds, and plants damaged by disease, pests or nutrient problems.
+
+WORKFLOW (follow in order):
+1. OBSERVE: shape, color, margins (smooth/serrated/lobed), venation, leaf arrangement, texture, size clues, spots, lesions, powder, mold, holes, curling, yellowing, wilting, insects, webbing, background.
+2. IDENTIFY: what part is shown (leaf/fruit/seed/tree/...). Then name the plant with common name, local names (Hindi, Tamil, Telugu, etc.) and scientific name. Compare against lookalikes before deciding (example: mango vs neem leaf, tulsi vs mint, chilli vs tomato). Never default to a popular plant. If unsure, give top 2 candidates.
+3. DIAGNOSE (if a plant part is shown): decide healthy or problem. Consider all causes:
+   - Fungal: blight, rust, powdery mildew, downy mildew, anthracnose, leaf spot, wilt, smut, blast, rot
+   - Bacterial: bacterial spot, canker, blight, wilt, soft rot
+   - Viral: mosaic, leaf curl, yellow vein mosaic, bunchy top
+   - Pests: aphids, whitefly, thrips, mites, borers, armyworm, leaf miner, mealybug, scale, caterpillars, nematodes
+   - Nutrient deficiency or toxicity: N, P, K, Mg, Fe, Zn, Ca, B
+   - Environmental: sunburn, frost, drought, waterlogging, herbicide injury
+   Give the most likely cause first, then alternatives. Never invent a disease. If the photo is unclear, say "not sure" and say what photo is needed.
+4. CHOOSE SECTIONS by image type. Do not use a fixed template:
+   - Leaf / plant part: identity, health status, problem name, symptoms, cause, treatment (organic first, then chemical), prevention, medicinal uses, benefits, cautions.
+   - Fruit / vegetable: identity, ripeness/quality, nutrition per 100 g, health benefits, side effects, storage, season, farming info, any visible rot/pest/disease.
+   - Seed / grain: identity, plant it grows into, sowing season, depth, spacing, soil, germination time, seed rate, storage, uses, seed-borne diseases.
+   - Whole tree / plant: identity, uses (fruit, wood, shade, medicine), growth habit, care, common problems.
+   - Field / crop: crop, growth stage, visible problems, fertilizer and water advice, next steps.
+   - Not a plant: say what it is and ask for a plant photo.
+5. TREATMENT RULES: give organic/cultural options first (neem oil, removing infected leaves, crop rotation, spacing, resistant varieties), then chemical options by ACTIVE INGREDIENT type only. Always say "follow the label and ask your local agriculture officer / KVK for exact dose". Never give unsafe mixing advice.
+6. SAFETY: for medicinal uses say "traditional use, not a medical prescription, consult a doctor". Warn clearly if the plant is toxic or poisonous to humans, children or animals. Warn about edible lookalikes.
+7. LANGUAGE: reply in ${targetLang}. Use very simple words and one short sentence per point.
+
+Reply ONLY with valid JSON.`;
+
+    const scanResponseSchema = {
+      type: "OBJECT",
+      properties: {
+        image_type: { 
+          type: "STRING", 
+          enum: ["leaf", "fruit", "vegetable", "seed", "tree", "flower", "root", "field", "other"]
+        },
+        title: { type: "STRING" },
+        local_names: { 
+          type: "ARRAY", 
+          items: { type: "STRING" } 
+        },
+        scientific_name: { type: "STRING" },
+        confidence: { 
+          type: "STRING", 
+          enum: ["high", "medium", "low"] 
+        },
+        other_possible_matches: { 
+          type: "ARRAY", 
+          items: { type: "STRING" } 
+        },
+        what_i_see: { 
+          type: "STRING", 
+          description: "2 simple lines about what you observed in the image" 
+        },
+        health_status: { 
+          type: "STRING", 
+          enum: ["healthy", "diseased", "pest", "deficiency", "damaged", "not_applicable"] 
+        },
+        problem_name: { type: "STRING" },
+        severity: { 
+          type: "STRING", 
+          enum: ["none", "mild", "moderate", "severe"] 
+        },
+        sections: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              heading: { type: "STRING" },
+              icon: { type: "STRING", description: "one single emoji relevant to heading" },
+              points: {
+                type: "ARRAY",
+                items: { type: "STRING" }
+              }
+            },
+            required: ["heading", "icon", "points"]
+          }
+        },
+        need_better_photo: { type: "STRING" },
+        farmer_summary: { 
+          type: "STRING", 
+          description: "2 simple lines: what this is and what to do next" 
+        }
+      },
+      required: [
+        "image_type",
+        "title",
+        "local_names",
+        "scientific_name",
+        "confidence",
+        "other_possible_matches",
+        "what_i_see",
+        "health_status",
+        "problem_name",
+        "severity",
+        "sections",
+        "need_better_photo",
+        "farmer_summary"
+      ]
+    };
+
+    const systemInstruction = systemPrompt;
+    const contents = [
+      {
+        role: "user",
+        parts: [
+          { text: "Analyze this agricultural botanical specimen accurately according to the instructions." },
+          {
+            inlineData: {
+              mimeType: mimeType,
+              data: base64Data
+            }
+          }
+        ]
+      }
+    ];
+    const generationConfig = {
+      temperature: 0.1,
+      responseMimeType: "application/json",
+      responseSchema: scanResponseSchema
+    };
+
+    try {
+      const { data, model } = await callGemini(
+        { systemInstruction, contents, generationConfig },
+        9000,
+        apiKey
+      );
+      const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!candidate) {
+        console.error('[analyze] Empty candidate received from Gemini:', data);
+        return res.status(502).json({
+          code: 'MODEL',
+          message: 'Gemini returned an empty diagnosis candidate.',
+          details: [{ model, status: 502, message: 'Empty candidate received from model' }]
+        });
+      }
+
+      let structuredResult;
+      try {
+        structuredResult = JSON.parse(candidate);
+      } catch (parseErr) {
+        console.error('[analyze] Failed to parse candidate JSON:', candidate);
+        return res.status(502).json({
+          code: 'MODEL',
+          message: 'Failed to parse structured botanical JSON from model.',
+          details: [{ model, status: 502, message: parseErr.message, raw: candidate }]
+        });
+      }
+
+      const isHealthy = structuredResult.health_status === 'healthy';
+
+      // Cross-reference Indian agronomic knowledge base
+      const kbMatch = findPlantEntry(structuredResult.title, structuredResult.scientific_name);
+      if (kbMatch) {
+        if (!structuredResult.local_names || structuredResult.local_names.length === 0) {
+          structuredResult.local_names = Object.values(kbMatch.local_names || {});
+        } else if (kbMatch.local_names) {
+          const existing = new Set(structuredResult.local_names);
+          Object.values(kbMatch.local_names).forEach(ln => {
+            if (!existing.has(ln)) {
+              structuredResult.local_names.push(ln);
+              existing.add(ln);
+            }
+          });
+        }
+      }
+
+      const result = {
+        ...structuredResult,
+        is_plant_detected: structuredResult.image_type !== 'not_a_plant' && structuredResult.image_type !== 'other',
+        plant_name: structuredResult.title || 'Botanical Specimen',
+        species: `${structuredResult.title || 'Specimen'} (${structuredResult.scientific_name || ''})`,
+        species_confidence: structuredResult.confidence === 'high' ? 0.95 : structuredResult.confidence === 'medium' ? 0.8 : 0.6,
+        health_status: structuredResult.health_status || (isHealthy ? 'healthy' : 'diseased'),
+        disease_name: structuredResult.problem_name || structuredResult.title,
+        disease_confidence: structuredResult.confidence === 'high' ? 0.95 : 0.8,
+        severity: structuredResult.severity || (isHealthy ? 'none' : 'moderate'),
+        farmer_advice: structuredResult.farmer_summary || '',
+        evidence: [structuredResult.what_i_see].filter(Boolean),
+        knowledge_base_verified: !!kbMatch,
+        knowledge_base_match: kbMatch ? {
+          name: kbMatch.name,
+          scientific_name: kbMatch.scientific_name,
+          category: kbMatch.category,
+          season: kbMatch.season,
+          soil: kbMatch.soil,
+          water: kbMatch.water,
+          nutrition_per_100g: kbMatch.nutrition_per_100g,
+          lookalikes: kbMatch.lookalikes
+        } : null,
+        model_used: model
+      };
+
+      return res.status(200).json({ ...result, _model: model });
+    } catch (e) {
+      const errors = e.errors || [{ status: 500, message: String(e.message || e) }];
+      console.error("Gemini failed:", JSON.stringify(errors));
+      return res.status(502).json({ ...friendly(errors), details: errors });
+    }
+  } catch (error) {
+    console.error('[analyze] Unhandled server error:', error);
+    const errors = [{ status: 500, message: error.message || 'Internal server error during analysis' }];
+    return res.status(502).json({
+      ...friendly(errors),
+      details: errors
+    });
+  }
+}
