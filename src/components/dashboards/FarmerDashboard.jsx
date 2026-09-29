@@ -19,7 +19,8 @@ import {
   Sparkles,
   Camera,
   Compass,
-  Sliders
+  Sliders,
+  Scale
 } from 'lucide-react';
 
 export default function FarmerDashboard() {
@@ -130,6 +131,17 @@ export default function FarmerDashboard() {
             >
               <Sliders className="w-4 h-4 text-teal-900" />
               <span>What-If Simulator</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveNav('module');
+                setActiveModule('resource-budget');
+              }}
+              className="px-3.5 py-2.5 rounded-xl bg-emerald-400 text-slate-900 font-extrabold text-xs shadow-md hover:bg-emerald-300 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <Scale className="w-4 h-4 text-emerald-950" />
+              <span>Budget Planner</span>
             </button>
 
             <button

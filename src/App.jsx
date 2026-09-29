@@ -35,6 +35,7 @@ import AfterSellingModule from './components/modules/AfterSellingModule.jsx';
 import AccessibilityModule from './components/modules/AccessibilityModule.jsx';
 import FarmAdvisorModule from './components/modules/FarmAdvisorModule.jsx';
 import WhatIfSimulatorModule from './components/modules/WhatIfSimulatorModule.jsx';
+import ResourceBudgetModule from './components/modules/ResourceBudgetModule.jsx';
 
 const MODULE_MAP = {
   'land-soil': LandSoilModule,
@@ -43,6 +44,8 @@ const MODULE_MAP = {
   'ai-assistant': FarmAdvisorModule,
   'farm-advisor': FarmAdvisorModule,
   'what-if-simulator': WhatIfSimulatorModule,
+  'resource-budget': ResourceBudgetModule,
+  'budget-planner': ResourceBudgetModule,
   'water': WaterModule,
   'fertilizer': FertilizerModule,
   'pest-disease': PestDiseaseModule,
