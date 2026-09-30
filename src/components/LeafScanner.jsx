@@ -439,6 +439,168 @@ const SAMPLE_SPECIMENS = [
     prevention: ['Avoid waterlogging at the root base.'],
     medicinal_uses: ['Tulsi kadha soothes cough, cold, and seasonal viral fevers.'],
     farmer_advice: 'Healthy herb; pinch flower buds regularly for maximum medicinal leaf yield.'
+  },
+  {
+    id: 'sample-okra-yvmv',
+    name: 'Okra (Yellow Vein Mosaic)',
+    plant_name: 'Okra / Bhindi',
+    scientific_name: 'Abelmoschus esculentus',
+    image_type: 'leaf',
+    confidence: 'high',
+    confidence_level: 'high',
+    species: 'Abelmoschus esculentus (Okra / Bhindi)',
+    condition: 'Yellow Vein Mosaic Virus (YVMV)',
+    category: 'Vegetables',
+    icon: '🥒',
+    img: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80',
+    severity: 'severe',
+    status: 'diseased',
+    what_i_see: 'Characteristic network of bright yellow veins contrasting against green leaf tissue. Terminal growth is stunted.',
+    sections: [
+      {
+        heading: 'Viral Diagnosis',
+        icon: '🔍',
+        points: [
+          'Diagnosed as Yellow Vein Mosaic Virus (YVMV).',
+          'Vectored by whiteflies (Bemisia tabaci) feeding on underside of leaves.',
+          'Causes stunted plants and hard, yellowish, unmarketable pods.'
+        ]
+      },
+      {
+        heading: 'Vector Control (Immediate)',
+        icon: '🪰',
+        points: [
+          'Install yellow sticky traps @ 20-25 per acre immediately.',
+          'Spray 5% Neem Seed Kernel Extract (NSKE) or Neem oil 1500 ppm @ 3ml/L.',
+          'Spray Thiamethoxam 25% WG @ 0.3g/L or Acetamiprid 20% SP @ 0.5g/L.'
+        ]
+      },
+      {
+        heading: 'Sanitation & Prevention',
+        icon: '🛡️',
+        points: [
+          'Rogue out and bury early infected plants to halt vector transmission.',
+          'Plant border barriers of maize or pearl millet to block incoming whitefly winds.',
+          'Choose resistant cultivars for next sowing: Arka Anamika or Kashi Kranti.'
+        ]
+      }
+    ],
+    farmer_summary: 'Severe YVMV viral infection detected. Whitefly control and removing infected plants is critical right now.',
+    symptoms: ['Interlacing of yellow chlorotic veins across the entire leaf lamina', 'Dwarfed pods and pale yellow shoot tips'],
+    cause: 'Begomovirus transmitted persistently by whitefly (Bemisia tabaci).',
+    organic: ['Install yellow sticky cards @ 20/acre', 'Spray 5% NSKE or Neem oil 3ml/L', 'Spray Verticillium lecanii @ 5g/L'],
+    chemical: ['Thiamethoxam 25% WG @ 0.3g/L', 'Acetamiprid 20% SP @ 0.5g/L', 'Spiromesifen 22.9% SC @ 1ml/L'],
+    prevention: ['Rogue out early yellow plants', 'Border barrier of maize', 'Sow resistant varieties like Arka Anamika'],
+    medicinal_uses: ['Okra pods provide soluble fiber for digestive health and blood sugar moderation.'],
+    farmer_advice: 'Act immediately: place yellow sticky cards today and spray Neem or systemic insecticide to halt whiteflies.'
+  },
+  {
+    id: 'sample-apple-scab',
+    name: 'Apple (Apple Scab)',
+    plant_name: 'Apple / Seb',
+    scientific_name: 'Malus domestica',
+    image_type: 'leaf',
+    confidence: 'high',
+    confidence_level: 'high',
+    species: 'Malus domestica (Apple)',
+    condition: 'Apple Scab (Venturia inaequalis)',
+    category: 'Fruits',
+    icon: '🍎',
+    img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80',
+    severity: 'moderate',
+    status: 'diseased',
+    what_i_see: 'Olive-green to velvety dark brown circular lesions on upper leaf surface. Fruit shows small corky brown scab spots.',
+    sections: [
+      {
+        heading: 'Pathology & Symptoms',
+        icon: '🔍',
+        points: [
+          'Infected with Apple Scab fungus (Venturia inaequalis).',
+          'Velvety olive-green lesions reduce photosynthetic capacity.',
+          'Can cause severe fruit deformation, skin cracking, and early drop.'
+        ]
+      },
+      {
+        heading: 'Treatment Protocol',
+        icon: '🧪',
+        points: [
+          'Spray Difenoconazole 25% EC @ 0.3ml/L or Kresoxim-methyl 44.3% SC @ 0.5ml/L.',
+          'For organic orchards: spray Copper Oxychloride @ 3g/L or 1% Bordeaux mixture.',
+          'Ensure thorough coverage of both upper and lower leaf canopies.'
+        ]
+      },
+      {
+        heading: 'Orchard Hygiene',
+        icon: '🍂',
+        points: [
+          'Collect and destroy fallen leaf litter beneath trees (primary winter spore reserve).',
+          'Prune inner criss-crossing branches to maximize solar exposure and air movement.',
+          'Spray 5% urea on fallen orchard floor leaves in autumn to accelerate leaf rot.'
+        ]
+      }
+    ],
+    farmer_summary: 'Apple scab identified; apply systemic triazole/strobilurin spray and clean orchard floor litter.',
+    symptoms: ['Olive-green velvety circular spots on foliage', 'Corky brown scabs and cracks on fruit epidermis'],
+    cause: 'Venturia inaequalis ascomycete fungus favored by prolonged spring rainfall and cool humidity.',
+    organic: ['Bordeaux mixture 1% or Copper Oxychloride 3g/L', 'Prune canopy for airflow', '5% urea spray on floor leaf litter'],
+    chemical: ['Difenoconazole 25% EC @ 0.3ml/L', 'Kresoxim-methyl 44.3% SC @ 0.5ml/L', 'Captan 50% WP @ 2.5g/L'],
+    prevention: ['Sanitation of fallen leaf litter', 'Canopy pruning', 'Cultivate scab-resistant varieties like Prima or Super Chief'],
+    medicinal_uses: ['Apple pectin supports gut microbiome flora and cardiovascular wellness.'],
+    farmer_advice: 'Spray Difenoconazole or Bordeaux mixture immediately and rake away fallen leaves from tree bases.'
+  },
+  {
+    id: 'sample-chickpea-wilt',
+    name: 'Chickpea (Fusarium Wilt)',
+    plant_name: 'Chickpea / Chana',
+    scientific_name: 'Cicer arietinum',
+    image_type: 'leaf',
+    confidence: 'high',
+    confidence_level: 'high',
+    species: 'Cicer arietinum (Chickpea / Bengal Gram)',
+    condition: 'Fusarium Wilt (Fusarium oxysporum f. sp. ciceris)',
+    category: 'Pulses',
+    icon: '🌱',
+    img: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=600&q=80',
+    severity: 'severe',
+    status: 'diseased',
+    what_i_see: 'Foliage droops and turns dull grayish-green without severe yellowing. Dark brown vascular xylem ring when stem is split.',
+    sections: [
+      {
+        heading: 'Wilt Diagnosis',
+        icon: '🔍',
+        points: [
+          'Vascular wilt caused by soil-borne Fusarium oxysporum f. sp. ciceris.',
+          'Fungus clogs water-conducting xylem vessels, causing sudden collapse.',
+          'Internal stem tissues show characteristic dark brown to black vascular discoloration.'
+        ]
+      },
+      {
+        heading: 'Management & Soil Treatment',
+        icon: '🌿',
+        points: [
+          'Soil-borne pathogen cannot be cured once vascular system is fully colonized.',
+          'Drench boundary healthy plants with Carbendazim 50% WP @ 1g/L.',
+          'Apply Trichoderma viride enriched FYM @ 2.5 tonnes/ha to suppress soil inocula.'
+        ]
+      },
+      {
+        heading: 'Future Crop Rotation',
+        icon: '🔄',
+        points: [
+          'Practice 3 to 4 year crop rotation with non-host crops like wheat, mustard, or sorghum.',
+          'Always use certified wilt-resistant varieties: JG-11, JAKI-9218, Digvijay, or Vishal.',
+          'Avoid early sowing when soil temperatures remain above 25°C.'
+        ]
+      }
+    ],
+    farmer_summary: 'Fusarium wilt detected; drench nearby perimeter plants and mark plot for rotation with resistant cultivars next season.',
+    symptoms: ['Sudden drooping of petioles and leaflets', 'Dull grey-green foliage', 'Dark brown vascular ring inside split stem'],
+    cause: 'Soil-borne chlamydospores of Fusarium oxysporum entering through roots.',
+    organic: ['Soil application of Trichoderma viride enriched FYM @ 2.5 t/ha', 'Deep summer solarization ploughing'],
+    chemical: ['Carbendazim 12% + Mancozeb 63% WP seed treatment @ 2g/kg', 'Carboxin 37.5% + Thiram 37.5% DS @ 2g/kg'],
+    prevention: ['Use resistant varieties (JG-11, JAKI-9218)', '3-4 year rotation with wheat/mustard', 'Avoid premature early October sowing'],
+    medicinal_uses: ['Chickpea is a premier protein source and low-glycemic staple across India.'],
+    farmer_advice: 'Uproot collapsing plants and treat border plants with Trichoderma or Carbendazim drench.'
   }
 ];
 
