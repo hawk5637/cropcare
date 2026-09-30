@@ -459,7 +459,11 @@ How to answer:
     };
 
     try {
-      const { data, model } = await callGemini({ systemInstruction, contents, generationConfig });
+      const { data, model } = await callGemini(
+        { systemInstruction, contents, generationConfig },
+        15000,
+        apiKey
+      );
       const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I could not process your query at this moment.";
 
       return res.status(200).json({

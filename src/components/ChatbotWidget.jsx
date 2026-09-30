@@ -6,30 +6,38 @@ import {
   X, 
   Send, 
   Paperclip, 
-  Trash2, 
   Sparkles, 
-  User, 
-  Image as ImageIcon,
   RotateCcw, 
   Mic, 
   MicOff, 
   Volume2, 
   VolumeX, 
   CheckCircle2, 
-  ShieldCheck,
-  ChevronDown,
-  Layers,
-  HelpCircle,
-  AlertCircle
+  ShieldCheck, 
+  Key, 
+  Copy, 
+  Check, 
+  ChevronDown, 
+  ChevronUp, 
+  ExternalLink,
+  Cpu,
+  AlertTriangle
 } from 'lucide-react';
 import { PROJECT_DATA, STARTER_QUESTIONS } from '../data/farmAdvisorContext.js';
+import { generateAdvisorResponse, generateGeneralResponse } from '../data/agronomyBrain.js';
 
 export default function ChatbotWidget() {
-  const { userName, userRole, language, runtimeApiKey, t } = useApp();
+  const { userName, userRole, language, runtimeApiKey, saveRuntimeApiKey, t } = useApp();
 
   const [isOpen, setIsOpen] = useState(false);
   const [botMode, setBotMode] = useState('advisor'); // 'advisor' (Farm Advisor AI) | 'general' (General Assistant)
   const [selectedPlotId, setSelectedPlotId] = useState(PROJECT_DATA.parcels[0].id);
+
+  // Key configuration panel
+  const [showKeyConfig, setShowKeyConfig] = useState(false);
+  const [customKeyInput, setCustomKeyInput] = useState(runtimeApiKey || '');
+  const [keyNotice, setKeyNotice] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   // Separate messages for Advisor and General modes
   const [advisorMessages, setAdvisorMessages] = useState([
@@ -42,6 +50,7 @@ I answer questions strictly using your farm's verified telemetry, soil tests, we
 
 Tap a starter question below or ask why a crop or fertilizer was recommended for your parcel!`,
       grounded: true,
+      source: 'brain',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -50,7 +59,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
     {
       id: 'welcome-general',
       sender: 'model',
-      text: `Hello ${userName || 'Kisan Friend'}! 🌱 I am CropCare's General Agronomy helper. Ask me any broad questions about crops, seeds, mandi rates, or attach a photo for examination!`,
+      text: `Hello **${userName || 'Kisan Friend'}**! 🌱 I am CropCare's General Agronomy helper. Ask me any questions about crops, diseases, fertilizers, mandi rates, or attach a photo for examination!`,
+      source: 'brain',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -69,9 +79,15 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
   const activeMessages = botMode === 'advisor' ? advisorMessages : generalMessages;
   const setActiveMessages = botMode === 'advisor' ? setAdvisorMessages : setGeneralMessages;
 
+  const isGeminiKeyValid = Boolean(
+    runtimeApiKey && 
+    !runtimeApiKey.startsWith('AQ.') && 
+    (runtimeApiKey.startsWith('AIza') || runtimeApiKey.length >= 35)
+  );
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [advisorMessages, generalMessages, isTyping, botMode]);
+  }, [advisorMessages, generalMessages, isTyping, botMode, showKeyConfig]);
 
   // Speech Recognition
   useEffect(() => {
@@ -134,6 +150,42 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
     window.speechSynthesis.speak(utterance);
   };
 
+  const copyToClipboard = (msgId, text) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedId(msgId);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleSaveKey = async (e) => {
+    e.preventDefault();
+    const trimmed = customKeyInput.trim();
+    if (!trimmed) {
+      saveRuntimeApiKey('');
+      setKeyNotice({ type: 'info', text: 'Using Built-in Agronomy Brain (No API Key needed)' });
+      setTimeout(() => setKeyNotice(null), 3500);
+      return;
+    }
+
+    if (trimmed.startsWith('AQ.') || trimmed.length < 25) {
+      setKeyNotice({ type: 'error', text: 'Invalid key. Google Gemini keys start with "AIzaSy..."' });
+      return;
+    }
+
+    await saveRuntimeApiKey(trimmed);
+    setKeyNotice({ type: 'success', text: 'Gemini API key saved! Live AI active.' });
+    setTimeout(() => {
+      setKeyNotice(null);
+      setShowKeyConfig(false);
+    }, 2000);
+  };
+
+  const handleResetToBrain = async () => {
+    setCustomKeyInput('');
+    await saveRuntimeApiKey('');
+    setKeyNotice({ type: 'info', text: 'Switched to Built-in Agronomy Brain.' });
+    setTimeout(() => setKeyNotice(null), 3000);
+  };
+
   const executeSend = async (trimmed, imageAttachment) => {
     if (!trimmed && !imageAttachment) return;
 
@@ -152,80 +204,88 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       .filter(m => m.sender && m.text && !m.id.startsWith('welcome-') && !m.isError && !m.text.startsWith('⚠️'))
       .slice(-8);
 
-    const effectiveKey = runtimeApiKey || import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
-
     try {
       let replyContent = '';
+      let replySource = 'brain';
 
-      if (botMode === 'advisor') {
-        // Call /api/farm-advisor
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 20000);
+      // 1. Try Live Gemini if a valid key is provided
+      if (isGeminiKeyValid) {
+        if (botMode === 'advisor') {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-          const res = await fetch('/api/farm-advisor', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-gemini-api-key': effectiveKey
-            },
-            body: JSON.stringify({
-              message: trimmed,
-              history: cleanHistory,
-              plotId: selectedPlotId,
-              language: language,
-              userName: userName || 'Farmer'
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
+            const res = await fetch('/api/farm-advisor', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-gemini-api-key': runtimeApiKey
+              },
+              body: JSON.stringify({
+                message: trimmed,
+                history: cleanHistory,
+                plotId: selectedPlotId,
+                language: language,
+                userName: userName || 'Farmer'
+              }),
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
 
-          if (res.ok) {
-            const data = await res.json();
-            replyContent = data.reply;
+            if (res.ok) {
+              const data = await res.json();
+              if (data.reply) {
+                replyContent = data.reply;
+                replySource = 'gemini';
+              }
+            }
+          } catch (e) {
+            console.warn('Live advisor backend error, using Agronomy Brain:', e.message);
           }
-        } catch (e) {
-          console.warn('Backend /api/farm-advisor unavailable, falling back:', e.message);
-        }
+        } else {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-        if (!replyContent) {
-          replyContent = getClientFallbackAdvisorReply(trimmed, currentPlot);
-        }
-      } else {
-        // Call /api/chat
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 25000);
+            const res = await fetch('/api/chat', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-gemini-api-key': runtimeApiKey
+              },
+              body: JSON.stringify({
+                message: trimmed,
+                history: cleanHistory,
+                language: language,
+                userName: userName,
+                userRole: userRole,
+                image: userMsg.image
+              }),
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
 
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-gemini-api-key': effectiveKey
-            },
-            body: JSON.stringify({
-              message: trimmed,
-              history: cleanHistory,
-              language: language,
-              userName: userName,
-              userRole: userRole,
-              image: userMsg.image
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if (res.ok) {
-            const data = await res.json();
-            replyContent = data.reply;
+            if (res.ok) {
+              const data = await res.json();
+              if (data.reply) {
+                replyContent = data.reply;
+                replySource = 'gemini';
+              }
+            }
+          } catch (e) {
+            console.warn('Live chat backend error, using Agronomy Brain:', e.message);
           }
-        } catch (proxyErr) {
-          console.warn('Backend proxy /api/chat unavailable:', proxyErr.message);
         }
+      }
 
-        if (!replyContent) {
-          replyContent = `### 🌾 CropCare Agronomy Advisory\nThank you for your question about "${trimmed}". For live crop diagnostics, please check your parcel telemetry in the Land & Soil module or scan a leaf in the AI Leaf Doctor.`;
+      // 2. Intelligent Agronomy Brain fallback / offline engine
+      if (!replyContent) {
+        if (botMode === 'advisor') {
+          replyContent = generateAdvisorResponse(trimmed, selectedPlotId, language, userName);
+        } else {
+          replyContent = generateGeneralResponse(trimmed, language, userName, currentPlot);
         }
+        replySource = 'brain';
       }
 
       setActiveMessages(prev => [
@@ -235,18 +295,25 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
           sender: 'model',
           text: replyContent,
           grounded: botMode === 'advisor',
+          source: replySource,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
     } catch (err) {
       console.error('Chat error:', err);
+      // Even on severe error, never show broken canned reply; provide helpful agronomy response
+      const fallbackReply = botMode === 'advisor'
+        ? generateAdvisorResponse(trimmed, selectedPlotId, language, userName)
+        : generateGeneralResponse(trimmed, language, userName, currentPlot);
+
       setActiveMessages(prev => [
         ...prev,
         {
-          id: `err-${Date.now()}`,
+          id: `bot-${Date.now()}`,
           sender: 'model',
-          isError: true,
-          text: '⚠️ I could not process your query at this moment. Based on the available data, please try asking again or check your plot telemetry directly.',
+          text: fallbackReply,
+          grounded: botMode === 'advisor',
+          source: 'brain',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -289,6 +356,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
           sender: 'model',
           text: `Farm Advisor AI session reset for **${currentPlot.name}**. What would you like to know about your soil, moisture, or crop recommendations?`,
           grounded: true,
+          source: 'brain',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -297,7 +365,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
         {
           id: `welcome-${Date.now()}`,
           sender: 'model',
-          text: `Chat cleared! How can I help you today?`,
+          text: `Chat cleared! How can I assist you with your crops, fertilizers, or diseases today?`,
+          source: 'brain',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -310,11 +379,11 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-5 right-5 z-40 p-3.5 sm:p-4 rounded-full bg-gradient-to-tr from-emerald-700 via-emerald-600 to-green-500 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center group cursor-pointer ring-4 ring-emerald-500/20"
-        aria-label="Open Farm Advisor AI"
+        aria-label="Open CropCare AI Assistant"
       >
         <Bot className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
         <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 font-bold text-xs pl-0 group-hover:pl-2">
-          Farm Advisor AI
+          {botMode === 'advisor' ? 'Farm Advisor AI' : 'CropCare AI'}
         </span>
         <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
         <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full" />
@@ -322,7 +391,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
 
       {/* Floating Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[460px] h-[600px] max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[480px] h-[640px] max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
           
           {/* Header */}
           <div className="p-3.5 bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white flex flex-col gap-2.5">
@@ -336,17 +405,48 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                     <h4 className="font-extrabold text-sm tracking-tight">
                       {botMode === 'advisor' ? 'Farm Advisor AI' : 'CropCare General AI'}
                     </h4>
-                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/40 text-emerald-100 border border-emerald-400/30 flex items-center gap-0.5">
-                      <ShieldCheck className="w-2.5 h-2.5" /> {botMode === 'advisor' ? 'Grounded' : 'General'}
-                    </span>
+                    
+                    {/* Live Engine Indicator */}
+                    <button
+                      type="button"
+                      onClick={() => setShowKeyConfig(!showKeyConfig)}
+                      className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold border transition-colors flex items-center gap-1 cursor-pointer ${
+                        isGeminiKeyValid
+                          ? 'bg-amber-400/20 text-amber-200 border-amber-300/40 hover:bg-amber-400/30'
+                          : 'bg-emerald-500/40 text-emerald-100 border-emerald-400/30 hover:bg-emerald-500/50'
+                      }`}
+                      title="Click to configure Gemini API Key"
+                    >
+                      {isGeminiKeyValid ? (
+                        <>
+                          <Sparkles className="w-2.5 h-2.5 text-amber-300" /> Live Gemini
+                        </>
+                      ) : (
+                        <>
+                          <Cpu className="w-2.5 h-2.5 text-emerald-200" /> Agronomy Brain
+                        </>
+                      )}
+                    </button>
                   </div>
                   <p className="text-[10px] text-emerald-100/90 font-medium">
-                    {botMode === 'advisor' ? `Data Grounded on ${currentPlot.code}: ${currentPlot.current_crop}` : 'Agricultural assistant'}
+                    {botMode === 'advisor' 
+                      ? `Telemetry Grounded on ${currentPlot.code}: ${currentPlot.current_crop}` 
+                      : 'World-Class Agronomy & Plant Pathology Helper'}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setShowKeyConfig(!showKeyConfig)}
+                  className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
+                    showKeyConfig ? 'bg-white/25 text-white' : 'text-emerald-200 hover:text-white hover:bg-white/10'
+                  }`}
+                  title="Configure Gemini API Key"
+                >
+                  <Key className="w-4 h-4" />
+                </button>
                 <button
                   onClick={clearCurrentChat}
                   className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
@@ -357,11 +457,71 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Close chat"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
+
+            {/* Collapsible Key Setup Drawer */}
+            {showKeyConfig && (
+              <div className="bg-black/30 p-2.5 rounded-2xl border border-white/15 text-xs animate-in fade-in duration-150 flex flex-col gap-2">
+                <div className="flex items-center justify-between text-[11px] font-bold text-emerald-100">
+                  <span className="flex items-center gap-1">
+                    <Key className="w-3.5 h-3.5 text-amber-300" /> Gemini API Key (Optional)
+                  </span>
+                  <a
+                    href="https://aistudio.google.com/app/apikey"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-amber-200 hover:text-white underline flex items-center gap-0.5"
+                  >
+                    Get Free Key <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+
+                <p className="text-[10px] text-emerald-200/90 leading-tight">
+                  {isGeminiKeyValid 
+                    ? 'Connected to Google Gemini Live API. Responses are powered by multimodal LLM.' 
+                    : 'Currently powered by CropCare’s Built-in Agronomy Brain (100% offline, 0s latency). You can add a Gemini key for open-ended cloud AI.'}
+                </p>
+
+                <form onSubmit={handleSaveKey} className="flex gap-1.5 items-center">
+                  <input
+                    type="password"
+                    value={customKeyInput}
+                    onChange={(e) => setCustomKeyInput(e.target.value)}
+                    placeholder="Paste AIzaSy... key or leave empty"
+                    className="flex-1 px-2.5 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-emerald-200/50 text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-300 font-mono"
+                  />
+                  <button
+                    type="submit"
+                    className="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-[11px] shadow-sm cursor-pointer whitespace-nowrap"
+                  >
+                    Save Key
+                  </button>
+                  {isGeminiKeyValid && (
+                    <button
+                      type="button"
+                      onClick={handleResetToBrain}
+                      className="px-2 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[10px] font-semibold cursor-pointer whitespace-nowrap"
+                      title="Clear key and use Agronomy Brain"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </form>
+
+                {keyNotice && (
+                  <div className={`p-1.5 rounded-lg text-[10px] font-semibold flex items-center gap-1 ${
+                    keyNotice.type === 'error' ? 'bg-rose-500/30 text-rose-100' : 'bg-emerald-500/30 text-emerald-100'
+                  }`}>
+                    <CheckCircle2 className="w-3 h-3" /> {keyNotice.text}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Mode Switcher Tabs */}
             <div className="flex bg-black/20 p-1 rounded-xl text-xs font-bold gap-1">
@@ -398,7 +558,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                     key={p.id}
                     type="button"
                     onClick={() => setSelectedPlotId(p.id)}
-                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all whitespace-nowrap ${
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all whitespace-nowrap cursor-pointer ${
                       selectedPlotId === p.id
                         ? 'bg-white text-emerald-900 shadow-sm'
                         : 'bg-white/15 text-emerald-100 hover:bg-white/25'
@@ -451,19 +611,38 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                     />
                   )}
 
-                  {m.grounded && m.sender !== 'user' && (
-                    <div className="flex items-center justify-between text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pb-1 mb-1 border-b border-slate-100 dark:border-slate-700/60">
-                      <span className="flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3" /> Grounded in {currentPlot.code} Data
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => toggleSpeakMessage(m.id, m.text)}
-                        className="text-slate-400 hover:text-emerald-600 transition-colors p-0.5"
-                        title={isSpeakingId === m.id ? "Stop voice" : "Read aloud"}
-                      >
-                        {isSpeakingId === m.id ? <VolumeX className="w-3 h-3 text-emerald-600 animate-pulse" /> : <Volume2 className="w-3 h-3" />}
-                      </button>
+                  {/* Header bar on model messages */}
+                  {m.sender !== 'user' && (
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 pb-1 mb-1 border-b border-slate-100 dark:border-slate-700/60">
+                      <div className="flex items-center gap-1.5">
+                        {m.grounded && (
+                          <span className="flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
+                            <ShieldCheck className="w-3 h-3" /> Grounded ({currentPlot.code})
+                          </span>
+                        )}
+                        <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                          {m.source === 'gemini' ? '✨ Gemini Live' : '🌱 Agronomy Brain'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(m.id, m.text)}
+                          className="text-slate-400 hover:text-emerald-600 transition-colors p-0.5"
+                          title="Copy response"
+                        >
+                          {copiedId === m.id ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleSpeakMessage(m.id, m.text)}
+                          className="text-slate-400 hover:text-emerald-600 transition-colors p-0.5"
+                          title={isSpeakingId === m.id ? "Stop voice" : "Read aloud"}
+                        >
+                          {isSpeakingId === m.id ? <VolumeX className="w-3 h-3 text-emerald-600 animate-pulse" /> : <Volume2 className="w-3 h-3" />}
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -489,7 +668,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '300ms' }} />
                   <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 pl-1">
-                    {botMode === 'advisor' ? 'Analyzing parcel telemetry & rules...' : 'Generating response...'}
+                    {botMode === 'advisor' ? 'Analyzing plot telemetry & agronomy...' : 'Formulating agricultural advisory...'}
                   </span>
                 </div>
               </div>
@@ -498,49 +677,118 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggested Starter Questions (Advisor Mode) */}
-          {botMode === 'advisor' && (
-            <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-emerald-500" /> Starter Questions:
+          {/* Quick Starter Suggestions Bar */}
+          <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-1">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-emerald-500" /> 
+                {botMode === 'advisor' ? 'Plot Inquiries:' : 'Recommended Topics:'}
               </span>
-              <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
-                {STARTER_QUESTIONS.map(q => (
+            </div>
+            
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
+              {botMode === 'advisor' ? (
+                <>
                   <button
-                    key={q.id}
                     type="button"
-                    onClick={() => handleQuickQuestion(q.text)}
+                    onClick={() => handleQuickQuestion('Why was this crop recommended for my parcel?')}
                     disabled={isTyping}
                     className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
                   >
-                    <span>{q.icon}</span>
-                    <span>{q.text}</span>
+                    <span>🌱</span>
+                    <span>Why this crop?</span>
                   </button>
-                ))}
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('How do soil moisture and NPK affect this crop?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>🧪</span>
+                    <span>NPK & Moisture</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What water and fertilizer schedule should I follow now?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>💧</span>
+                    <span>Water & Spray plan</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What are the pest risks and NDVI score for this plot?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>🛡️</span>
+                    <span>Pest Risk & Vigour</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What is my projected yield and revenue for this harvest?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>📊</span>
+                    <span>Yield & Revenue</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What is the optimal fertilizer dose for Wheat?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🌾 Wheat Fertilizer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('How to treat Tomato early blight and leaf curl?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🍅 Tomato Diseases
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('How to prepare 5% Neem oil spray for pests?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🌿 Organic Neem Spray
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('Explain PM-KISAN ₹6,000 scheme eligibility')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🏛️ PM-KISAN Scheme
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What are current MSP rates for major crops?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    📈 Mandi MSP Rates
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('How to treat acidic and alkaline soils?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🧪 Soil pH Remedy
+                  </button>
+                </>
+              )}
             </div>
-          )}
-
-          {/* Quick suggestions for General mode */}
-          {botMode === 'general' && (
-            <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 flex gap-1.5 overflow-x-auto scrollbar-none">
-              {[
-                '🌾 Wheat fertilizer dose?', 
-                '🍅 Tomato early blight cure', 
-                '🌿 How to make Neem spray?', 
-                '📈 Mandi MSP rates'
-              ].map((s, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleQuickQuestion(s)}
-                  className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-800 dark:hover:bg-emerald-950 shrink-0 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
+          </div>
 
           {/* Input Footer */}
           <form onSubmit={handleSendMessage} className="p-2.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
@@ -561,25 +809,21 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
             )}
 
             <div className="flex items-center gap-1.5">
-              {botMode === 'general' && (
-                <>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    accept="image/*"
-                    onChange={(e) => handleImageAttach(e.target.files?.[0])}
-                    className="hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
-                    title="Attach plant photo"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                  </button>
-                </>
-              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={(e) => handleImageAttach(e.target.files?.[0])}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+                title="Attach plant photo"
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
 
               <button
                 type="button"
@@ -602,8 +846,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                   isListening 
                     ? 'Listening to your voice...' 
                     : botMode === 'advisor'
-                    ? `Ask Farm Advisor AI about ${currentPlot.code}...`
-                    : 'Ask about farming, botany, crops...'
+                    ? `Ask Farm Advisor about Plot ${currentPlot.code}...`
+                    : 'Ask about crops, diseases, fertilizers...'
                 }
                 className="flex-1 px-3 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400"
               />
@@ -612,6 +856,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                 type="submit"
                 disabled={!inputText.trim() && !attachedImage}
                 className="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                title="Send message"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -621,8 +866,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               <CheckCircle2 className="w-3 h-3 text-emerald-500" />
               <span>
                 {botMode === 'advisor'
-                  ? 'Grounded on soil NPK, moisture & weather telemetry • Uncertainty stated clearly'
-                  : 'CropCare Agronomy Assistant'}
+                  ? 'Telemetry verified: Soil NPK, moisture & weather • Precision Agronomy'
+                  : 'CropCare Agronomy Brain • 30+ Crops, IPM & Government Schemes'}
               </span>
             </div>
           </form>
@@ -631,39 +876,4 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       )}
     </>
   );
-}
-
-// Client fallback offline engine for Farm Advisor if network is disconnected
-function getClientFallbackAdvisorReply(query, plot) {
-  const q = query.toLowerCase();
-  
-  if (q.includes('why') && (q.includes('crop') || q.includes('recommend'))) {
-    return `Based on the available data for **${plot.name}**:
-- **Soil Suitability:** Your ${plot.soil.type} soil has a pH of ${plot.soil.ph}, which is optimal for ${plot.current_crop}.
-- **Water & Moisture:** Current soil moisture is ${plot.soil.moisture}%, within the required ${plot.soil.moisture_target} target range.
-- **Nutrient Profile:** High available Potassium (${plot.soil.potassium} kg/ha) supports strong earheads and prevents lodging.
-- **Season:** Rabi winter temperatures match the grain filling stage.
-
-*Note: In-field conditions may vary depending on local microclimate.*`;
-  }
-
-  if (q.includes('soil') || q.includes('npk') || q.includes('moisture')) {
-    return `Based on the available telemetry for **${plot.name}**:
-- **Moisture:** ${plot.soil.moisture}% (Target: ${plot.soil.moisture_target}) — currently optimal.
-- **NPK Ratio:** Nitrogen ${plot.soil.nitrogen} kg/ha, Phosphorus ${plot.soil.phosphorus} kg/ha, Potassium ${plot.soil.potassium} kg/ha.
-- **Impact on Crop:** Potassium foliar absorption at this stage increases grain weight by ~8%. Keep moisture steady above 30% to prevent grain shrivelling.
-
-*This may vary if upcoming rain arrives on Friday.*`;
-  }
-
-  if (q.includes('water') || q.includes('irrigation') || q.includes('fertilizer') || q.includes('schedule')) {
-    return `Based on the available data:
-- **Next Irrigation:** ${plot.irrigation.next_cycle}.
-- **Fertilizer Advisory:** ${plot.active_recommendation.title}. ${plot.active_recommendation.why}
-- **Action:** ${plot.active_recommendation.action}.
-
-*Please check the Weather Module before spraying, as high winds are predicted for Thursday.*`;
-  }
-
-  return `Based on the available data for ${plot.name}, ${plot.current_crop} is in ${plot.growth_stage} with an overall health score of ${plot.health_score}/100. If you are asking about outside topics like buying inputs or diagnosing photos, please open the **AI Leaf Doctor** or **Marketplace** modules in CropCare.`;
 }

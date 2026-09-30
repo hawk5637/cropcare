@@ -22,6 +22,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { PROJECT_DATA, STARTER_QUESTIONS } from '../../data/farmAdvisorContext.js';
+import { generateAdvisorResponse } from '../../data/agronomyBrain.js';
 
 export default function FarmAdvisorModule() {
   const { userName, userRole, language, runtimeApiKey, setActiveNav, setActiveModule } = useApp();
@@ -176,9 +177,9 @@ Select a plot above or tap one of the starter questions below to see how soil, w
         console.warn('Backend proxy /api/farm-advisor error:', backendErr);
       }
 
-      // If backend fails, use grounded fallback logic with client knowledge
+      // If backend fails or unavailable, use rich grounded agronomy brain
       if (!replyText) {
-        replyText = getClientFallbackAdvisorReply(textToSend, currentPlot);
+        replyText = generateAdvisorResponse(textToSend, selectedPlotId, language, userName);
       }
 
       setMessages(prev => [
@@ -481,39 +482,4 @@ Select a plot above or tap one of the starter questions below to see how soil, w
       </div>
     </div>
   );
-}
-
-// Client fallback offline engine if network is disconnected
-function getClientFallbackAdvisorReply(query, plot) {
-  const q = query.toLowerCase();
-  
-  if (q.includes('why') && (q.includes('crop') || q.includes('recommend'))) {
-    return `Based on the available data for **${plot.name}**:
-- **Soil Match:** Your ${plot.soil.type} soil has a pH of ${plot.soil.ph}, which is optimal for ${plot.current_crop}.
-- **Water & Moisture:** Current soil moisture is ${plot.soil.moisture}%, within the required ${plot.soil.moisture_target} target range.
-- **Nutrient Availability:** Potassium is ${plot.soil.potassium} kg/ha, which supports heavy yield during the ${plot.growth_stage} stage.
-- **Season:** Current temperature (27°C) matches the ideal growth window.
-
-*Note: Field microclimates may vary across plot sections.*`;
-  }
-
-  if (q.includes('soil') || q.includes('npk') || q.includes('moisture')) {
-    return `Based on the available telemetry for **${plot.name}**:
-- **Moisture:** ${plot.soil.moisture}% (Target: ${plot.soil.moisture_target}) — currently adequate.
-- **NPK Ratio:** Nitrogen ${plot.soil.nitrogen} kg/ha, Phosphorus ${plot.soil.phosphorus} kg/ha, Potassium ${plot.soil.potassium} kg/ha.
-- **Impact on Crop:** Potassium foliar absorption at this stage increases grain weight by ~8%. Keep moisture steady above 30% to prevent grain shrivelling.
-
-*This may vary if upcoming rain arrives on Friday.*`;
-  }
-
-  if (q.includes('water') || q.includes('irrigation') || q.includes('fertilizer') || q.includes('schedule')) {
-    return `Based on the available data:
-- **Next Irrigation:** ${plot.irrigation.next_cycle}.
-- **Fertilizer Advisory:** ${plot.active_recommendation.title}. ${plot.active_recommendation.why}
-- **Action:** ${plot.active_recommendation.action}.
-
-*Please check the Weather Module before spraying, as high winds are predicted for Thursday.*`;
-  }
-
-  return `Based on the available data for ${plot.name}, ${plot.current_crop} is in ${plot.growth_stage} with an overall health score of ${plot.health_score}/100. If you are asking about outside topics like buying inputs or diagnosing photos, please open the **AI Leaf Doctor** or **Marketplace** modules in CropCare.`;
 }

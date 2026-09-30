@@ -129,7 +129,7 @@ How to answer:
     try {
       const { data, model } = await callGemini(
         { systemInstruction, contents, generationConfig },
-        9000,
+        15000,
         apiKey
       );
       const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;

@@ -1,13 +1,21 @@
 const BASE = "https://generativelanguage.googleapis.com/v1beta";
 
-const KEY = (customKey) => 
-  customKey || 
-  process.env.GEMINI_API_KEY || 
-  process.env.VITE_GEMINI_API_KEY || 
-  'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
+export function isLikelyGeminiKey(key) {
+  if (!key || typeof key !== 'string') return false;
+  const k = key.trim();
+  if (k.startsWith('AQ.') || k.length < 25) return false;
+  return k.startsWith('AIza') || k.length >= 35;
+}
+
+const KEY = (customKey) => {
+  const candidate = customKey || 
+    process.env.GEMINI_API_KEY || 
+    process.env.VITE_GEMINI_API_KEY;
+  return candidate && isLikelyGeminiKey(candidate) ? candidate.trim() : '';
+};
 
 const PREFERRED_ORDER = [
-  process.env.GEMINI_MODEL,
+  process.env.GEMINI_MODEL && !process.env.GEMINI_MODEL.includes('3.5') ? process.env.GEMINI_MODEL : null,
   "gemini-2.5-flash",
   "gemini-2.0-flash",
   "gemini-1.5-flash",
@@ -20,17 +28,24 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function availableModels(apiKey) {
   const key = KEY(apiKey);
+  if (!key) {
+    return [...new Set(PREFERRED_ORDER)];
+  }
   if (cache.models && Date.now() - cache.at < 10 * 60_000) return cache.models;
-  const r = await fetch(`${BASE}/models?pageSize=200`, {
-    headers: { "x-goog-api-key": key },
-  });
-  const d = await r.json();
-  if (!r.ok) throw { errors: [{ status: r.status, message: d.error?.message || "Failed to list models" }] };
-  const names = (d.models || [])
-    .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
-    .map((m) => m.name.replace("models/", ""));
-  cache = { at: Date.now(), models: names };
-  return names;
+  try {
+    const r = await fetch(`${BASE}/models?pageSize=200`, {
+      headers: { "x-goog-api-key": key },
+    });
+    const d = await r.json();
+    if (!r.ok) throw { errors: [{ status: r.status, message: d.error?.message || "Failed to list models" }] };
+    const names = (d.models || [])
+      .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
+      .map((m) => m.name.replace("models/", ""));
+    cache = { at: Date.now(), models: names };
+    return names;
+  } catch (err) {
+    return [...new Set(PREFERRED_ORDER)];
+  }
 }
 
 export async function modelChain(apiKey) {
@@ -55,10 +70,10 @@ export async function modelChain(apiKey) {
   return chain.length ? chain : [...new Set(PREFERRED_ORDER)];
 }
 
-export async function callGemini(body, timeoutMs = 9000, customApiKey = null) {
+export async function callGemini(body, timeoutMs = 15000, customApiKey = null) {
   const apiKey = KEY(customApiKey);
   if (!apiKey) {
-    const err = { model: "none", status: 401, message: "Missing GEMINI_API_KEY" };
+    const err = { model: "none", status: 401, message: "Missing or invalid GEMINI_API_KEY. Please provide a valid key starting with AIzaSy..." };
     throw { errors: [err] };
   }
 

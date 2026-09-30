@@ -64,9 +64,10 @@ export function AppProvider({ children }) {
     { id: 'n3', type: 'info', message: 'Soil moisture at 36% — optimal range', read: true, time: '1h ago' }
   ]);
   const [hasServerApiKey, setHasServerApiKey] = useState(true);
-  const [runtimeApiKey, setRuntimeApiKey] = useState(() =>
-    localStorage.getItem('cropcare_runtime_api_key') || import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg'
-  );
+  const [runtimeApiKey, setRuntimeApiKey] = useState(() => {
+    const saved = localStorage.getItem('cropcare_runtime_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '';
+    return saved && !saved.startsWith('AQ.') ? saved.trim() : '';
+  });
   const [expertQueue, setExpertQueue] = useState([]);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isIntroModalOpen, setIsIntroModalOpen] = useState(() => {
