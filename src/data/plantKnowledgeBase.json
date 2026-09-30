@@ -153,7 +153,10 @@
           "Maintain alternate wetting and drying (AWD)"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#4ade80"
   },
   {
     "name": "Wheat",
@@ -298,7 +301,10 @@
           "Timely sowing to escape peak aphid population in late winter"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#facc15"
   },
   {
     "name": "Maize",
@@ -445,7 +451,10 @@
           "Burn or compost maize stubble before spring"
         ]
       }
-    ]
+    ],
+    "icon": "🌽",
+    "leaf_image_url": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#eab308"
   },
   {
     "name": "Tomato",
@@ -599,7 +608,10 @@
           "Deep summer ploughing to destroy pupae in soil"
         ]
       }
-    ]
+    ],
+    "icon": "🍅",
+    "leaf_image_url": "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#ef4444"
   },
   {
     "name": "Potato",
@@ -743,7 +755,10 @@
           "Use vector-free certified foundation seed"
         ]
       }
-    ]
+    ],
+    "icon": "🥔",
+    "leaf_image_url": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#a8a29e"
   },
   {
     "name": "Brinjal",
@@ -894,7 +909,10 @@
           "Do not overuse broad-spectrum synthetic pyrethroids which kill predatory mites"
         ]
       }
-    ]
+    ],
+    "icon": "🍆",
+    "leaf_image_url": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#8b5cf6"
   },
   {
     "name": "Chilli",
@@ -1044,7 +1062,10 @@
           "Avoid dense sowing of seed in nursery"
         ]
       }
-    ]
+    ],
+    "icon": "🌶️",
+    "leaf_image_url": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#dc2626"
   },
   {
     "name": "Onion",
@@ -1191,7 +1212,10 @@
           "Avoid planting downwind of old infected onion fields"
         ]
       }
-    ]
+    ],
+    "icon": "🧅",
+    "leaf_image_url": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f97316"
   },
   {
     "name": "Mango",
@@ -1335,7 +1359,10 @@
           "Use disease-free scion wood for grafting"
         ]
       }
-    ]
+    ],
+    "icon": "🥭",
+    "leaf_image_url": "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f59e0b"
   },
   {
     "name": "Banana",
@@ -1480,7 +1507,10 @@
           "Hot water treatment of suckers at 50°C for 20 minutes before planting"
         ]
       }
-    ]
+    ],
+    "icon": "🍌",
+    "leaf_image_url": "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#fbbf24"
   },
   {
     "name": "Papaya",
@@ -1628,7 +1658,10 @@
           "Avoid broad spectrum sprays that kill Acerophagus parasitoids"
         ]
       }
-    ]
+    ],
+    "icon": "🍈",
+    "leaf_image_url": "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#ea580c"
   },
   {
     "name": "Guava",
@@ -1771,7 +1804,10 @@
           "Spray at flushing and fruitlet setting stages"
         ]
       }
-    ]
+    ],
+    "icon": "🍐",
+    "leaf_image_url": "https://images.unsplash.com/photo-1536511135898-0348554d3b66?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#84cc16"
   },
   {
     "name": "Neem",
@@ -1912,7 +1948,10 @@
           "Avoid excess shade and overwatering in seedling beds"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#16a34a"
   },
   {
     "name": "Tulsi",
@@ -2056,7 +2095,10 @@
           "Avoid hard water deposits in pots"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#15803d"
   },
   {
     "name": "Aloe vera",
@@ -2195,7 +2237,10 @@
           "Inspect crevices of new suckers before transplanting"
         ]
       }
-    ]
+    ],
+    "icon": "🪴",
+    "leaf_image_url": "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#22c55e"
   },
   {
     "name": "Turmeric",
@@ -2341,7 +2386,10 @@
           "Maintain optimum soil moisture; avoid water stress during dry spells"
         ]
       }
-    ]
+    ],
+    "icon": "💛",
+    "leaf_image_url": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#eab308"
   },
   {
     "name": "Ginger",
@@ -2487,7 +2535,10 @@
           "Hot water treatment of seed rhizomes at 48°C for 20 minutes"
         ]
       }
-    ]
+    ],
+    "icon": "🫚",
+    "leaf_image_url": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#d97706"
   },
   {
     "name": "Mustard",
@@ -2635,7 +2686,10 @@
           "Avoid dense plant populations"
         ]
       }
-    ]
+    ],
+    "icon": "🌼",
+    "leaf_image_url": "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#fde047"
   },
   {
     "name": "Groundnut",
@@ -2784,7 +2838,10 @@
           "Collect larvae under soil clods during daytime"
         ]
       }
-    ]
+    ],
+    "icon": "🥜",
+    "leaf_image_url": "https://images.unsplash.com/photo-1525607551316-4a8e16d1f9ba?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#d97706"
   },
   {
     "name": "Cotton",
@@ -2935,7 +2992,10 @@
           "Prophylactic sulfur spray in October-November"
         ]
       }
-    ]
+    ],
+    "icon": "☁️",
+    "leaf_image_url": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f8fafc"
   },
   {
     "name": "Sugarcane",
@@ -3079,7 +3139,10 @@
           "Never use setts from ratoon fields showing GSD symptoms"
         ]
       }
-    ]
+    ],
+    "icon": "🎋",
+    "leaf_image_url": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#65a30d"
   },
   {
     "name": "Variegated Foliage",
@@ -3145,7 +3208,10 @@
           "Provide bright filtered indirect sunlight to protect white margins from scorching"
         ]
       }
-    ]
+    ],
+    "icon": "🍃",
+    "leaf_image_url": "https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#86efac"
   },
   {
     "name": "Citrus / Lemon",
@@ -3211,7 +3277,10 @@
           "Erect windbreak trees around orchard"
         ]
       }
-    ]
+    ],
+    "icon": "🍋",
+    "leaf_image_url": "https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#facc15"
   },
   {
     "name": "Rose",
@@ -3279,7 +3348,10 @@
           "Water strictly at soil level early morning"
         ]
       }
-    ]
+    ],
+    "icon": "🌹",
+    "leaf_image_url": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f43f5e"
   },
   {
     "name": "Mint",
@@ -3347,7 +3419,10 @@
           "Replant beds every 2-3 years to fresh fertile soil"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#10b981"
   },
   {
     "name": "Betel Leaf",
@@ -3415,7 +3490,10 @@
           "Use disease-free apical vine cuttings"
         ]
       }
-    ]
+    ],
+    "icon": "🍃",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#059669"
   },
   {
     "name": "Okra / Bhindi",
@@ -3512,7 +3590,10 @@
           "Hand-pick damaged pods at harvest"
         ]
       }
-    ]
+    ],
+    "icon": "🥒",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#16a34a"
   },
   {
     "name": "Cabbage",
@@ -3607,7 +3688,10 @@
           "Ensure raised beds with good drainage"
         ]
       }
-    ]
+    ],
+    "icon": "🥬",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#22c55e"
   },
   {
     "name": "Cauliflower",
@@ -3698,7 +3782,10 @@
           "Use only disease-free nursery seedlings"
         ]
       }
-    ]
+    ],
+    "icon": "🥦",
+    "leaf_image_url": "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f8fafc"
   },
   {
     "name": "Bitter Gourd / Karela",
@@ -3794,7 +3881,10 @@
           "Early morning harvest before fly activity peaks"
         ]
       }
-    ]
+    ],
+    "icon": "🥒",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#15803d"
   },
   {
     "name": "Bottle Gourd / Lauki",
@@ -3890,7 +3980,10 @@
           "Use disease-free certified hybrid seeds"
         ]
       }
-    ]
+    ],
+    "icon": "🥒",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#86efac"
   },
   {
     "name": "Spinach / Palak",
@@ -3987,7 +4080,10 @@
           "Avoid excessive synthetic urea which creates succulent sap"
         ]
       }
-    ]
+    ],
+    "icon": "🥬",
+    "leaf_image_url": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#15803d"
   },
   {
     "name": "Carrot / Gajar",
@@ -4081,7 +4177,10 @@
           "Avoid using untreated canal water on light soils"
         ]
       }
-    ]
+    ],
+    "icon": "🥕",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#f97316"
   },
   {
     "name": "Radish / Mooli",
@@ -4155,7 +4254,10 @@
           "Destroy infected crop residues after harvest"
         ]
       }
-    ]
+    ],
+    "icon": "🥣",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#e2e8f0"
   },
   {
     "name": "Garlic / Lehsun",
@@ -4252,7 +4354,10 @@
           "Overhead sprinkler washes thrips down"
         ]
       }
-    ]
+    ],
+    "icon": "🧄",
+    "leaf_image_url": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#e2e8f0"
   },
   {
     "name": "Fenugreek / Methi",
@@ -4328,7 +4433,10 @@
           "Collect and burn post-harvest crop debris"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#22c55e"
   },
   {
     "name": "Coriander / Dhaniya",
@@ -4404,7 +4512,10 @@
           "Use resistant varieties like RCr-41, Pant Haritima"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1588879460618-924b172a6b22?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#16a34a"
   },
   {
     "name": "Green Peas / Matar",
@@ -4479,7 +4590,10 @@
           "Destroy vines after final picking"
         ]
       }
-    ]
+    ],
+    "icon": "🟢",
+    "leaf_image_url": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#4ade80"
   },
   {
     "name": "Cucumber / Kheera",
@@ -4554,7 +4668,10 @@
           "Avoid overhead evening sprinkling"
         ]
       }
-    ]
+    ],
+    "icon": "🥒",
+    "leaf_image_url": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#22c55e"
   },
   {
     "name": "Apple / Seb",
@@ -4648,7 +4765,10 @@
           "Inspect orchards weekly during early bloom"
         ]
       }
-    ]
+    ],
+    "icon": "🍎",
+    "leaf_image_url": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#ef4444"
   },
   {
     "name": "Grapes / Angoor",
@@ -4746,7 +4866,10 @@
           "Avoid over-irrigation"
         ]
       }
-    ]
+    ],
+    "icon": "🍇",
+    "leaf_image_url": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#a855f7"
   },
   {
     "name": "Pomegranate / Anar",
@@ -4841,7 +4964,10 @@
           "Spray repellant neem formulation at petal fall"
         ]
       }
-    ]
+    ],
+    "icon": "🫐",
+    "leaf_image_url": "https://images.unsplash.com/photo-1541344999736-83eca872f241?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#e11d48"
   },
   {
     "name": "Watermelon / Tarbooz",
@@ -4936,7 +5062,10 @@
           "Deep summer ploughing"
         ]
       }
-    ]
+    ],
+    "icon": "🍉",
+    "leaf_image_url": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#10b981"
   },
   {
     "name": "Coconut / Nariyal",
@@ -5030,7 +5159,10 @@
           "Encourage barn owls in orchard"
         ]
       }
-    ]
+    ],
+    "icon": "🥥",
+    "leaf_image_url": "https://images.unsplash.com/photo-1544860707-c352cc5a92e3?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#854d0e"
   },
   {
     "name": "Chickpea / Chana",
@@ -5126,7 +5258,10 @@
           "Nipping / topping of terminal shoots at 30-40 DAS"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#ca8a04"
   },
   {
     "name": "Pigeon Pea / Arhar / Tur",
@@ -5219,7 +5354,10 @@
           "Use wilt-resistant cultivars (Maruti, Asha, BDN-2)"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#d97706"
   },
   {
     "name": "Green Gram / Moong",
@@ -5314,7 +5452,10 @@
           "Clean field sanitation"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#16a34a"
   },
   {
     "name": "Black Gram / Urad",
@@ -5410,7 +5551,10 @@
           "Plant resistant varieties"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#374151"
   },
   {
     "name": "Soybean / Soya",
@@ -5507,7 +5651,10 @@
           "Intercrop with pearl millet or maize"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#65a30d"
   },
   {
     "name": "Pearl Millet / Bajra",
@@ -5599,7 +5746,10 @@
           "Never feed ergot-contaminated grain to livestock"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#78716c"
   },
   {
     "name": "Sorghum / Jowar",
@@ -5691,7 +5841,10 @@
           "Avoid late plantings that push maturity into late rains"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#b45309"
   },
   {
     "name": "Finger Millet / Ragi",
@@ -5766,7 +5919,10 @@
           "Treat seeds with Carbendazim 2g/kg"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#831843"
   },
   {
     "name": "Sunflower / Surajmukhi",
@@ -5859,7 +6015,10 @@
           "Harvest as soon as back of head turns yellow-brown"
         ]
       }
-    ]
+    ],
+    "icon": "🌻",
+    "leaf_image_url": "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#eab308"
   },
   {
     "name": "Sesame / Til",
@@ -5953,7 +6112,10 @@
           "Deep summer ploughing to expose pupae in soil"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#fbbf24"
   },
   {
     "name": "Cumin / Jeera",
@@ -6049,7 +6211,10 @@
           "Collect and burn infected debris"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1588879460618-924b172a6b22?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#78350f"
   },
   {
     "name": "Tea / Chai",
@@ -6143,7 +6308,10 @@
           "Target dawn and dusk for application when bugs are active"
         ]
       }
-    ]
+    ],
+    "icon": "🍵",
+    "leaf_image_url": "https://images.unsplash.com/photo-1563822249548-9a72b6353cd1?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#059669"
   },
   {
     "name": "Coffee",
@@ -6237,7 +6405,10 @@
           "Install pheromone traps during peak flight"
         ]
       }
-    ]
+    ],
+    "icon": "☕",
+    "leaf_image_url": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#78350f"
   },
   {
     "name": "Rubber",
@@ -6323,7 +6494,10 @@
           "Maintain adequate weed slashing around tree bases"
         ]
       }
-    ]
+    ],
+    "icon": "🌲",
+    "leaf_image_url": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#166534"
   },
   {
     "name": "Jute / Patson",
@@ -6417,7 +6591,10 @@
           "Remove alternate weed hosts around channels"
         ]
       }
-    ]
+    ],
+    "icon": "🌾",
+    "leaf_image_url": "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#ca8a04"
   },
   {
     "name": "Cardamom / Elaichi",
@@ -6513,7 +6690,10 @@
           "Spray on flower panicles at 30-day intervals"
         ]
       }
-    ]
+    ],
+    "icon": "🌱",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#15803d"
   },
   {
     "name": "Black Pepper / Kali Mirch",
@@ -6607,6 +6787,9 @@
           "Loosen soil around base in summer to expose pupae"
         ]
       }
-    ]
+    ],
+    "icon": "🌿",
+    "leaf_image_url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80",
+    "theme_color": "#166534"
   }
 ]

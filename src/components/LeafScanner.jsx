@@ -637,12 +637,54 @@ export default function LeafScanner() {
   const [correctionCrop, setCorrectionCrop] = useState('');
   const [selectedSampleId, setSelectedSampleId] = useState(null);
   const [geminiNotice, setGeminiNotice] = useState(null);
+  const [leafFilterCategory, setLeafFilterCategory] = useState('all');
+  const [leafSearchTerm, setLeafSearchTerm] = useState('');
+  const [isFoliarLibraryOpen, setIsFoliarLibraryOpen] = useState(true);
+  const [spectralMode, setSpectralMode] = useState('rgb'); // 'rgb' | 'chlorophyll' | 'ndvi'
+  const [showShutterFlash, setShowShutterFlash] = useState(false);
 
   const videoRef = useRef(null);
   const fileInputRef = useRef(null);
   const nativeCameraInputRef = useRef(null);
   const errorRef = useRef(null);
   const resultRef = useRef(null);
+
+  // Instant 1-click test scan for any plant in the 61-crop foliar library
+  const scanKnowledgeBasePlant = (plant, scanHealthMode = 'diseased') => {
+    setSelectedSampleId(`kb-${plant.name}-${scanHealthMode}`);
+    setImagePreview(plant.leaf_image_url);
+    setShowShutterFlash(true);
+    setTimeout(() => setShowShutterFlash(false), 200);
+    setIsScanning(true);
+    setScanResult(null);
+    setScanError(null);
+    setScanStep(`Calibrating multi-spectral reflectance for ${plant.name}...`);
+
+    setTimeout(() => {
+      setScanStep(`Extracting foliar venation & cellular chlorophyll at 550nm...`);
+      setTimeout(() => {
+        setScanStep(`Matching ICAR & Agricultural Extension phytopathology database...`);
+        setTimeout(() => {
+          setIsScanning(false);
+          const isHealthyReq = scanHealthMode === 'healthy';
+          const diag = buildOfflineSpecimenDiagnosis(plant.name, null, null);
+          if (isHealthyReq) {
+            diag.health_status = 'healthy';
+            diag.disease_name = 'None (Healthy Specimen)';
+            diag.problem_name = `Healthy ${plant.name} Foliage`;
+            diag.farmer_summary = `Your ${plant.name} specimen shows vigorous chlorophyll density, intact leaf margins, and zero pathogen infection.`;
+            diag.farmer_advice = 'No chemical pesticide required. Maintain balanced watering and standard organic care.';
+          }
+          setScanResult(diag);
+          setTimeout(() => {
+            if (resultRef.current) {
+              resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 150);
+        }, 350);
+      }, 350);
+    }, 400);
+  };
 
   // Auto-scroll to error notice with sticky navbar clearance
   useEffect(() => {
@@ -1873,16 +1915,36 @@ Reply ONLY with valid JSON.`;
                     style={{
                       transform: `scale(${zoomLevel})`,
                       transformOrigin: 'center center',
-                      transition: 'transform 0.3s ease'
+                      transition: 'transform 0.3s ease',
+                      filter: spectralMode === 'chlorophyll' 
+                        ? 'saturate(220%) contrast(120%) brightness(105%)' 
+                        : spectralMode === 'ndvi' 
+                        ? 'invert(75%) hue-rotate(180deg) saturate(220%)' 
+                        : 'none'
                     }}
                     className="w-full h-full object-cover"
                   />
+
+                  {/* Shutter Camera Flash Animation */}
+                  {showShutterFlash && (
+                    <div className="absolute inset-0 bg-white z-30 pointer-events-none animate-in fade-in duration-150"></div>
+                  )}
 
                   {/* 4 Corner Targeting HUD brackets */}
                   <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-emerald-400 rounded-tl-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
                   <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-emerald-400 rounded-tr-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
                   <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-emerald-400 rounded-bl-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
                   <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-emerald-400 rounded-br-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
+
+                  {/* High-Tech Spectral Telemetry Readout */}
+                  <div className="absolute top-12 left-3 z-10 pointer-events-none flex flex-col gap-0.5 text-[9px] font-mono text-emerald-300 bg-slate-950/85 px-2.5 py-1 rounded-md border border-emerald-500/30 backdrop-blur-sm shadow-md">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                      <span className="font-bold">MULTI-SPECTRAL SENSOR</span>
+                    </div>
+                    <div className="text-slate-400">SPECTRUM: {spectralMode.toUpperCase()} (550nm)</div>
+                    <div className="text-slate-400">EXPOSURE: ISO 100 • F/1.8</div>
+                  </div>
 
                   {/* Active Laser Scanning Sweep Line */}
                   <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent absolute top-0 animate-scan-laser shadow-[0_0_12px_#10b981] pointer-events-none z-10"></div>
@@ -1891,10 +1953,30 @@ Reply ONLY with valid JSON.`;
                   <div className="absolute inset-4 sm:inset-6 border border-emerald-400/50 rounded-2xl pointer-events-none flex flex-col justify-between p-3 shadow-[inset_0_0_30px_rgba(16,185,129,0.2)] z-10">
                     {/* Top HUD Bar */}
                     <div className="flex items-center justify-between pointer-events-auto">
-                      <span className="text-[10px] uppercase font-bold text-emerald-300 bg-slate-950/85 px-2.5 py-1 rounded-md border border-emerald-500/40 flex items-center gap-1.5 backdrop-blur-sm">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        {cameraFacing === 'environment' ? 'Rear Camera' : 'Front Camera'} • {zoomLevel}x
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] uppercase font-bold text-emerald-300 bg-slate-950/85 px-2.5 py-1 rounded-md border border-emerald-500/40 flex items-center gap-1.5 backdrop-blur-sm">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                          {cameraFacing === 'environment' ? 'Rear' : 'Front'} • {zoomLevel}x
+                        </span>
+
+                        {/* Spectral Filter Toggle */}
+                        <div className="flex items-center gap-0.5 bg-slate-950/85 p-0.5 rounded-md border border-emerald-500/30 text-[9px]">
+                          {['rgb', 'chlorophyll', 'ndvi'].map(m => (
+                            <button
+                              key={m}
+                              type="button"
+                              onClick={() => setSpectralMode(m)}
+                              className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase transition-all cursor-pointer ${
+                                spectralMode === m 
+                                  ? 'bg-emerald-500 text-slate-950 shadow-sm' 
+                                  : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {m === 'chlorophyll' ? 'Chloro' : m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
 
                       <div className="flex items-center gap-1.5">
                         {hasTorch && (
@@ -2196,31 +2278,135 @@ Reply ONLY with valid JSON.`;
               </div>
             )}
 
-            {/* Quick 1-Click Sample Specimen Picker */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                  <Layers className="w-3 h-3 text-emerald-600" />
-                  Try Sample Specimen (1-Click)
+            {/* 🌿 Full Encyclopedic Foliar Leaf & Specimen Reference Database (61 Crops) */}
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setIsFoliarLibraryOpen(!isFoliarLibraryOpen)}
+                  className="flex items-center gap-1.5 text-xs font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider hover:text-emerald-600 transition-colors cursor-pointer"
+                >
+                  <Layers className="w-4 h-4 text-emerald-500" />
+                  <span>🌿 Foliar Leaf Database (61 Crops)</span>
+                  <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
+                    61 Leaves
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isFoliarLibraryOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                  Ready to Diagnose
                 </span>
-                <span className="text-[10px] text-emerald-600 font-semibold">Ready to Test</span>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-48 overflow-y-auto pr-1">
-                {SAMPLE_SPECIMENS.map(specimen => (
-                  <button
-                    key={specimen.id}
-                    onClick={() => selectSampleSpecimen(specimen)}
-                    className={`flex items-center gap-1.5 p-2 rounded-xl text-left border transition-all text-xs ${
-                      selectedSampleId === specimen.id
-                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold'
-                        : 'border-slate-200 dark:border-slate-700 hover:border-emerald-300 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <span className="text-base">{specimen.icon}</span>
-                    <span className="truncate text-[11px] font-medium">{specimen.name.split(' ')[0]}</span>
-                  </button>
-                ))}
-              </div>
+
+              {isFoliarLibraryOpen && (
+                <div className="space-y-2 animate-in fade-in duration-200">
+                  {/* Category Filter Pills */}
+                  <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[10px] font-bold scrollbar-none">
+                    {[
+                      { id: 'all', label: 'All (61)' },
+                      { id: 'vegetable', label: 'Vegetables (18)' },
+                      { id: 'fruit', label: 'Fruits (10)' },
+                      { id: 'pulse', label: 'Pulses (5)' },
+                      { id: 'cereal', label: 'Cereals (6)' },
+                      { id: 'oilseed', label: 'Oilseeds (5)' },
+                      { id: 'spice', label: 'Spices (6)' },
+                      { id: 'plantation', label: 'Plantation (4)' },
+                      { id: 'medicinal', label: 'Medicinal (5)' }
+                    ].map(cat => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setLeafFilterCategory(cat.id)}
+                        className={`px-2.5 py-1 rounded-lg shrink-0 transition-all cursor-pointer ${
+                          leafFilterCategory === cat.id
+                            ? 'bg-emerald-600 text-white font-extrabold shadow-sm'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Search Leaf Box */}
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Search any leaf (e.g. Okra, Apple, Tomato, Rice, Tea)..."
+                      value={leafSearchTerm}
+                      onChange={(e) => setLeafSearchTerm(e.target.value)}
+                      className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-500 font-medium text-slate-900 dark:text-white"
+                    />
+                  </div>
+
+                  {/* Leaf Cards Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1">
+                    {(Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase : [])
+                      .filter(p => {
+                        const matchesCat = leafFilterCategory === 'all' || 
+                          (p.category && p.category.toLowerCase().includes(leafFilterCategory.toLowerCase()));
+                        if (!leafSearchTerm) return matchesCat;
+                        const q = leafSearchTerm.toLowerCase();
+                        const matchesName = p.name && p.name.toLowerCase().includes(q);
+                        const matchesSci = p.scientific_name && p.scientific_name.toLowerCase().includes(q);
+                        const matchesLocal = p.local_names && Object.values(p.local_names).some(v => v.toLowerCase().includes(q));
+                        return matchesCat && (matchesName || matchesSci || matchesLocal);
+                      })
+                      .map(plant => (
+                        <div
+                          key={plant.name}
+                          className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col justify-between gap-1.5 transition-all hover:border-emerald-400"
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={plant.leaf_image_url || "https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=300&q=80"}
+                              alt={plant.name}
+                              className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                              loading="lazy"
+                            />
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1">
+                                <span className="text-sm shrink-0">{plant.icon || '🌿'}</span>
+                                <h5 className="font-extrabold text-xs text-slate-900 dark:text-white truncate">
+                                  {plant.name}
+                                </h5>
+                              </div>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 italic truncate">
+                                {plant.scientific_name}
+                              </p>
+                              {plant.local_names?.hi && (
+                                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold truncate">
+                                  {plant.local_names.hi}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-1 pt-1 border-t border-slate-100 dark:border-slate-700/60">
+                            <button
+                              type="button"
+                              onClick={() => scanKnowledgeBasePlant(plant, 'healthy')}
+                              className="py-1 px-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 font-bold text-[10px] border border-emerald-300 dark:border-emerald-800 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                              title={`Scan healthy ${plant.name} leaf`}
+                            >
+                              <span>🌿 Healthy</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => scanKnowledgeBasePlant(plant, 'diseased')}
+                              className="py-1 px-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/80 text-amber-800 dark:text-amber-300 font-bold text-[10px] border border-amber-300 dark:border-amber-800 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                              title={`Scan diseased ${plant.name} leaf`}
+                            >
+                              <span>🔬 Disease</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>

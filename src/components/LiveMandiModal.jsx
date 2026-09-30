@@ -21,7 +21,8 @@ import {
   triggerLiveMandiTick, 
   searchMandiPrices, 
   APMC_STATES, 
-  COMMODITY_CATEGORIES 
+  COMMODITY_CATEGORIES,
+  MANDI_DATA_SOURCES 
 } from '../services/mandiService';
 
 export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, onNavigateToMarket }) {
@@ -29,6 +30,7 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedState, setSelectedState] = useState(preSelectedCommodity?.state || 'All India');
   const [selectedCategory, setSelectedCategory] = useState(preSelectedCommodity?.category || 'All Categories');
+  const [selectedSource, setSelectedSource] = useState('All Sources');
   const [commodities, setCommodities] = useState([]);
   const [activeItem, setActiveItem] = useState(preSelectedCommodity || null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -72,7 +74,8 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
   const filteredCommodities = searchMandiPrices({
     query: searchTerm,
     state: selectedState,
-    category: selectedCategory
+    category: selectedCategory,
+    source: selectedSource
   });
 
   if (!isOpen) return null;
@@ -95,7 +98,7 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
                 </span>
               </div>
               <p className="text-xs text-emerald-200 mt-0.5">
-                Official APMC spot auction prices, government MSP benchmarks, and daily arrivals • Last synced {lastSync}
+                Official APMC spot auction prices, government MSP benchmarks, and multi-source daily arrivals • Last synced {lastSync}
               </p>
             </div>
           </div>
@@ -122,7 +125,7 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
         <div className="p-3 sm:p-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap gap-2.5 items-center justify-between">
           
           {/* Search Box */}
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -133,26 +136,35 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
             />
           </div>
 
-          {/* State Selector */}
-          <div className="flex items-center gap-2">
+          {/* State & Category & Source Selectors */}
+          <div className="flex flex-wrap items-center gap-2">
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="py-2 px-3 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="py-2 px-2.5 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               {APMC_STATES.map(st => (
                 <option key={st} value={st}>{st}</option>
               ))}
             </select>
 
-            {/* Category Selector */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="py-2 px-3 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="py-2 px-2.5 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               {COMMODITY_CATEGORIES.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+
+            <select
+              value={selectedSource}
+              onChange={(e) => setSelectedSource(e.target.value)}
+              className="py-2 px-2.5 text-xs rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 font-bold text-emerald-800 dark:text-emerald-300 focus:outline-none focus:border-emerald-500 cursor-pointer"
+            >
+              {MANDI_DATA_SOURCES.map(src => (
+                <option key={src} value={src}>{src}</option>
               ))}
             </select>
           </div>
@@ -240,10 +252,26 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                        {activeItem.category}
-                      </span>
-                      <h3 className="font-extrabold text-lg text-slate-900 dark:text-white leading-tight mt-0.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                          {activeItem.category}
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                          {activeItem.primarySource || 'Agmarknet'}
+                        </span>
+                        {activeItem.marketSentiment && (
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                            activeItem.marketSentiment === 'Bullish'
+                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                              : activeItem.marketSentiment === 'Bearish'
+                              ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                              : 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300'
+                          }`}>
+                            {activeItem.marketSentiment === 'Bullish' ? '📈 Bullish' : activeItem.marketSentiment === 'Bearish' ? '📉 Bearish' : '⚖️ Stable'}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-extrabold text-lg text-slate-900 dark:text-white leading-tight mt-1">
                         {activeItem.name}
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
@@ -251,9 +279,16 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
                         {activeItem.mandi} ({activeItem.state})
                       </p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                      {activeItem.demandLevel}
-                    </span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                        {activeItem.demandLevel}
+                      </span>
+                      {activeItem.arrivalTrend && (
+                        <span className="text-[10px] text-slate-500 font-semibold">
+                          Arrival: {activeItem.arrivalTrend}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Price Banner */}
