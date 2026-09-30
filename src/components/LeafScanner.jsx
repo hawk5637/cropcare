@@ -29,7 +29,8 @@ import {
   Aperture,
   Sliders,
   Bot,
-  ZoomIn
+  ZoomIn,
+  Search
 } from 'lucide-react';
 
 const SAMPLE_SPECIMENS = [
@@ -613,6 +614,7 @@ export default function LeafScanner() {
     addFeedbackToQueue, 
     hasServerApiKey, 
     runtimeApiKey, 
+    saveRuntimeApiKey,
     t 
   } = useApp();
 
@@ -642,6 +644,7 @@ export default function LeafScanner() {
   const [isFoliarLibraryOpen, setIsFoliarLibraryOpen] = useState(true);
   const [spectralMode, setSpectralMode] = useState('rgb'); // 'rgb' | 'chlorophyll' | 'ndvi'
   const [showShutterFlash, setShowShutterFlash] = useState(false);
+  const [cameraError, setCameraError] = useState(null);
 
   const videoRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -757,14 +760,15 @@ export default function LeafScanner() {
     handlePlay();
   }, [cameraStream, isCameraActive, activeTab]);
 
-  // Clean up camera stream on unmount
+  // Auto-start camera when component mounts
   useEffect(() => {
+    startCamera(undefined, true);
     return () => {
       if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [cameraStream]);
+  }, []);
 
   // Multi-spectral visual feature analyzer (detects foliage, chlorosis, and human skin/features)
   const sampleCanvasColors = (canvas) => {
@@ -941,6 +945,7 @@ export default function LeafScanner() {
   const startCamera = async (overrideFacing, isSilent = false) => {
     try {
       setScanError(null);
+      setCameraError(null);
       setImagePreview(null);
       setIsCameraLoading(true);
 
@@ -956,9 +961,10 @@ export default function LeafScanner() {
       if (!isSecure || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setIsCameraLoading(false);
         setIsCameraActive(false);
-        if (!isSilent && nativeCameraInputRef.current) {
-          nativeCameraInputRef.current.click();
-        }
+        setCameraError({
+          title: 'Live Camera Permission / Insecure Protocol',
+          message: 'Live video streaming in modern browsers requires HTTPS or Localhost. You can take a photo with your device camera directly or choose an image below.'
+        });
         return;
       }
 
@@ -990,9 +996,14 @@ export default function LeafScanner() {
       if (!stream) {
         setIsCameraLoading(false);
         setIsCameraActive(false);
-        if (!isSilent && nativeCameraInputRef.current) {
-          nativeCameraInputRef.current.click();
-        }
+        setCameraError({
+          title: 'Camera Access Notice',
+          message: lastErr?.name === 'NotAllowedError'
+            ? 'Camera permission was denied. Please allow camera access in browser settings or use the Device Camera button below.'
+            : lastErr?.name === 'NotFoundError'
+            ? 'No camera sensor was detected on this device. You can upload a photo or use a 1-click test specimen.'
+            : 'Could not connect to live camera feed. Please tap "Take Photo with Device Camera" or upload a leaf photo.'
+        });
         return;
       }
 
@@ -1015,9 +1026,10 @@ export default function LeafScanner() {
       console.warn('[LeafScanner] Camera live feed unavailable:', err);
       setIsCameraActive(false);
       setIsCameraLoading(false);
-      if (!isSilent && nativeCameraInputRef.current) {
-        nativeCameraInputRef.current.click();
-      }
+      setCameraError({
+        title: 'Camera Stream Notice',
+        message: err?.message || 'Unable to open camera feed. Tap "Take Photo with Device Camera" below.'
+      });
     }
   };
 
@@ -2124,8 +2136,12 @@ Reply ONLY with valid JSON.`;
                     <Camera className="w-8 h-8 animate-pulse" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white">AI Live Camera Viewfinder</p>
-                    <p className="text-xs text-slate-400 mt-1">Point at crop leaves, fruits, or seeds for instant ICAR diagnosis</p>
+                    <p className="text-sm font-bold text-white">
+                      {cameraError ? cameraError.title : 'AI Live Camera Viewfinder'}
+                    </p>
+                    <p className="text-xs text-slate-300 mt-1">
+                      {cameraError ? cameraError.message : 'Point at crop leaves, fruits, or seeds for instant ICAR diagnosis'}
+                    </p>
                   </div>
                   <div className="flex flex-col gap-2 w-full pt-1">
                     <button
@@ -2134,12 +2150,12 @@ Reply ONLY with valid JSON.`;
                       className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer hover:scale-[1.01]"
                     >
                       <Camera className="w-4 h-4" />
-                      <span>{t('scanner.startCamera') || 'Start Live Camera'}</span>
+                      <span>{cameraError ? 'Retry Live Camera' : (t('scanner.startCamera') || 'Start Live Camera')}</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => nativeCameraInputRef.current?.click()}
-                      className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold text-xs rounded-xl flex items-center justify-center gap-2 border border-emerald-500/40 shadow-sm transition-all cursor-pointer"
+                      className="w-full py-2.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 font-bold text-xs rounded-xl flex items-center justify-center gap-2 border border-emerald-500/60 shadow-sm transition-all cursor-pointer"
                     >
                       <Smartphone className="w-4 h-4 text-emerald-400" />
                       <span>Take Photo with Device Camera</span>
