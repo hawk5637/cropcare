@@ -1509,10 +1509,15 @@ export default function LeafScanner() {
     setScanStep(t('scanner.analyzingSteps.classifying') || 'Classifying botanical specimen...');
     const t1 = setTimeout(() => setScanStep(t('scanner.analyzingSteps.morphology') || 'Analyzing morphological leaf, seed, fruit & plant structure...'), 500);
     const t2 = setTimeout(() => setScanStep(t('scanner.analyzingSteps.pathology') || 'Cross-referencing ICAR & FAO phytopathology database...'), 1200);
-    const t3 = setTimeout(() => setScanStep(t('scanner.analyzingSteps.prescribing') || 'Formulating clinical prescription & farmer action plan...'), 2000);
+    const isGeminiKeyValid = (key) => {
+      if (!key || typeof key !== 'string') return false;
+      const k = key.trim();
+      if (k.startsWith('AQ.') || k.length < 25) return false;
+      return k.startsWith('AIza') || k.length >= 35;
+    };
 
     const rawKey = (runtimeApiKey || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
-    const apiKey = rawKey && rawKey.length > 5 ? rawKey : '';
+    const apiKey = isGeminiKeyValid(rawKey) ? rawKey : '';
 
     const langMap = {
       en: 'English',
@@ -1656,19 +1661,23 @@ Reply ONLY with valid JSON.`;
           if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          const timeoutId = setTimeout(() => controller.abort(), 4500);
 
           const res = await fetch('/api/analyze', {
             method: 'POST',
             headers,
-            body: JSON.stringify({ image: dataUrl, language }),
+            body: JSON.stringify({ 
+              image: dataUrl, 
+              language,
+              targetCrop: (specimenFocus && specimenFocus !== 'auto') ? specimenFocus : 'Tomato'
+            }),
             signal: controller.signal
           });
           clearTimeout(timeoutId);
 
           if (res.ok) {
             const json = await res.json();
-            if (json && !json.error && json.sections) {
+            if (json && !json.error && (json.sections || json.title)) {
               data = json;
               networkSuccess = true;
             }
@@ -1678,7 +1687,7 @@ Reply ONLY with valid JSON.`;
         }
       }
 
-      // Step 2: Direct Client-Side Gemini Vision Call with official production models
+      // Step 2: Direct Client-Side Gemini Vision Call with official production models (only if valid API key)
       let lastGeminiStatus = null;
       let lastGeminiMessage = null;
 
@@ -1705,7 +1714,7 @@ Reply ONLY with valid JSON.`;
             try {
               const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelCandidate}:generateContent?key=${apiKey}`;
               const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 15000);
+              const timeoutId = setTimeout(() => controller.abort(), 6000);
 
               const response = await fetch(geminiUrl, {
                 method: 'POST',
@@ -1789,7 +1798,7 @@ Reply ONLY with valid JSON.`;
             } catch (candErr) {
               const isAbort = candErr.name === 'AbortError';
               const errStatus = isAbort ? 408 : (lastGeminiStatus || 500);
-              const errMsg = isAbort ? 'Request timed out after 15 seconds' : (candErr.message || 'Network error');
+              const errMsg = isAbort ? 'Request timed out after 6 seconds' : (candErr.message || 'Network error');
               console.error(`[Gemini API Exception] Status: ${errStatus}, Model: ${modelCandidate}, Message: ${errMsg}`);
               lastGeminiStatus = errStatus;
               lastGeminiMessage = errMsg;
@@ -1802,7 +1811,6 @@ Reply ONLY with valid JSON.`;
 
       clearTimeout(t1);
       clearTimeout(t2);
-      clearTimeout(t3);
 
       // Step 3: Heuristic & Certified Botanical Offline Diagnostic Engine (Never leave page looking broken)
       if (!networkSuccess && dataUrl) {
@@ -1810,23 +1818,17 @@ Reply ONLY with valid JSON.`;
         data.ai_provider = 'CropCare Certified Offline Engine (ICAR / FAO)';
         networkSuccess = true;
 
-        if (lastGeminiStatus === 429) {
+        if (apiKey && lastGeminiStatus === 429) {
           setGeminiNotice({
             type: 'warning',
             title: 'Gemini API Rate Limit Reached (HTTP 429)',
             message: 'Your Google Gemini API free-tier quota has been reached. Loaded certified ICAR/FAO offline botanical diagnosis so your analysis is uninterrupted.'
           });
-        } else if (lastGeminiStatus === 400 || lastGeminiStatus === 403) {
+        } else if (apiKey && (lastGeminiStatus === 400 || lastGeminiStatus === 403)) {
           setGeminiNotice({
             type: 'warning',
-            title: `Gemini API Key Error (HTTP ${lastGeminiStatus})`,
-            message: `Gemini API key rejected (${lastGeminiMessage || 'Invalid or expired key'}). Showing certified ICAR offline botanical diagnosis.`
-          });
-        } else if (lastGeminiStatus) {
-          setGeminiNotice({
-            type: 'info',
-            title: `Gemini API Notice (HTTP ${lastGeminiStatus})`,
-            message: `${lastGeminiMessage || 'Gemini service is currently unreachable'}. Loaded certified ICAR offline botanical diagnosis.`
+            title: `Gemini API Key Notice (HTTP ${lastGeminiStatus})`,
+            message: `Custom Gemini API key rejected. Showing certified ICAR offline botanical diagnosis.`
           });
         }
       }
