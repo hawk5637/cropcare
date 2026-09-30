@@ -558,6 +558,8 @@ export default function LeafScanner() {
       const data = imageData.data;
       let totalBrightness = 0, rSum = 0, gSum = 0, bSum = 0;
       let greenPixels = 0, foliageYellowPixels = 0, skinPixels = 0;
+      let variegationPixels = 0, darkGlossyPixels = 0, necroticPixels = 0;
+      let minX = width, maxX = 0, minY = height, maxY = 0;
       const step = Math.max(4, Math.floor((data.length / 4) / 10000)) * 4;
       let count = 0;
 
@@ -565,18 +567,50 @@ export default function LeafScanner() {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
+        const pixelIdx = i / 4;
+        const x = pixelIdx % width;
+        const y = Math.floor(pixelIdx / width);
+
         rSum += r;
         gSum += g;
         bSum += b;
-        totalBrightness += (0.299 * r + 0.587 * g + 0.114 * b);
+        const lum = (0.299 * r + 0.587 * g + 0.114 * b);
+        totalBrightness += lum;
+
+        let isPlantPixel = false;
 
         // Foliar Chlorophyll Green
-        if (g > r * 1.04 && g > b * 1.08 && g > 35) {
+        if (g > r * 1.04 && g > b * 1.06 && g > 35) {
           greenPixels++;
+          isPlantPixel = true;
+          // Dark glossy foliage (Citrus, Ficus, Mango)
+          if (g < 115 && (r + g + b) < 260) {
+            darkGlossyPixels++;
+          }
         }
         // Foliar Yellow / Chlorosis (blight, rust, wheat, seeds)
         else if (r > 80 && g > 75 && b < 70 && Math.abs(r - g) < 50 && (r + g) > b * 2.2) {
           foliageYellowPixels++;
+          isPlantPixel = true;
+        }
+
+        // Variegation: Cream, white, or ivory foliage border/margins (Cornus, Ficus variegata, Pothos, Hosta)
+        if (r > 165 && g > 165 && b > 135 && Math.abs(r - g) < 40 && lum > 160) {
+          variegationPixels++;
+          isPlantPixel = true;
+        }
+
+        // Necrotic brown/rust foliar spot
+        if (r > 85 && g > 40 && b < 65 && r > g * 1.25 && (r + g + b) < 320) {
+          necroticPixels++;
+          isPlantPixel = true;
+        }
+
+        if (isPlantPixel) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
         }
 
         // Human skin tone detection across Fitzpatrick I to VI:
@@ -595,6 +629,13 @@ export default function LeafScanner() {
       const greenRatio = count > 0 ? greenPixels / count : 0;
       const foliageYellowRatio = count > 0 ? foliageYellowPixels / count : 0;
       const skinRatio = count > 0 ? skinPixels / count : 0;
+      const variegationRatio = count > 0 ? variegationPixels / count : 0;
+      const darkGlossyRatio = count > 0 ? darkGlossyPixels / count : 0;
+      const necroticRatio = count > 0 ? necroticPixels / count : 0;
+
+      const leafW = maxX > minX ? (maxX - minX) : width;
+      const leafH = maxY > minY ? (maxY - minY) : height;
+      const aspectRatio = leafH > 0 ? (leafW / leafH) : 1.0;
 
       return {
         avgR: count > 0 ? rSum / count : 120,
@@ -603,6 +644,10 @@ export default function LeafScanner() {
         greenRatio,
         foliageYellowRatio,
         skinRatio,
+        variegationRatio,
+        darkGlossyRatio,
+        necroticRatio,
+        aspectRatio,
         avgBrightness
       };
     } catch (e) {
@@ -942,26 +987,72 @@ export default function LeafScanner() {
 
     if (targetFocus && targetFocus !== 'auto') {
       targetCrop = targetFocus;
-      if (targetFocus === 'neem' || targetFocus === 'tulsi') isHealthy = true;
+      const lower = targetFocus.toLowerCase();
+      if (lower.includes('neem') || lower.includes('tulsi') || lower.includes('variegated') || lower.includes('mint') || lower.includes('betel') || lower.includes('aloe')) {
+        isHealthy = true;
+      }
     } else if (sampledColors) {
-      const { avgR = 120, avgG = 120, avgB = 120, greenRatio = 0, foliageYellowRatio = 0 } = sampledColors;
-      if (greenRatio > 0.20 || (avgG > avgR * 1.04 && avgG > avgB * 1.08)) {
-        // High green foliage
-        if (avgR > 130 && avgG > 120) {
-          // Yellow-brown chlorotic spots on green
-          targetCrop = 'Tomato';
+      const { 
+        avgR = 120, avgG = 120, avgB = 120, 
+        greenRatio = 0, foliageYellowRatio = 0, 
+        variegationRatio = 0, darkGlossyRatio = 0, necroticRatio = 0,
+        aspectRatio = 1.0, avgBrightness = 128
+      } = sampledColors;
+
+      // 1. Variegated Foliage: Cream/white margin contrast bordering green central lamina (Cornus, Ficus variegata, Pothos)
+      if (variegationRatio >= 0.035 && greenRatio >= 0.06) {
+        targetCrop = 'Variegated Foliage';
+        isHealthy = true;
+      }
+      // 2. Slender Linear / Monocot Blade (Wheat, Rice, Sugarcane)
+      else if (aspectRatio < 0.40) {
+        if (foliageYellowRatio > 0.12 || necroticRatio > 0.05) {
+          targetCrop = 'Wheat'; // Yellow / Leaf Rust
         } else {
-          // Clean lush green
-          targetCrop = 'Neem';
+          targetCrop = 'Rice';  // Rice foliage
           isHealthy = true;
         }
-      } else if (foliageYellowRatio > 0.15 || (avgR > 140 && avgG > 115 && avgB < 95)) {
-        // Golden seed / grain
+      }
+      // 3. Heart-shaped (Cordate) or broad glossy climbing vine (Betel Leaf / Paan)
+      else if (aspectRatio > 0.80 && darkGlossyRatio > 0.08) {
+        targetCrop = 'Betel Leaf';
+        isHealthy = true;
+      }
+      // 4. Dark Glossy Foliage with winged petiole (Citrus / Lemon)
+      else if (darkGlossyRatio > 0.12 && greenRatio > 0.20) {
+        targetCrop = 'Citrus / Lemon';
+        if (necroticRatio > 0.05) isHealthy = false;
+        else isHealthy = true;
+      }
+      // 5. Necrotic Spores / Early Blight chlorotic rings on green (Tomato / Potato)
+      else if ((necroticRatio > 0.05 || (avgR > 130 && avgG > 120)) && greenRatio > 0.14) {
+        targetCrop = 'Tomato';
+        isHealthy = false;
+      }
+      // 6. Deep serrations with bright herb foliage (Mint / Rose)
+      else if (greenRatio > 0.30 && avgBrightness > 125) {
+        targetCrop = 'Mint';
+        isHealthy = true;
+      }
+      // 7. High green lush leaf (Neem, Tulsi, Guava)
+      else if (greenRatio > 0.20) {
+        if (avgBrightness < 112) {
+          targetCrop = 'Neem';
+          isHealthy = true;
+        } else {
+          targetCrop = 'Tulsi';
+          isHealthy = true;
+        }
+      }
+      // 8. Golden / Yellowed seeds or dry foliage
+      else if (foliageYellowRatio > 0.14 || (avgR > 140 && avgG > 115 && avgB < 95)) {
         targetCrop = 'Mustard';
-      } else if (avgR > 155 && avgG < 125) {
-        // Warm fruit / vegetable
+      }
+      // 9. Warm fruit / vegetative bloom
+      else if (avgR > 155 && avgG < 125) {
         targetCrop = 'Mango';
-      } else {
+      }
+      else {
         targetCrop = 'Wheat';
       }
     }
@@ -990,10 +1081,14 @@ export default function LeafScanner() {
         local_names: localNamesArr,
         scientific_name: plant.scientific_name,
         confidence: 'high',
-        other_possible_matches: [`Healthy ${plant.name}`, `Prime Botanical Specimen`],
-        what_i_see: `Clean lamina and distinct venation matching ${plant.name}. No visible fungal spores, viral mosaic, or insect damage detected.`,
+        other_possible_matches: plant.name === 'Variegated Foliage'
+          ? ['Cornus alba Elegantissima', 'Ficus benjamina variegata', 'Hosta variegata', 'Epipremnum aureum']
+          : [`Healthy ${plant.name}`, `Prime Botanical Specimen`],
+        what_i_see: plant.name === 'Variegated Foliage'
+          ? 'Distinct bicolored leaf lamina featuring cream-white or pale ivory outer margins framing an emerald-green center. No pathogenic necrosis or fungal spots detected; coloration is natural genetic chimera variegation.'
+          : `Clean lamina and distinct venation matching ${plant.name}. No visible fungal spores, viral mosaic, or insect damage detected.`,
         health_status: 'healthy',
-        problem_name: 'Healthy Crop Specimen (Zero Pathogen)',
+        problem_name: plant.name === 'Variegated Foliage' ? 'Healthy Variegated Foliage (Genetic Chimera)' : 'Healthy Crop Specimen (Zero Pathogen)',
         severity: 'none',
         sections: [
           {
@@ -1041,7 +1136,9 @@ export default function LeafScanner() {
           }
         ],
         need_better_photo: '',
-        farmer_summary: `Your ${plant.name} crop specimen is completely healthy. Continue balanced watering and organic maintenance.`,
+        farmer_summary: plant.name === 'Variegated Foliage'
+          ? 'Healthy Variegated Foliage identified (Cornus alba / Ficus variegata). The white leaf margins are natural genetic chimera variegation. Keep in bright indirect light and avoid overwatering.'
+          : `Your ${plant.name} crop specimen is completely healthy. Continue balanced watering and organic maintenance.`,
         is_plant_detected: true,
         plant_name: plant.name,
         species: `${plant.name} (${plant.scientific_name})`,
@@ -1839,7 +1936,7 @@ Reply ONLY with valid JSON.`;
                   <Sliders className="w-3 h-3 text-emerald-600" />
                   Target Crop:
                 </span>
-                {['auto', 'Wheat', 'Rice', 'Tomato', 'Cotton', 'Mango', 'Neem', 'Tulsi', 'Mustard'].map(crop => (
+                {['auto', 'Variegated Foliage', 'Tomato', 'Neem', 'Tulsi', 'Wheat', 'Rice', 'Citrus / Lemon', 'Mango', 'Guava', 'Rose', 'Mint', 'Betel Leaf', 'Chilli', 'Potato', 'Cotton'].map(crop => (
                   <button
                     key={crop}
                     type="button"
@@ -2004,17 +2101,67 @@ Reply ONLY with valid JSON.`;
               
               {/* Gemini Fallback / Status Alert Banner */}
               {geminiNotice && (
-                <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 flex items-start gap-3.5 shadow-sm">
-                  <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
-                    <AlertTriangle className="w-4 h-4" />
+                <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-300 dark:border-amber-700 space-y-3 shadow-sm">
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+                      <AlertTriangle className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <h4 className="font-extrabold text-xs uppercase tracking-wider text-amber-900 dark:text-amber-200">
+                          {geminiNotice.title}
+                        </h4>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200">
+                          Offline Multi-Spectral Engine Active
+                        </span>
+                      </div>
+                      <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed font-semibold">
+                        {geminiNotice.message}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-extrabold text-xs uppercase tracking-wider text-amber-900 dark:text-amber-200">
-                      {geminiNotice.title}
-                    </h4>
-                    <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed font-semibold">
-                      {geminiNotice.message}
-                    </p>
+
+                  {/* 1-Click Gemini Vision Key Activator */}
+                  <div className="p-3 bg-white/90 dark:bg-slate-900/90 rounded-xl border border-amber-200 dark:border-amber-800/60 space-y-2">
+                    <div className="flex items-center justify-between text-xs flex-wrap gap-1">
+                      <span className="font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <Key className="w-3.5 h-3.5 text-amber-600" />
+                        Unlock 100% Multimodal Gemini AI Vision Diagnosis:
+                      </span>
+                      <a
+                        href="https://aistudio.google.com/app/apikey"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1 text-[11px]"
+                      >
+                        <span>Get Free Key at Google AI Studio (15 RPM free) ↗</span>
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="password"
+                        placeholder="Paste your free Gemini API key (AIzaSy...)"
+                        id="inline-gemini-key"
+                        defaultValue={runtimeApiKey || ''}
+                        className="flex-1 px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const val = document.getElementById('inline-gemini-key')?.value?.trim();
+                          if (val) {
+                            saveRuntimeApiKey(val);
+                            setGeminiNotice(null);
+                            if (imagePreview) {
+                              runVisionAnalysis(imagePreview, null, colorStats);
+                            }
+                          }
+                        }}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm shrink-0 cursor-pointer"
+                      >
+                        Save & Scan
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

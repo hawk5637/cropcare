@@ -1615,5 +1615,210 @@
         "prevention": ["Raise three-tier seed nursery system (breeder, foundation, certified)", "Never use setts from ratoon fields showing GSD symptoms"]
       }
     ]
+  },
+  {
+    "name": "Variegated Foliage",
+    "local_names": {
+      "hi": "चित्तीदार पत्तियां / वेरीगेटेड पौधे (Variegated Plant)",
+      "ta": "வண்ணமயமான இலை செடி (Variegated Leaf)",
+      "te": "వరిగేటెడ్ మొక్క (Variegated Plant)",
+      "kn": "ಚಿತ್ತಾರದ ಎಲೆಗಳು",
+      "ml": "വരയുള്ള ഇലച്ചെടി"
+    },
+    "scientific_name": "Cornus alba 'Elegantissima' / Ficus benjamina variegata",
+    "category": "ornamental",
+    "how_to_identify_leaf": "Ovate to elliptic leaves featuring distinct cream-white or pale ivory margins surrounding an emerald green central lamina, smooth entire margins, and arcuate venation.",
+    "how_to_identify_seed_or_fruit": "Ornamental cultivars rarely set fruit in indoor/garden culture; white pithy drupes or small syconium figs may form outdoors.",
+    "lookalikes": ["Hosta variegata", "Euonymus fortunei 'Emerald Gaiety'", "Epipremnum aureum (Money Plant / Pothos)"],
+    "season": "Year-round perennial ornamental foliage; best growth during warm monsoon and spring flushes",
+    "soil": "Rich, well-draining loamy potting mix enriched with leaf mold and perlite; pH 6.0-7.0",
+    "water": "Moderate watering; allow top 2 cm of soil to dry between irrigations; avoid waterlogging",
+    "seed_rate_and_sowing": "Propagated via semi-hardwood stem cuttings or air layering during warm rainy season",
+    "nutrition_per_100g": {
+      "carbs_g": "0",
+      "fiber_g": "0",
+      "protein_g": "0",
+      "fat_g": "0",
+      "calories_kcal": "0",
+      "key_vitamins_minerals": ["Chlorophyll a & b", "Anthocyanins", "Carotenoids"]
+    },
+    "benefits": ["Air-purifying ornamental landscape shrub", "Striking bicolored foliage architecture", "Excellent low-maintenance hedging and indoor pot plant"],
+    "risks_or_cautions": ["Non-edible ornamental foliage; sap may cause mild skin sensitivity in sensitive individuals"],
+    "medicinal_uses": ["Mainly cultivated for aesthetic biophilic design and urban air quality enhancement"],
+    "diseases": [
+      {
+        "name": "Anthracnose & Leaf Margin Burn (Colletotrichum spp.)",
+        "type": "fungal",
+        "symptoms": "Browning and necrosis along the non-chlorophyll white margins, leading to dry ragged leaf edges and premature leaf drop.",
+        "cause": "Overwatering, overhead wetting of leaves in low light, or stagnant humid air.",
+        "organic_treatment": ["Prune browned variegated foliage", "Spray cold-pressed Neem Oil @ 3 ml/L", "Improve air circulation"],
+        "chemical_treatment_type": ["Foliar spray of Copper Oxychloride 50% WP @ 2 g/L or Mancozeb 75% WP @ 2 g/L"],
+        "prevention": ["Avoid wetting foliage when watering", "Provide bright filtered indirect sunlight to protect white margins from scorching"]
+      }
+    ]
+  },
+  {
+    "name": "Citrus / Lemon",
+    "local_names": {
+      "hi": "नींबू (Nimbu)",
+      "ta": "எலுமிச்சை (Elumichai)",
+      "te": "నిమ్మ (Nimma)",
+      "kn": "ನಿಂಬೆ (Nimbe)",
+      "ml": "നാരങ്ങ (Narange)"
+    },
+    "scientific_name": "Citrus limon / Citrus aurantifolia",
+    "category": "fruit",
+    "how_to_identify_leaf": "Alternate, dark glossy green elliptical leaves with winged petioles and fine pellucid oil glands that emit a fresh citrus fragrance when crushed.",
+    "how_to_identify_seed_or_fruit": "Globose to oval hesperidium fruit with yellow to green glandular peel (flavedo) containing acidic juicy pulp vesicles.",
+    "lookalikes": ["Curry leaf", "Bitter orange", "Mosambi (Sweet lime)"],
+    "season": "Year-round fruiting with main flushes in Hastabahar and Ambebahar",
+    "soil": "Well-drained sandy loam to alluvial soils, pH 5.5-7.5; highly sensitive to waterlogging",
+    "water": "Regular drip irrigation; stress period of 3-4 weeks given before flowering to induce profuse bloom",
+    "seed_rate_and_sowing": "Budded or air-layered grafts planted at 5m x 5m or 6m x 6m spacing",
+    "nutrition_per_100g": {
+      "carbs_g": "9.3",
+      "fiber_g": "2.8",
+      "protein_g": "1.1",
+      "fat_g": "0.3",
+      "calories_kcal": "29",
+      "key_vitamins_minerals": ["Vitamin C (53 mg)", "Citric Acid", "Potassium", "Hesperidin"]
+    },
+    "benefits": ["Immune-boosting high Vitamin C source", "Aids digestive absorption and kidney stone prevention", "Versatile culinary acidulant"],
+    "risks_or_cautions": ["High acidity can erode dental enamel if consumed undiluted"],
+    "medicinal_uses": ["Ayurvedic Nimbu swarasa used in digestive formulations and detoxifying beverages"],
+    "diseases": [
+      {
+        "name": "Citrus Canker (Xanthomonas axonopodis pv. citri)",
+        "type": "bacterial",
+        "symptoms": "Raised, corky, rough brownish lesions with characteristic yellow chlorotic halos on both leaf surfaces, twigs, and fruits.",
+        "cause": "Bacterium entering through stomata or leaf-miner wounds, dispersed by wind-driven rain.",
+        "organic_treatment": ["Prune and burn cankered twigs before monsoon", "Spray 1% Bordeaux mixture or Copper Hydroxide @ 2 g/L"],
+        "chemical_treatment_type": ["Streptocycline 1g in 10L water mixed with Copper Oxychloride 30g"],
+        "prevention": ["Control citrus leaf miner using Neem oil or spinosad", "Erect windbreak trees around orchard"]
+      }
+    ]
+  },
+  {
+    "name": "Rose",
+    "local_names": {
+      "hi": "गुलाब (Gulab)",
+      "ta": "ரோஜா (Roja)",
+      "te": "గులాబీ (Gulabi)",
+      "kn": "ಗುಲಾಬಿ (Gulabi)",
+      "ml": "റോസ് (Rose)"
+    },
+    "scientific_name": "Rosa indica / Rosa hybrida",
+    "category": "ornamental",
+    "how_to_identify_leaf": "Alternate odd-pinnately compound leaves with 3 to 7 oval, sharply serrated leaflets, dark green upper surface, and paired stipules at petiole base.",
+    "how_to_identify_seed_or_fruit": "Showy multi-petaled fragrant flowers followed by fleshy berry-like red to orange rose hips.",
+    "lookalikes": ["Wild brier", "Blackberry foliage", "Poterium"],
+    "season": "Winter to spring peak bloom across plains; year-round in temperate highlands",
+    "soil": "Fertile clay loam rich in organic manure; well-drained, pH 6.0-6.8",
+    "water": "Deep regular watering at root base; avoid splashing water on flower buds and leaves",
+    "seed_rate_and_sowing": "Propagated via T-budding or rooted hardwood cuttings",
+    "nutrition_per_100g": {
+      "carbs_g": "0",
+      "fiber_g": "0",
+      "protein_g": "0",
+      "fat_g": "0",
+      "calories_kcal": "0",
+      "key_vitamins_minerals": ["Geraniol", "Citronellol", "Phenylethanol", "Flavonoids"]
+    },
+    "benefits": ["Premium commercial cut flower and essential oil extraction", "Petals used for Gulkand and herbal tea", "Natural mood uplifter"],
+    "risks_or_cautions": ["Sharp epidermal prickles (thorns) require handling care"],
+    "medicinal_uses": ["Gulab jal (Rose water) used as eye soothing wash and cosmetic toner", "Gulkand treats hyperacidity"],
+    "diseases": [
+      {
+        "name": "Black Spot (Diplocarpon rosae)",
+        "type": "fungal",
+        "symptoms": "Circular black spots with feathery fringed margins on upper leaf surfaces, surrounded by yellow chlorotic tissue, followed by rapid defoliation.",
+        "cause": "Fungal spores germinating in leaf wetness lasting >6 hours in humid weather.",
+        "organic_treatment": ["Remove and dispose of fallen infected leaves", "Baking soda spray (5g/L with 2 ml liquid soap)", "Foliar neem oil spray @ 4 ml/L"],
+        "chemical_treatment_type": ["Difenoconazole 25% EC @ 0.5 ml/L or Mancozeb 75% WP @ 2 g/L or Azoxystrobin @ 1 ml/L"],
+        "prevention": ["Prune inner branches for sun penetration", "Water strictly at soil level early morning"]
+      }
+    ]
+  },
+  {
+    "name": "Mint",
+    "local_names": {
+      "hi": "पुदीना (Pudina)",
+      "ta": "புதினா (Pudhina)",
+      "te": "పుదీనా (Pudina)",
+      "kn": "ಪುದೀನಾ (Pudina)",
+      "ml": "പുതിന (Puthina)"
+    },
+    "scientific_name": "Mentha spicata / Mentha arvensis",
+    "category": "herb",
+    "how_to_identify_leaf": "Opposite, aromatic, ovate to lanceolate bright green leaves with serrated margins, prominent veins, square stems, and strong menthol aroma.",
+    "how_to_identify_seed_or_fruit": "Tiny purple to lilac flower spikes in whorled verticillasters; small nutlets.",
+    "lookalikes": ["Lemon balm", "Catmint", "Spearmint"],
+    "season": "Spring, summer, and monsoon herb; thrives in warm moist climate",
+    "soil": "Moist, rich, well-draining loamy soil with high organic matter, pH 6.0-7.0",
+    "water": "High water requirement; keep soil evenly moist; sensitive to severe drought",
+    "seed_rate_and_sowing": "Stolon and runner cuttings planted at 30x15 cm spacing",
+    "nutrition_per_100g": {
+      "carbs_g": "14.9",
+      "fiber_g": "8.0",
+      "protein_g": "3.8",
+      "fat_g": "0.9",
+      "calories_kcal": "70",
+      "key_vitamins_minerals": ["Menthol", "Vitamin A", "Iron", "Manganese", "Folate"]
+    },
+    "benefits": ["Soothes indigestion and nausea", "Natural oral freshness and cooling carminative", "High concentration of antioxidant rosmarinic acid"],
+    "risks_or_cautions": ["May aggravate gastroesophageal reflux (GERD) in sensitive individuals"],
+    "medicinal_uses": ["Essential oil menthol used in pain-relief balms, inhalers, and digestive churan"],
+    "diseases": [
+      {
+        "name": "Mint Rust (Puccinia menthae)",
+        "type": "fungal",
+        "symptoms": "Dusty orange to chocolate-brown pustules on underside of leaves with corresponding yellow spots on top, leaf distortion and drop.",
+        "cause": "Macrocyclic autoecious rust fungus spreading by wind spores during damp humid weather.",
+        "organic_treatment": ["Cut back infected shoots to ground level and burn", "Submerge roots in hot water (44°C) for 10 min before transplanting", "Neem extract spray"],
+        "chemical_treatment_type": ["Propiconazole 25% EC @ 1 ml/L or Mancozeb 75% WP @ 2 g/L"],
+        "prevention": ["Avoid overhead irrigation", "Replant beds every 2-3 years to fresh fertile soil"]
+      }
+    ]
+  },
+  {
+    "name": "Betel Leaf",
+    "local_names": {
+      "hi": "पान का पत्ता (Paan)",
+      "ta": "வெற்றிலை (Vetrillai)",
+      "te": "తమలపాకు (Tamalapaku)",
+      "kn": "ವೀಳ್ಯದೆಲೆ (Veelyadele)",
+      "ml": "വെറ്റില (Vettila)"
+    },
+    "scientific_name": "Piper betle",
+    "category": "cash",
+    "how_to_identify_leaf": "Deep green, glossy, heart-shaped (cordate) leaves with obliquely asymmetrical base, prominent curving palmate veins, and distinct pungent spicy aromatic flavor.",
+    "how_to_identify_seed_or_fruit": "Dioecious woody perennial climber; adventitious clinging roots at nodes; catkin inflorescences rarely setting seeds in commercial paan barejas.",
+    "lookalikes": ["Wild pepper vine", "Money plant (Epipremnum)", "Peepal leaf"],
+    "season": "Year-round cultivated inside conservatories (bareja / panthota) under 60-70% shade and high humidity",
+    "soil": "Friable, fertile sandy loam to clayey loam with excellent drainage, rich in humus, pH 7.0-7.5",
+    "water": "Frequent light daily misting or ditch irrigation; cannot tolerate water stagnation",
+    "seed_rate_and_sowing": "Stem cuttings of 3-5 nodes with roots planted at 15-20 cm intervals along bamboo trellises",
+    "nutrition_per_100g": {
+      "carbs_g": "3.1",
+      "fiber_g": "2.3",
+      "protein_g": "3.1",
+      "fat_g": "0.8",
+      "calories_kcal": "44",
+      "key_vitamins_minerals": ["Chavicol", "Eugenol", "Calcium", "Vitamin C", "Thiamine", "Carotene"]
+    },
+    "benefits": ["Traditional post-meal digestive and mouth freshener", "Potent antimicrobial and antifungal properties", "Rich source of bioactive phenols"],
+    "risks_or_cautions": ["Consuming with tobacco or slaked lime causes oral submucous fibrosis and cancer risk; consume plain"],
+    "medicinal_uses": ["Warmed leaves applied over chest with castor oil to relieve bronchial congestion in children"],
+    "diseases": [
+      {
+        "name": "Foot Rot & Leaf Rot (Phytophthora parasitica var. piperina)",
+        "type": "fungal",
+        "symptoms": "Water-soaked oily dark brown circular lesions on lower leaves expanding rapidly with wet rot; collar rot at vine base causing sudden wilting.",
+        "cause": "Soil and water-borne oomycete spreading aggressively during rainy seasons with high soil moisture.",
+        "organic_treatment": ["Drench soil around vine with Trichoderma viride @ 5g/vine mixed with neem cake", "Remove and burn wilted vines"],
+        "chemical_treatment_type": ["Drench and spray with Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L or Bordeaux mixture 1%"],
+        "prevention": ["Ensure high raised planting ridges for rapid surface drainage", "Use disease-free apical vine cuttings"]
+      }
+    ]
   }
 ]
