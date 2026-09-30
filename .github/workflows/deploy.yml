@@ -36,7 +36,7 @@ jobs:
       - name: Build production bundle
         env:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg' }}
-          VITE_GEMINI_MODEL: 'gemini-3.5-flash'
+          VITE_GEMINI_MODEL: 'gemini-2.5-flash'
         run: npm run build
 
       - name: Setup Pages

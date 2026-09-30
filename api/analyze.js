@@ -236,16 +236,32 @@ Reply ONLY with valid JSON.`;
         }
       }
 
+      const isPerson = /human|person|face|man|woman|portrait|selfie/i.test(structuredResult.title || '') ||
+                       /human|person|face|man|woman|portrait|selfie/i.test(structuredResult.what_i_see || '');
+      const isNotPlant = structuredResult.image_type === 'other' || 
+                         structuredResult.image_type === 'not_a_plant' ||
+                         structuredResult.health_status === 'not_applicable' ||
+                         structuredResult.is_plant_detected === false ||
+                         isPerson ||
+                         /not a plant|non-plant|indoor|furniture|device|room/i.test(structuredResult.title || '') ||
+                         /not a plant|non-plant|indoor|furniture|device|room/i.test(structuredResult.what_i_see || '');
+
+      const finalTitle = isPerson 
+        ? 'Human Face / Person (Not a Plant)'
+        : (isNotPlant ? (structuredResult.title || 'Non-Botanical Subject') : (structuredResult.title || 'Botanical Specimen'));
+
       const result = {
         ...structuredResult,
-        is_plant_detected: structuredResult.image_type !== 'not_a_plant' && structuredResult.image_type !== 'other',
-        plant_name: structuredResult.title || 'Botanical Specimen',
-        species: `${structuredResult.title || 'Specimen'} (${structuredResult.scientific_name || ''})`,
+        image_type: isNotPlant ? 'other' : structuredResult.image_type,
+        is_plant_detected: !isNotPlant,
+        title: finalTitle,
+        plant_name: isNotPlant ? 'Non-Botanical' : (structuredResult.title || 'Botanical Specimen'),
+        species: isNotPlant ? finalTitle : `${structuredResult.title || 'Specimen'} (${structuredResult.scientific_name || ''})`,
         species_confidence: structuredResult.confidence === 'high' ? 0.95 : structuredResult.confidence === 'medium' ? 0.8 : 0.6,
-        health_status: structuredResult.health_status || (isHealthy ? 'healthy' : 'diseased'),
-        disease_name: structuredResult.problem_name || structuredResult.title,
-        disease_confidence: structuredResult.confidence === 'high' ? 0.95 : 0.8,
-        severity: structuredResult.severity || (isHealthy ? 'none' : 'moderate'),
+        health_status: isNotPlant ? 'not_applicable' : (structuredResult.health_status || (isHealthy ? 'healthy' : 'diseased')),
+        disease_name: isNotPlant ? 'None (Non-Plant Subject)' : (structuredResult.problem_name || structuredResult.title),
+        disease_confidence: isNotPlant ? 0 : (structuredResult.confidence === 'high' ? 0.95 : 0.8),
+        severity: isNotPlant ? 'none' : (structuredResult.severity || (isHealthy ? 'none' : 'moderate')),
         farmer_advice: structuredResult.farmer_summary || '',
         evidence: [structuredResult.what_i_see].filter(Boolean),
         knowledge_base_verified: !!kbMatch,
