@@ -119,6 +119,7 @@ export default function App() {
 
     if (activeNav === 'modules') return <ModulesHub />;
     if (activeNav === 'scanner') return <LeafScanner />;
+    if (activeNav === 'weather') return <WeatherModule />;
     if (activeNav === 'catalog') return <CatalogSection />;
     if (activeNav === 'about') return <AboutCropCare />;
 

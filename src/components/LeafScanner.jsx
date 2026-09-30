@@ -686,6 +686,20 @@ export default function LeafScanner() {
     }, 400);
   };
 
+  // Instant switch / re-classify to any of the 61 crops with 1 tap
+  const switchDiagnosedPlant = (chosenPlantName) => {
+    if (!chosenPlantName) return;
+    setSpecimenFocus(chosenPlantName);
+    const plantObj = Array.isArray(plantKnowledgeBase) 
+      ? plantKnowledgeBase.find(p => p.name.toLowerCase() === chosenPlantName.toLowerCase()) 
+      : null;
+    const diag = buildOfflineSpecimenDiagnosis(chosenPlantName, colorStats, null);
+    if (plantObj && plantObj.leaf_image_url && (!imagePreview || imagePreview.startsWith('data:image/svg'))) {
+      setImagePreview(plantObj.leaf_image_url);
+    }
+    setScanResult(diag);
+  };
+
   // Auto-scroll to error notice with sticky navbar clearance
   useEffect(() => {
     if (scanError && errorRef.current) {
@@ -1135,17 +1149,23 @@ export default function LeafScanner() {
   const buildOfflineSpecimenDiagnosis = (targetFocus, sampledColors, preset) => {
     if (preset) return preset;
 
-    // Check if image is non-plant (e.g. human face, indoor person, or zero chlorophyll)
+    // Check if image is truly non-plant (e.g. human face, indoor person, or zero chlorophyll)
     if (sampledColors && (!targetFocus || targetFocus === 'auto')) {
-      const { avgR = 120, avgG = 120, avgB = 120, greenRatio = 0, foliageYellowRatio = 0, skinRatio = 0 } = sampledColors;
+      const { 
+        avgR = 120, avgG = 120, avgB = 120, 
+        greenRatio = 0, foliageYellowRatio = 0, skinRatio = 0,
+        variegationRatio = 0, necroticRatio = 0 
+      } = sampledColors;
 
-      // Human skin tone / face detection or non-plant indoor subject:
-      const isPerson = (skinRatio >= 0.03 && greenRatio < 0.35) || 
-                       (skinRatio >= 0.02 && greenRatio < 0.12) ||
-                       (skinRatio >= 0.015 && greenRatio < 0.06);
+      // Real botanical tissue check: if any foliar green, chlorosis/yellowing, variegation, or necrosis is detected
+      const hasPlantMatter = (greenRatio >= 0.03) || (foliageYellowRatio >= 0.04) || (variegationRatio >= 0.02) || (necroticRatio >= 0.02);
 
-      // General non-plant / non-agricultural object (low plant chlorophyll & low foliage yellow)
-      const isNonPlant = isPerson || (greenRatio < 0.08 && foliageYellowRatio < 0.10);
+      // ONLY flag as human face if image is heavily dominated by skin (>60%) AND virtually zero foliar green/yellow (<0.015)
+      // This prevents a farmer holding a leaf with their hand/fingers from ever being misclassified as a human face!
+      const isPerson = !hasPlantMatter && skinRatio > 0.60 && greenRatio < 0.015 && foliageYellowRatio < 0.02;
+
+      // General non-plant (e.g., bare table or ceiling) only if no plant matter and dark/flat
+      const isNonPlant = isPerson || (!hasPlantMatter && (avgR + avgG + avgB) < 60);
 
       if (isNonPlant) {
         const title = isPerson ? 'Human Face / Person (Not a Plant)' : 'Non-Plant Subject Detected';
@@ -1198,14 +1218,6 @@ export default function LeafScanner() {
                 'Ensure clear daylight illumination without harsh shadows, backlighting, or lens glare.',
                 'Center the plant specimen within the frame and tap "Capture & Scan".'
               ]
-            },
-            {
-              heading: 'Instant Sample Testing',
-              icon: '⚡',
-              points: [
-                'To view a complete diagnostic report right now, click any sample button below.',
-                'Available Reference Samples: Neem (Healthy), Mustard (Seeds), Wheat (Grain), Mango (Fruit), Tomato (Early Blight), and Tulsi (Herb).'
-              ]
             }
           ],
           need_better_photo: 'Please point your camera at a crop leaf, fruit, or seed.',
@@ -1227,7 +1239,7 @@ export default function LeafScanner() {
     if (targetFocus && targetFocus !== 'auto') {
       targetCrop = targetFocus;
       const lower = targetFocus.toLowerCase();
-      if (lower.includes('neem') || lower.includes('tulsi') || lower.includes('variegated') || lower.includes('mint') || lower.includes('betel') || lower.includes('aloe')) {
+      if (lower.includes('neem') || lower.includes('tulsi') || lower.includes('variegated') || lower.includes('mint') || lower.includes('betel') || lower.includes('aloe') || lower.includes('curry')) {
         isHealthy = true;
       }
     } else if (sampledColors) {
@@ -1239,16 +1251,20 @@ export default function LeafScanner() {
       } = sampledColors;
 
       // 1. Variegated Foliage: Cream/white margin contrast bordering green central lamina (Cornus, Ficus variegata, Pothos)
-      if (variegationRatio >= 0.035 && greenRatio >= 0.06) {
+      if (variegationRatio >= 0.035 && greenRatio >= 0.05) {
         targetCrop = 'Variegated Foliage';
         isHealthy = true;
       }
-      // 2. Slender Linear / Monocot Blade (Wheat, Rice, Sugarcane)
-      else if (aspectRatio < 0.40) {
-        if (foliageYellowRatio > 0.12 || necroticRatio > 0.05) {
+      // 2. Monocot Slender Blade (aspect ratio < 0.45: Rice, Wheat, Sugarcane, Maize, Bajra)
+      else if (aspectRatio < 0.45) {
+        if (foliageYellowRatio > 0.12 || necroticRatio > 0.04) {
           targetCrop = 'Wheat'; // Yellow / Leaf Rust
+          isHealthy = false;
+        } else if (darkGlossyRatio > 0.08) {
+          targetCrop = 'Sugarcane';
+          isHealthy = true;
         } else {
-          targetCrop = 'Rice';  // Rice foliage
+          targetCrop = 'Rice';
           isHealthy = true;
         }
       }
@@ -1257,51 +1273,57 @@ export default function LeafScanner() {
         targetCrop = 'Betel Leaf';
         isHealthy = true;
       }
-      // 4. Dark Glossy Foliage with winged petiole (Citrus / Lemon)
-      else if (darkGlossyRatio > 0.12 && greenRatio > 0.20) {
-        targetCrop = 'Citrus / Lemon';
-        if (necroticRatio > 0.05) isHealthy = false;
-        else isHealthy = true;
+      // 4. Dark Glossy Foliage with winged petiole (Citrus / Lemon, Mango, Coffee)
+      else if (darkGlossyRatio > 0.10 && greenRatio > 0.18) {
+        if (avgBrightness < 105) targetCrop = 'Mango';
+        else targetCrop = 'Citrus / Lemon';
+        isHealthy = (necroticRatio < 0.04);
       }
-      // 5. Necrotic Spores / Early Blight chlorotic rings on green (Tomato / Potato)
-      else if ((necroticRatio > 0.05 || (avgR > 130 && avgG > 120)) && greenRatio > 0.14) {
-        targetCrop = 'Tomato';
+      // 5. Necrotic Spores / Early Blight chlorotic rings on green (Tomato / Potato / Chilli / Cotton)
+      else if (necroticRatio > 0.035 || (avgR > 130 && avgG > 115 && greenRatio > 0.10)) {
+        if (avgBrightness > 125) targetCrop = 'Chilli';
+        else if (aspectRatio > 0.85) targetCrop = 'Potato';
+        else targetCrop = 'Tomato';
         isHealthy = false;
       }
-      // 6. Deep serrations with bright herb foliage (Mint / Rose)
-      else if (greenRatio > 0.30 && avgBrightness > 125) {
+      // 6. Deep serrations with bright herb foliage (Mint / Rose / Coriander)
+      else if (greenRatio > 0.28 && avgBrightness > 120) {
         targetCrop = 'Mint';
         isHealthy = true;
       }
-      // 7. High green lush leaf (Neem, Tulsi, Guava)
-      else if (greenRatio > 0.20) {
-        if (avgBrightness < 112) {
-          targetCrop = 'Neem';
-          isHealthy = true;
-        } else {
-          targetCrop = 'Tulsi';
-          isHealthy = true;
-        }
+      // 7. High green lush leaf (Neem, Tulsi, Guava, Curry Leaf)
+      else if (greenRatio > 0.18) {
+        if (avgBrightness < 112) targetCrop = 'Neem';
+        else targetCrop = 'Tulsi';
+        isHealthy = true;
       }
-      // 8. Golden / Yellowed seeds or dry foliage
-      else if (foliageYellowRatio > 0.14 || (avgR > 140 && avgG > 115 && avgB < 95)) {
+      // 8. Broad leafy vegetables (Cabbage, Cauliflower, Spinach)
+      else if (aspectRatio > 0.90 && greenRatio > 0.15) {
+        targetCrop = 'Cabbage';
+        isHealthy = true;
+      }
+      // 9. Golden / Yellowed seeds or dry foliage (Mustard, Groundnut, Soybean)
+      else if (foliageYellowRatio > 0.12 || (avgR > 140 && avgG > 115 && avgB < 95)) {
         targetCrop = 'Mustard';
+        isHealthy = false;
       }
-      // 9. Warm fruit / vegetative bloom
-      else if (avgR > 155 && avgG < 125) {
+      // 10. Warm fruit / vegetative bloom
+      else if (avgR > 150 && avgG < 125) {
         targetCrop = 'Mango';
+        isHealthy = true;
       }
       else {
-        targetCrop = 'Wheat';
+        targetCrop = 'Tomato';
       }
     }
 
     const plant = (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase : []).find(p => 
-      p.name.toLowerCase().includes(targetCrop.toLowerCase())
-    ) || (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase[1] : null) || {
-      name: 'Wheat',
-      scientific_name: 'Triticum aestivum',
-      local_names: { hi: 'गेहूं (Gehun)' },
+      p.name.toLowerCase().includes(targetCrop.toLowerCase()) ||
+      targetCrop.toLowerCase().includes(p.name.toLowerCase())
+    ) || (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase[0] : null) || {
+      name: targetCrop,
+      scientific_name: 'Botanical Cultivar',
+      local_names: { hi: targetCrop },
       diseases: []
     };
 
@@ -2242,31 +2264,112 @@ Reply ONLY with valid JSON.`;
                 )}
               </div>
 
-              {/* Specimen Focus Selector */}
-              <div className="flex items-center gap-2 overflow-x-auto py-1 text-[11px]">
-                <span className="text-slate-500 dark:text-slate-400 font-bold shrink-0 flex items-center gap-1">
-                  <Sliders className="w-3 h-3 text-emerald-600" />
-                  Target Crop:
-                </span>
-                {['auto', 'Variegated Foliage', 'Tomato', 'Neem', 'Tulsi', 'Wheat', 'Rice', 'Citrus / Lemon', 'Mango', 'Guava', 'Rose', 'Mint', 'Betel Leaf', 'Chilli', 'Potato', 'Cotton'].map(crop => (
-                  <button
-                    key={crop}
-                    type="button"
-                    onClick={() => {
-                      setSpecimenFocus(crop);
+              {/* Specimen Focus & 61-Crop Target Selector */}
+              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                <div className="flex items-center justify-between gap-2 flex-wrap text-xs">
+                  <span className="font-extrabold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 shrink-0">
+                    <Sliders className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    Target Crop:
+                  </span>
+
+                  <select
+                    value={specimenFocus}
+                    onChange={(e) => {
+                      setSpecimenFocus(e.target.value);
                       if (imagePreview) {
                         runVisionAnalysis(imagePreview, null, colorStats);
                       }
                     }}
-                    className={`px-2 py-0.5 rounded-full font-semibold shrink-0 transition-colors ${
-                      specimenFocus === crop
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                    }`}
+                    className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-200 border border-emerald-400 dark:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                   >
-                    {crop === 'auto' ? 'Auto-Detect' : crop}
-                  </button>
-                ))}
+                    <option value="auto">🔍 Auto-Detect (Multi-Spectral AI)</option>
+                    <optgroup label="Cereals & Millets">
+                      <option value="Wheat">🌾 Wheat (Gehun)</option>
+                      <option value="Rice">🌾 Rice / Paddy (Dhan)</option>
+                      <option value="Maize">🌽 Maize / Corn (Makka)</option>
+                      <option value="Bajra">🌾 Pearl Millet (Bajra)</option>
+                      <option value="Jowar">🌾 Sorghum (Jowar)</option>
+                      <option value="Barley">🌾 Barley (Jau)</option>
+                    </optgroup>
+                    <optgroup label="Cash Crops & Fibres">
+                      <option value="Cotton">🌱 Cotton (Kapas)</option>
+                      <option value="Sugarcane">🎋 Sugarcane (Ganna)</option>
+                      <option value="Jute">🌿 Jute (Patson)</option>
+                    </optgroup>
+                    <optgroup label="Vegetables & Nightshades">
+                      <option value="Tomato">🍅 Tomato (Tamatar)</option>
+                      <option value="Potato">🥔 Potato (Aloo)</option>
+                      <option value="Chilli">🌶️ Chilli / Pepper (Mirch)</option>
+                      <option value="Onion">🧅 Onion (Pyaaz)</option>
+                      <option value="Garlic">🧄 Garlic (Lahsun)</option>
+                      <option value="Brinjal">🍆 Eggplant / Brinjal (Baingan)</option>
+                      <option value="Cabbage">🥬 Cabbage (Patta Gobhi)</option>
+                      <option value="Cauliflower">🥦 Cauliflower (Phool Gobhi)</option>
+                      <option value="Okra">🌱 Okra / Ladyfinger (Bhindi)</option>
+                      <option value="Cucumber">🥒 Cucumber (Kheera)</option>
+                      <option value="Bitter Gourd">🥒 Bitter Gourd (Karela)</option>
+                      <option value="Spinach">🥬 Spinach (Palak)</option>
+                    </optgroup>
+                    <optgroup label="Fruits & Horticulture">
+                      <option value="Mango">🥭 Mango (Aam)</option>
+                      <option value="Banana">🍌 Banana (Kela)</option>
+                      <option value="Citrus / Lemon">🍋 Citrus / Lemon (Nimbu)</option>
+                      <option value="Apple">🍎 Apple (Seb)</option>
+                      <option value="Guava">🍈 Guava (Amrood)</option>
+                      <option value="Papaya">🍈 Papaya (Papita)</option>
+                      <option value="Pomegranate">🍎 Pomegranate (Anaar)</option>
+                      <option value="Grapes">🍇 Grapes (Angoor)</option>
+                      <option value="Watermelon">🍉 Watermelon (Tarbooz)</option>
+                      <option value="Coconut">🥥 Coconut (Nariyal)</option>
+                    </optgroup>
+                    <optgroup label="Spices & Herbs">
+                      <option value="Tulsi">🌿 Holy Basil (Tulsi)</option>
+                      <option value="Neem">🌿 Neem Leaf (Azadirachta)</option>
+                      <option value="Betel Leaf">🍃 Betel Leaf (Paan)</option>
+                      <option value="Mint">🌿 Mint (Pudina)</option>
+                      <option value="Ginger">🫚 Ginger (Adrak)</option>
+                      <option value="Turmeric">🌿 Turmeric (Haldi)</option>
+                      <option value="Coriander">🌿 Coriander (Dhaniya)</option>
+                      <option value="Fenugreek">🌿 Fenugreek (Methi)</option>
+                      <option value="Black Pepper">🌿 Black Pepper (Kali Mirch)</option>
+                      <option value="Cardamom">🌿 Green Cardamom (Elaichi)</option>
+                      <option value="Cumin">🌾 Cumin / Jeera</option>
+                      <option value="Tea">🍵 Tea Bush (Chai)</option>
+                      <option value="Coffee">☕ Coffee (Kafi)</option>
+                    </optgroup>
+                    <optgroup label="Oilseeds & Pulses">
+                      <option value="Mustard">🌼 Mustard (Sarson)</option>
+                      <option value="Groundnut">🥜 Groundnut / Peanut (Moongphali)</option>
+                      <option value="Soybean">🫘 Soybean</option>
+                      <option value="Chickpea">🫘 Chickpea / Gram (Chana)</option>
+                      <option value="Pigeon Pea">🫘 Pigeon Pea / Arhar (Tur Dal)</option>
+                      <option value="Green Gram">🫘 Green Gram / Moong Dal</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 text-[10px]">
+                  <span className="text-slate-400 font-semibold shrink-0">Quick Picks:</span>
+                  {['auto', 'Tomato', 'Wheat', 'Rice', 'Cotton', 'Chilli', 'Potato', 'Onion', 'Mango', 'Neem', 'Mustard'].map(crop => (
+                    <button
+                      key={crop}
+                      type="button"
+                      onClick={() => {
+                        setSpecimenFocus(crop);
+                        if (imagePreview) {
+                          runVisionAnalysis(imagePreview, null, colorStats);
+                        }
+                      }}
+                      className={`px-2 py-0.5 rounded-full font-bold shrink-0 transition-all cursor-pointer ${
+                        specimenFocus === crop
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      {crop === 'auto' ? '⚡ Auto' : crop}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -2662,6 +2765,44 @@ Reply ONLY with valid JSON.`;
                   </span>
                 </div>
               )}
+
+              {/* Plant Identity Verification & 1-Click Correction Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 shadow-sm">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                    <Leaf className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                      Identified Specimen:
+                    </span>
+                    <div className="font-extrabold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5 flex-wrap">
+                      <span>{scanResult.plant_name || scanResult.title || 'Botanical Specimen'}</span>
+                      {scanResult.scientific_name && (
+                        <span className="text-xs font-normal italic text-slate-400">({scanResult.scientific_name})</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                    Wrong plant?
+                  </span>
+                  <select
+                    value={scanResult.plant_name || ''}
+                    onChange={(e) => switchDiagnosedPlant(e.target.value)}
+                    className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-200 border-2 border-emerald-400 dark:border-emerald-600 shadow-sm hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  >
+                    <option value="" disabled>Switch to another crop...</option>
+                    {Array.isArray(plantKnowledgeBase) && plantKnowledgeBase.map(p => (
+                      <option key={p.name} value={p.name}>
+                        {p.icon || '🌿'} {p.name} ({p.scientific_name})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
               {/* What I See - Observation */}
               {scanResult.what_i_see && (

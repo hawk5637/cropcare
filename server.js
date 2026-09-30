@@ -7,6 +7,7 @@ import { callGemini, friendly, modelChain } from './api/_gemini.js';
 import { findPlantEntry, getPlants, getAllDiseases, searchKnowledge } from './api/_knowledge.js';
 import { buildFarmAdvisorPrompt, PROJECT_DATA } from './api/_advisorContext.js';
 import { getMandiCommodities } from './src/data/mandiData.js';
+import weatherHandler from './api/weather.js';
 
 dotenv.config();
 
@@ -187,6 +188,9 @@ app.post('/api/config/key', (req, res) => {
   process.env.GEMINI_API_KEY = apiKey.trim();
   res.json({ success: true, message: 'Gemini API key configured successfully' });
 });
+
+// GET /api/weather — 14-Day Agricultural Agro-Meteorological Weather Service
+app.get('/api/weather', weatherHandler);
 
 // POST /api/scan & /api/analyze — Real Multimodal Vision Scanner
 app.post(['/api/scan', '/api/analyze'], aiLimiter, async (req, res) => {

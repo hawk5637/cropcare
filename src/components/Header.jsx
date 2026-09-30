@@ -17,7 +17,8 @@ import {
   Layers,
   Grid3x3,
   BookOpen,
-  Play
+  Play,
+  CloudSun
 } from 'lucide-react';
 
 export default function Header() {
@@ -123,6 +124,18 @@ export default function Header() {
             >
               <Camera className="w-3.5 h-3.5" />
               <span>{t('header.scanner')}</span>
+            </button>
+
+            <button
+              onClick={() => setActiveNav('weather')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                activeNav === 'weather'
+                  ? 'bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <CloudSun className="w-3.5 h-3.5 text-sky-500" />
+              <span>Weather (14D)</span>
             </button>
 
             <button
@@ -410,8 +423,18 @@ export default function Header() {
         </button>
 
         <button
+          onClick={() => setActiveNav('weather')}
+          className={`flex flex-col items-center gap-1 text-[11px] font-semibold py-1 px-2.5 rounded-lg ${
+            activeNav === 'weather' ? 'text-sky-600 dark:text-sky-400 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <CloudSun className="w-4 h-4" />
+          <span>Weather</span>
+        </button>
+
+        <button
           onClick={() => setActiveNav('catalog')}
-          className={`flex flex-col items-center gap-1 text-[11px] font-semibold py-1 px-3 rounded-lg ${
+          className={`flex flex-col items-center gap-1 text-[11px] font-semibold py-1 px-2.5 rounded-lg ${
             activeNav === 'catalog' ? 'text-emerald-700 dark:text-emerald-400 font-bold' : 'text-slate-500'
           }`}
         >
