@@ -1002,7 +1002,7 @@ export default function LeafScanner() {
             points: [
               `Specimen identified as healthy ${plant.name} (${plant.scientific_name}).`,
               plant.how_to_identify_leaf || 'Leaves exhibit normal green coloration, intact margins, and cellular vigor.',
-              'Tissue integrity is firm with clean stomatal surfaces.'
+              'Tissue integrity is firm with clean stomatal surfaces and active foliar chloroplast density.'
             ]
           },
           {
@@ -1011,7 +1011,25 @@ export default function LeafScanner() {
             points: [
               plant.soil ? `Optimal soil requirement: ${plant.soil}` : 'Maintain balanced moisture and soil aeration.',
               plant.water ? `Water requirement: ${plant.water}` : 'Apply timely irrigation at key phenological stages.',
-              'Continue regular weekly field scouting for early pest or fungal detection.'
+              'Apply balanced NPK fertilization with supplementary micronutrients (Zinc, Boron) based on periodic soil testing.'
+            ]
+          },
+          {
+            heading: 'Growth Stages & Field Telemetry',
+            icon: '📈',
+            points: [
+              `Crop Category: ${plant.category || 'Agricultural Field Crop'}.`,
+              'Optimal Solar Exposure: 6 to 8 hours of unfiltered natural daylight.',
+              'Photosynthetic Efficiency: High foliar chlorophyll saturation with intact cellular vigor.'
+            ]
+          },
+          {
+            heading: 'Prophylactic Field Protection (IPM)',
+            icon: '🛡️',
+            points: [
+              'Conduct weekly field scouting and inspect leaf undersides for aphid or mite nymphs.',
+              'Spray preventive organic Neem oil (1,500 ppm @ 3 ml/L) during cloudy or high humidity periods.',
+              'Install yellow and blue sticky traps (10 traps/acre) for pest vector monitoring.'
             ]
           },
           {
@@ -1030,8 +1048,8 @@ export default function LeafScanner() {
         species_confidence: 0.96,
         disease_name: 'None (Healthy Specimen)',
         disease_confidence: 0.95,
-        farmer_advice: `Your ${plant.name} crop is in excellent condition; zero chemical intervention required.`,
-        evidence: ['Clean lamina with zero lesions or pest punctures.'],
+        farmer_advice: `No chemical application required. Maintain clean weeding, balanced irrigation, and standard agronomic care.`,
+        evidence: [`Intact cellular structure and zero foliar lesions`],
         image_hash: 'scan_' + Date.now()
       };
     }
@@ -1058,6 +1076,16 @@ export default function LeafScanner() {
           ]
         },
         {
+          heading: 'Pathogen Profile & Weather Epidemiology',
+          icon: '🌦️',
+          points: [
+            `Target Crop: ${plant.name} • Botanical Family: ${plant.scientific_name}.`,
+            'Favorable Climate: Relative humidity > 75% with temperatures between 20°C and 30°C.',
+            'Transmission Vector: Wind-borne fungal spores, rain-splash, and contaminated field tools.',
+            'Vulnerability Window: New vegetative flushes and fruit-set stages are most susceptible.'
+          ]
+        },
+        {
           heading: 'Immediate Organic Action',
           icon: '🌿',
           points: Array.isArray(disease.organic_treatment) && disease.organic_treatment.length > 0
@@ -1079,7 +1107,7 @@ export default function LeafScanner() {
               ]
         },
         {
-          heading: 'Field Prevention & Best Practice',
+          heading: 'Field Prevention & Cultural Best Practice',
           icon: '🛡️',
           points: Array.isArray(disease.prevention) && disease.prevention.length > 0
             ? disease.prevention
@@ -1087,6 +1115,15 @@ export default function LeafScanner() {
                 'Avoid overhead sprinkler irrigation to keep foliage dry.',
                 'Maintain recommended row-to-row spacing for cross-ventilation.'
               ]
+        },
+        {
+          heading: 'Economic Impact & Yield Protection',
+          icon: '📊',
+          points: [
+            'Action Urgency: Immediate (intervene within 48 hours to prevent canopy defoliation).',
+            'Estimated Yield Risk: 30% to 50% crop loss if untreated during active disease cycle.',
+            'Post-Treatment Protocol: Re-inspect foliage 5 to 7 days after initial spray application.'
+          ]
         }
       ],
       need_better_photo: '',
@@ -1984,24 +2021,49 @@ Reply ONLY with valid JSON.`;
 
               {/* Verdict Banner - Prominently Displayed at Top */}
               {!scanResult.is_plant_detected ? (
-                <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 flex items-center justify-between shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
-                      <AlertTriangle className="w-6 h-6" />
+                <>
+                  <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+                        <AlertTriangle className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-amber-950 dark:text-amber-200 text-base">
+                          {scanResult.title || 'Human Face / Non-Plant Subject'}
+                        </h4>
+                        <p className="text-xs text-amber-800 dark:text-amber-300 font-semibold mt-0.5">
+                          Non-Botanical Subject • Zero crop foliage or plant disease detected
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-extrabold text-amber-950 dark:text-amber-200 text-base">
-                        {scanResult.title || 'Human Face / Non-Plant Subject'}
-                      </h4>
-                      <p className="text-xs text-amber-800 dark:text-amber-300 font-semibold mt-0.5">
-                        Non-Botanical Subject • Zero crop foliage or plant disease detected
-                      </p>
-                    </div>
+                    <span className="px-3 py-1 bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 font-extrabold text-xs rounded-full shrink-0">
+                      Not a Plant
+                    </span>
                   </div>
-                  <span className="px-3 py-1 bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 font-extrabold text-xs rounded-full shrink-0">
-                    Not a Plant
-                  </span>
+
+                {/* Instant Botanical Specimen Quick-Launcher */}
+                <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-700 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-emerald-600" />
+                      Try Scanning a Real Crop Leaf (1-Click Instant Test):
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {SAMPLE_SPECIMENS.slice(0, 6).map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => selectSampleSpecimen(s)}
+                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-emerald-300 dark:border-slate-600 text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 transition-all shadow-sm flex items-center gap-1.5"
+                      >
+                        <span>{s.icon}</span>
+                        <span>{s.name}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
+              </>
               ) : scanResult.health_status === 'healthy' ? (
                 <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 flex items-center justify-between">
                   <div className="flex items-center gap-3">
