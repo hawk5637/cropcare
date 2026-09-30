@@ -18,6 +18,7 @@ import {
   X 
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { APMC_STATES } from '../../services/mandiService';
 
 const MANDI_PRICES = [
   // ─── VEGETABLES ─────────────────────────────────────
@@ -417,6 +418,7 @@ const CATEGORIES = ['All Mandis', 'Vegetables', 'Fruits', 'Grains & Crops'];
 export default function MarketModule() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All Mandis');
+  const [selectedState, setSelectedState] = useState('All India');
   const [selectedCrop, setSelectedCrop] = useState(MANDI_PRICES[0]);
   const [alertSet, setAlertSet] = useState({});
   
@@ -435,7 +437,8 @@ export default function MarketModule() {
       m.mandi.toLowerCase().includes(search.toLowerCase()) ||
       m.state.toLowerCase().includes(search.toLowerCase());
     const matchesCat = activeCategory === 'All Mandis' || m.category === activeCategory;
-    return matchesSearch && matchesCat;
+    const matchesState = selectedState === 'All India' || m.state.toLowerCase() === selectedState.toLowerCase() || m.mandi.toLowerCase().includes(selectedState.toLowerCase());
+    return matchesSearch && matchesCat && matchesState;
   });
 
   const chartData = selectedCrop ? selectedCrop.history.map((v, i) => ({ day: DAYS[i], price: v })) : [];
@@ -556,14 +559,26 @@ export default function MarketModule() {
           })}
         </div>
 
-        <div className="relative md:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search crop, state, or APMC mandi..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-          />
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <select
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+            className="py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shrink-0"
+          >
+            {APMC_STATES.map(st => (
+              <option key={st} value={st}>{st}</option>
+            ))}
+          </select>
+
+          <div className="relative flex-1 md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search crop, state, or APMC mandi..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
         </div>
       </div>
 

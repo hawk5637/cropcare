@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import { callGemini, friendly, modelChain } from './api/_gemini.js';
 import { findPlantEntry, getPlants, getAllDiseases, searchKnowledge } from './api/_knowledge.js';
 import { buildFarmAdvisorPrompt, PROJECT_DATA } from './api/_advisorContext.js';
+import { getMandiCommodities } from './src/data/mandiData.js';
 
 dotenv.config();
 
@@ -658,6 +659,34 @@ app.get('/api/plants/:name', (req, res) => {
     return res.json({ success: true, plant: entry });
   }
   res.status(404).json({ success: false, message: 'Plant not found in knowledge base' });
+});
+
+// GET /api/mandi — Live APMC Mandi prices
+app.get('/api/mandi', (req, res) => {
+  const { state, crop, lang = 'en' } = req.query;
+  let commodities = getMandiCommodities(lang);
+
+  if (state && state !== 'All India') {
+    commodities = commodities.filter(m => 
+      (m.state && m.state.toLowerCase() === state.toLowerCase()) || 
+      (m.mandi && m.mandi.toLowerCase().includes(state.toLowerCase()))
+    );
+  }
+
+  if (crop) {
+    commodities = commodities.filter(m => 
+      (m.name && m.name.toLowerCase().includes(crop.toLowerCase())) || 
+      (m.crop && m.crop.toLowerCase().includes(crop.toLowerCase()))
+    );
+  }
+
+  res.json({
+    status: 'success',
+    timestamp: new Date().toISOString(),
+    source: 'Agmarknet / e-NAM APMC Grid',
+    count: commodities.length,
+    commodities
+  });
 });
 
 

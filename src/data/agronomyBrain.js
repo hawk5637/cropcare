@@ -4,6 +4,7 @@
 
 import plantKnowledgeBase from './plantKnowledgeBase.json' with { type: 'json' };
 import { PROJECT_DATA } from './farmAdvisorContext.js';
+import { findMandiRatesForChat, getLiveMandiPrices } from '../services/mandiService.js';
 
 // Pre-index plants by name, scientific name, and local names
 const plantIndex = new Map();
@@ -502,19 +503,25 @@ Feel free to ask a specific question or attach a photo for examination!`;
   }
 
   // D. Mandi, MSP & Selling Crops
-  if (q.includes('mandi') || q.includes('msp') || q.includes('price') || q.includes('sell crop') || q.includes('e-nam')) {
-    return `### 📈 Mandi Selling & Minimum Support Price (MSP) Advisory
+  if (q.includes('mandi') || q.includes('msp') || q.includes('price') || q.includes('rate') || q.includes('bhav') || q.includes('sell crop') || q.includes('e-nam')) {
+    const matched = findMandiRatesForChat(query);
+    const commoditiesToDisplay = matched.length > 0 ? matched : getLiveMandiPrices().slice(0, 5);
 
-**1. Key MSP Baselines (Government Procurement Rates):**
-- **Wheat:** ₹2,275 - ₹2,425 / Quintal
-- **Paddy (Common):** ₹2,183 - ₹2,300 / Quintal
-- **Mustard / Rapeseed:** ₹5,650 / Quintal
-- **Chana (Gram):** ₹5,440 / Quintal
+    let ratesTable = `| Commodity & Grade | APMC Mandi | Live Modal Rate | Min - Max Range | Govt MSP |\n| :--- | :--- | :--- | :--- | :--- |\n`;
+    commoditiesToDisplay.forEach(item => {
+      const upDown = item.trend === 'up' ? '▲' : '▼';
+      const mspVal = item.msp ? `₹${item.msp.toLocaleString('en-IN')}` : 'N/A';
+      ratesTable += `| **${item.name}** | ${item.mandi} | **₹${item.modalPrice?.toLocaleString('en-IN')}/qtl** ${upDown} | ₹${item.minPrice?.toLocaleString('en-IN')} - ₹${item.maxPrice?.toLocaleString('en-IN')} | ${mspVal} |\n`;
+    });
 
-**2. Golden Rules for Getting Top Mandi Rates:**
-- **Moisture Control:** Mandi buyers dock prices heavily for high moisture. Ensure grain moisture is below **12% for Wheat/Mustard** and below **17% for Paddy**.
-- **Grading & Cleaning:** Winnow and pass grain through a cleaner to remove chaff, immature grains, and weed seeds. Clean grain fetches a ₹100 - ₹200/quintal premium.
-- **e-NAM Integration:** Check live prices across nearby mandis using the e-NAM app or CropCare's **Mandi Module** before dispatching your trolley.`;
+    return `### 📈 Real Live Mandi Rates & MSP Advisory (Agmarknet & e-NAM)
+
+${ratesTable}
+
+**💡 Key Selling Strategies for Top Realization:**
+1. **Moisture Standard:** Mandi commission agents dock prices heavily if grain moisture exceeds permissible limits. Maintain moisture below **11.5% for Wheat & Mustard**, **10% for Soybean**, and **17% for Paddy**.
+2. **Quality Grading:** Mechanically winnowed and cleaned lots with lustrous bold grains fetch a **₹120 - ₹250/quintal premium** over average arrivals.
+3. **Electronic Nodal Escrow:** You can lock guaranteed buyer contracts directly in CropCare's **Market Module** with instant digital payment assurance.`;
   }
 
   // E. Sowing calendar & seasons

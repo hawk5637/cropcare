@@ -20,8 +20,10 @@ import {
   Camera,
   Compass,
   Sliders,
-  Scale
+  Scale,
+  ExternalLink
 } from 'lucide-react';
+import { getLiveMandiPrices } from '../../services/mandiService';
 
 export default function FarmerDashboard() {
   const { 
@@ -109,12 +111,14 @@ export default function FarmerDashboard() {
     { id: 'plot-c', name: 'Parcel C-3 (Basmati Rice Nursery)', size: '4.0 Acres', moisture: 42, npk: '100:50:50', health: 'Vegetative' }
   ];
 
-  const mandiRates = [
-    { crop: 'Wheat (HD-2967)', mandi: 'Khanna APMC', spotPrice: '₹2,540 / qtl', change: '+₹45', trend: 'up' },
-    { crop: 'Basmati Rice (1121)', mandi: 'Karnal APMC', spotPrice: '₹4,380 / qtl', change: '+₹110', trend: 'up' },
-    { crop: 'Mustard (Pusa Bold)', mandi: 'Alwar APMC', spotPrice: '₹5,820 / qtl', change: '-₹20', trend: 'down' },
-    { crop: 'Alphonso Mango', mandi: 'Vashi Market', spotPrice: '₹1,200 / crate', change: '+₹80', trend: 'up' }
-  ];
+  const liveCommodities = getLiveMandiPrices(language);
+  const mandiRates = liveCommodities.slice(0, 5).map(item => ({
+    crop: item.name,
+    mandi: item.mandi,
+    spotPrice: `₹${item.modalPrice?.toLocaleString('en-IN')} / qtl`,
+    change: `${item.trend === 'up' ? '+' : ''}${item.change}%`,
+    trend: item.trend
+  }));
 
   const buyerBids = [
     { id: 'BID-881', buyer: 'ITC Agri Business Ltd', crop: 'Wheat Grade-A (200 Qtls)', offerPrice: '₹2,580/qtl', escrowLocked: '₹5,16,000', expiry: '4 hours' },
@@ -413,6 +417,17 @@ export default function FarmerDashboard() {
               </div>
             ))}
           </div>
+
+          <button
+            onClick={() => {
+              setActiveNav('module');
+              setActiveModule('market');
+            }}
+            className="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all border border-emerald-300 dark:border-emerald-800 cursor-pointer"
+          >
+            <span>Open All Indian APMC Mandis & Buyer Cockpit</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
 

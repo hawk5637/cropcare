@@ -21,15 +21,20 @@ import {
   ChevronUp, 
   ExternalLink,
   Cpu,
-  AlertTriangle
+  AlertTriangle,
+  Maximize2,
+  Minimize2,
+  Camera,
+  TrendingUp
 } from 'lucide-react';
 import { PROJECT_DATA, STARTER_QUESTIONS } from '../data/farmAdvisorContext.js';
 import { generateAdvisorResponse, generateGeneralResponse } from '../data/agronomyBrain.js';
 
 export default function ChatbotWidget() {
-  const { userName, userRole, language, runtimeApiKey, saveRuntimeApiKey, t } = useApp();
+  const { userName, userRole, language, runtimeApiKey, saveRuntimeApiKey, setActiveNav, t } = useApp();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [botMode, setBotMode] = useState('advisor'); // 'advisor' (Farm Advisor AI) | 'general' (General Assistant)
   const [selectedPlotId, setSelectedPlotId] = useState(PROJECT_DATA.parcels[0].id);
 
@@ -87,7 +92,54 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [advisorMessages, generalMessages, isTyping, botMode, showKeyConfig]);
+  }, [advisorMessages, generalMessages, isTyping, botMode, showKeyConfig, isMaximized]);
+
+  // Listen for diagnosis handoff from Leaf Scanner
+  useEffect(() => {
+    const handleLeafDiagnosis = (e) => {
+      const detail = e.detail;
+      if (!detail) return;
+      setIsOpen(true);
+      setBotMode('general');
+      const cropText = detail.species || detail.name || 'Crop Specimen';
+      const condText = detail.condition || detail.disease_name || 'Plant Health Check';
+      const prompt = `I just scanned a **${cropText}** with the Leaf Scanner. Diagnosis detected: **${condText}**. What are the organic treatments, chemical controls, and preventive steps?`;
+
+      const userMsg = {
+        id: `user-diag-${Date.now()}`,
+        sender: 'user',
+        text: prompt,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setGeneralMessages(prev => [...prev, userMsg]);
+      setIsTyping(true);
+
+      setTimeout(async () => {
+        try {
+          const resp = await generateGeneralResponse({
+            query: `Diagnosis: ${cropText} with ${condText}. What are the organic treatments, chemical controls, and preventive steps?`,
+            language
+          });
+          const modelMsg = {
+            id: `model-diag-${Date.now()}`,
+            sender: 'model',
+            text: resp.text,
+            source: resp.source,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          setGeneralMessages(prev => [...prev, modelMsg]);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setIsTyping(false);
+        }
+      }, 500);
+    };
+
+    window.addEventListener('cropcare:diagnose-leaf', handleLeafDiagnosis);
+    return () => window.removeEventListener('cropcare:diagnose-leaf', handleLeafDiagnosis);
+  }, [language]);
 
   // Speech Recognition
   useEffect(() => {
@@ -391,7 +443,11 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
 
       {/* Floating Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[480px] h-[640px] max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className={`z-50 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden transition-all duration-200 ${
+          isMaximized
+            ? 'fixed inset-2 sm:inset-6 max-w-5xl mx-auto h-[92vh] max-h-[95vh] ring-4 ring-emerald-500/20'
+            : 'fixed bottom-20 right-3 sm:right-6 w-[95vw] sm:w-[500px] h-[660px] max-h-[85vh] animate-in fade-in slide-in-from-bottom-5'
+        }`}>
           
           {/* Header */}
           <div className="p-3.5 bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white flex flex-col gap-2.5">
@@ -437,6 +493,28 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               </div>
 
               <div className="flex items-center gap-1">
+                {setActiveNav && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveNav('scanner');
+                      if (!isMaximized) setIsOpen(false);
+                    }}
+                    className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-bold"
+                    title="Open Camera Scanner"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Scan</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsMaximized(!isMaximized)}
+                  className="p-1.5 rounded-xl text-emerald-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  title={isMaximized ? "Restore window" : "Maximize window"}
+                >
+                  {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
                 <button
                   type="button"
                   onClick={() => setShowKeyConfig(!showKeyConfig)}
@@ -739,6 +817,23 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                 <>
                   <button
                     type="button"
+                    onClick={() => handleQuickQuestion('What are today\'s real live mandi prices across APMCs?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-[10px] font-bold text-amber-800 dark:text-amber-200 hover:bg-amber-100 border border-amber-300 dark:border-amber-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>📈</span>
+                    <span>Live Mandi Rates</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What is the current mandi price and MSP for Wheat and Mustard?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
+                  >
+                    🌾 Wheat & Mustard Price
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => handleQuickQuestion('What is the optimal fertilizer dose for Wheat?')}
                     disabled={isTyping}
                     className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/60 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer"
@@ -824,6 +919,20 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               >
                 <Paperclip className="w-4 h-4" />
               </button>
+
+              {setActiveNav && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveNav('scanner');
+                    if (!isMaximized) setIsOpen(false);
+                  }}
+                  className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+                  title="Scan Plant Leaf with Camera"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+              )}
 
               <button
                 type="button"

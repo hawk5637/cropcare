@@ -27,7 +27,9 @@ import {
   ZapOff,
   Smartphone,
   Aperture,
-  Sliders
+  Sliders,
+  Bot,
+  ZoomIn
 } from 'lucide-react';
 
 const SAMPLE_SPECIMENS = [
@@ -460,6 +462,7 @@ export default function LeafScanner() {
   const [cameraFacing, setCameraFacing] = useState('environment'); // 'environment' | 'user'
   const [hasTorch, setHasTorch] = useState(false);
   const [isTorchOn, setIsTorchOn] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [specimenFocus, setSpecimenFocus] = useState('auto');
   const [colorStats, setColorStats] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -825,6 +828,38 @@ export default function LeafScanner() {
         console.warn('Torch constraint error:', e);
       }
     }
+  };
+
+  const handleZoomChange = async (level) => {
+    setZoomLevel(level);
+    if (cameraStream) {
+      const track = cameraStream.getVideoTracks()[0];
+      if (track) {
+        try {
+          const caps = track.getCapabilities ? track.getCapabilities() : {};
+          if (caps.zoom) {
+            await track.applyConstraints({
+              advanced: [{ zoom: level }]
+            });
+          }
+        } catch (e) {
+          console.warn('[LeafScanner] Hardware zoom not supported, digital transform applied:', e);
+        }
+      }
+    }
+  };
+
+  const handleAskAIChatbot = () => {
+    if (!scanResult) return;
+    const event = new CustomEvent('cropcare:diagnose-leaf', {
+      detail: {
+        species: scanResult.species || scanResult.name,
+        condition: scanResult.condition || scanResult.status,
+        confidence: scanResult.confidence,
+        sections: scanResult.sections
+      }
+    });
+    window.dispatchEvent(event);
   };
 
   // Safe frame capture: does not fail if readyState is 1 or if dimensions need a brief tick
@@ -1673,15 +1708,30 @@ Reply ONLY with valid JSON.`;
                     autoPlay 
                     playsInline 
                     muted
+                    style={{
+                      transform: `scale(${zoomLevel})`,
+                      transformOrigin: 'center center',
+                      transition: 'transform 0.3s ease'
+                    }}
                     className="w-full h-full object-cover"
                   />
+
+                  {/* 4 Corner Targeting HUD brackets */}
+                  <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-emerald-400 rounded-tl-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
+                  <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-emerald-400 rounded-tr-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
+                  <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-emerald-400 rounded-bl-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
+                  <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-emerald-400 rounded-br-lg pointer-events-none z-10 shadow-[0_0_8px_#10b981]"></div>
+
+                  {/* Active Laser Scanning Sweep Line */}
+                  <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent absolute top-0 animate-scan-laser shadow-[0_0_12px_#10b981] pointer-events-none z-10"></div>
+
                   {/* Framing Reticle HUD */}
-                  <div className="absolute inset-4 sm:inset-6 border-2 border-emerald-400/80 rounded-2xl pointer-events-none flex flex-col justify-between p-3 shadow-[inset_0_0_30px_rgba(16,185,129,0.2)]">
+                  <div className="absolute inset-4 sm:inset-6 border border-emerald-400/50 rounded-2xl pointer-events-none flex flex-col justify-between p-3 shadow-[inset_0_0_30px_rgba(16,185,129,0.2)] z-10">
                     {/* Top HUD Bar */}
                     <div className="flex items-center justify-between pointer-events-auto">
                       <span className="text-[10px] uppercase font-bold text-emerald-300 bg-slate-950/85 px-2.5 py-1 rounded-md border border-emerald-500/40 flex items-center gap-1.5 backdrop-blur-sm">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        {cameraFacing === 'environment' ? 'Rear Camera' : 'Front Camera'}
+                        {cameraFacing === 'environment' ? 'Rear Camera' : 'Front Camera'} • {zoomLevel}x
                       </span>
 
                       <div className="flex items-center gap-1.5">
@@ -1712,17 +1762,35 @@ Reply ONLY with valid JSON.`;
 
                     {/* Center Targeting Reticle */}
                     <div className="self-center flex flex-col items-center gap-2">
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-2 border-dashed border-emerald-400/60 flex items-center justify-center animate-pulse">
-                        <div className="w-8 h-8 rounded-full border border-emerald-300/40"></div>
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-2 border-dashed border-emerald-400/70 flex items-center justify-center animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                        <div className="w-8 h-8 rounded-full border border-emerald-300/60"></div>
                       </div>
-                      <span className="text-[10px] font-semibold text-emerald-200 bg-slate-950/80 px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-emerald-500/30">
+                      <span className="text-[10px] font-semibold text-emerald-200 bg-slate-950/85 px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-emerald-500/30">
                         Hold steady • Center plant specimen
                       </span>
                     </div>
 
-                    {/* Bottom Status Guide */}
-                    <div className="text-center">
-                      <span className="text-[10px] text-slate-300 bg-slate-950/80 px-3 py-1 rounded-md border border-slate-700/60 inline-block backdrop-blur-sm">
+                    {/* Bottom Zoom & Guide Bar */}
+                    <div className="flex items-center justify-between pointer-events-auto">
+                      <div className="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-white/15 backdrop-blur-sm">
+                        <ZoomIn className="w-3 h-3 text-emerald-400 ml-1 mr-0.5" />
+                        {[1, 1.5, 2, 3].map(lvl => (
+                          <button
+                            key={lvl}
+                            type="button"
+                            onClick={() => handleZoomChange(lvl)}
+                            className={`px-2 py-0.5 rounded-lg text-[10px] font-black transition-all cursor-pointer ${
+                              zoomLevel === lvl 
+                                ? 'bg-emerald-500 text-slate-950 shadow-sm' 
+                                : 'text-slate-300 hover:text-white'
+                            }`}
+                          >
+                            {lvl}x
+                          </button>
+                        ))}
+                      </div>
+
+                      <span className="text-[10px] text-slate-300 bg-slate-950/85 px-2.5 py-1 rounded-md border border-slate-700/60 inline-block backdrop-blur-sm">
                         Tap "Capture & Scan" below
                       </span>
                     </div>
@@ -2542,6 +2610,27 @@ Reply ONLY with valid JSON.`;
                     )}
                   </div>
                 )}
+
+                {/* Instant AI Chatbot Consultation Card */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-900 via-emerald-800 to-green-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg border border-emerald-500/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
+                      <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+                    </div>
+                    <div>
+                      <h4 className="font-extrabold text-sm text-white">Need Customized Spray Timing or Dosage Advice?</h4>
+                      <p className="text-xs text-emerald-200">Consult Farm Advisor AI chatbot about water ratio, parcel weather forecast, or organic alternatives.</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAskAIChatbot}
+                    className="py-2.5 px-4 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  >
+                    <Bot className="w-4 h-4 text-slate-950" />
+                    <span>Ask AI Chatbot About This</span>
+                  </button>
+                </div>
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
