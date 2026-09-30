@@ -17,7 +17,9 @@ export function AppProvider({ children }) {
     localStorage.getItem('cropcare_auth') === 'true'
   );
   // Application Flow Step: 'logo' -> 'login' -> 'intro' -> 'main'
-  const [flowStep, setFlowStep] = useState('logo');
+  const [flowStep, setFlowStep] = useState(() =>
+    localStorage.getItem('cropcare_auth') === 'true' ? 'main' : 'logo'
+  );
   const [profileSetupDone, setProfileSetupDone] = useState(() =>
     localStorage.getItem('cropcare_profile_done') === 'true'
   );

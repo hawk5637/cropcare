@@ -80,7 +80,7 @@ export default function App() {
 
   // Step 1: First animated logo in opening
   if (flowStep === 'logo') {
-    return <AnimatedOpeningLogo onComplete={() => setFlowStep('login')} />;
+    return <AnimatedOpeningLogo onComplete={() => setFlowStep(isAuthenticated ? 'main' : 'login')} />;
   }
 
   // Step 2: Then login page

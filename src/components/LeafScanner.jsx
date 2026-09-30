@@ -937,8 +937,8 @@ export default function LeafScanner() {
     reader.readAsDataURL(file);
   };
 
-  // Start live webcam or mobile phone camera with resilient multi-step constraints
-  const startCamera = async (overrideFacing) => {
+  // Start live webcam or mobile phone camera with resilient multi-step constraints and auto-fallback
+  const startCamera = async (overrideFacing, isSilent = false) => {
     try {
       setScanError(null);
       setImagePreview(null);
@@ -953,26 +953,34 @@ export default function LeafScanner() {
 
       // Check browser mediaDevices support (WebRTC requires HTTPS or localhost)
       const isSecure = window.isSecureContext || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (!isSecure && window.location.protocol !== 'https:') {
-        throw new Error('Camera streaming requires a secure HTTPS connection. Please access the website via HTTPS, or tap "Take Photo with Phone Camera" below.');
+      if (!isSecure || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setIsCameraLoading(false);
+        setIsCameraActive(false);
+        if (!isSilent && nativeCameraInputRef.current) {
+          nativeCameraInputRef.current.click();
+        }
+        return;
       }
 
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('Direct camera streaming is unavailable on this browser. You can tap "Take Photo with Phone Camera" below to use your device camera directly.');
-      }
-
-      // Safe constraints using { ideal } so devices without rear camera don't trigger OverconstrainedError
+      // Safe constraints using { ideal } with 3.5s timeout per attempt
       const attempts = [
         { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
         { video: { facingMode: { ideal: facing } }, audio: false },
         { video: true, audio: false }
       ];
 
+      const getStreamWithTimeout = (constraint, timeoutMs = 3500) => {
+        return Promise.race([
+          navigator.mediaDevices.getUserMedia(constraint),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeoutMs))
+        ]);
+      };
+
       let stream = null;
       let lastErr = null;
       for (const constraint of attempts) {
         try {
-          stream = await navigator.mediaDevices.getUserMedia(constraint);
+          stream = await getStreamWithTimeout(constraint, 3500);
           if (stream) break;
         } catch (errTry) {
           lastErr = errTry;
@@ -980,7 +988,12 @@ export default function LeafScanner() {
       }
 
       if (!stream) {
-        throw lastErr || new Error('Could not access device camera.');
+        setIsCameraLoading(false);
+        setIsCameraActive(false);
+        if (!isSilent && nativeCameraInputRef.current) {
+          nativeCameraInputRef.current.click();
+        }
+        return;
       }
 
       // Check torch capability
@@ -999,20 +1012,12 @@ export default function LeafScanner() {
       setIsCameraLoading(false);
       setActiveTab('camera');
     } catch (err) {
-      console.error('[LeafScanner] Camera access error:', err);
+      console.warn('[LeafScanner] Camera live feed unavailable:', err);
       setIsCameraActive(false);
       setIsCameraLoading(false);
-
-      let helpfulMsg = err.message || 'Permission denied or camera device busy.';
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        helpfulMsg = 'Camera permission was denied. Please click the camera or lock icon in your browser address bar to allow camera access, then tap Start Live Camera again. Alternatively, tap "Take Photo with Phone Camera".';
-      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        helpfulMsg = 'No camera device found on this system. You can tap "Take Photo with Phone Camera" or select a photo from your gallery.';
-      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-        helpfulMsg = 'Camera is currently in use by another application. Please close other camera apps and retry.';
+      if (!isSilent && nativeCameraInputRef.current) {
+        nativeCameraInputRef.current.click();
       }
-
-      setScanError(`Camera Notice: ${helpfulMsg}`);
     }
   };
 
@@ -2069,6 +2074,29 @@ Reply ONLY with valid JSON.`;
                   <RefreshCw className="w-10 h-10 text-emerald-400 animate-spin" />
                   <p className="text-sm font-bold text-white">Starting Camera Sensor...</p>
                   <p className="text-xs text-emerald-200">Please allow browser camera permission if prompted</p>
+                  <div className="flex flex-col gap-2 w-full max-w-xs mt-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCameraLoading(false);
+                        if (nativeCameraInputRef.current) nativeCameraInputRef.current.click();
+                      }}
+                      className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Open Device Camera Directly</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCameraLoading(false);
+                        stopCamera();
+                      }}
+                      className="w-full py-1 text-xs text-slate-400 hover:text-white cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               ) : imagePreview ? (
                 <div className="relative w-full h-full">
@@ -2084,7 +2112,7 @@ Reply ONLY with valid JSON.`;
                         setImagePreview(null);
                         startCamera();
                       }}
-                      className="px-2.5 py-1 bg-slate-950/85 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold border border-white/20 backdrop-blur-sm transition-all"
+                      className="px-2.5 py-1 bg-slate-950/85 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold border border-white/20 backdrop-blur-sm transition-all cursor-pointer"
                     >
                       Retake
                     </button>
@@ -2103,7 +2131,7 @@ Reply ONLY with valid JSON.`;
                     <button
                       type="button"
                       onClick={() => startCamera()}
-                      className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md shadow-emerald-600/30 transition-all cursor-pointer"
+                      className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer hover:scale-[1.01]"
                     >
                       <Camera className="w-4 h-4" />
                       <span>{t('scanner.startCamera') || 'Start Live Camera'}</span>
@@ -2111,17 +2139,29 @@ Reply ONLY with valid JSON.`;
                     <button
                       type="button"
                       onClick={() => nativeCameraInputRef.current?.click()}
-                      className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 border border-emerald-500/30 transition-all cursor-pointer"
+                      className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold text-xs rounded-xl flex items-center justify-center gap-2 border border-emerald-500/40 shadow-sm transition-all cursor-pointer"
                     >
-                      <Smartphone className="w-3.5 h-3.5" />
-                      <span>Take Photo with Phone Camera</span>
+                      <Smartphone className="w-4 h-4 text-emerald-400" />
+                      <span>Take Photo with Device Camera</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full py-1.5 text-slate-400 hover:text-slate-200 font-medium text-xs transition-colors cursor-pointer"
+                      className="w-full py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 border border-slate-700 transition-all cursor-pointer"
                     >
-                      Or select photo from gallery / files
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload Plant Leaf from Gallery</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const defaultSample = SAMPLE_SPECIMENS[0];
+                        if (defaultSample) selectSampleSpecimen(defaultSample);
+                      }}
+                      className="w-full py-1.5 text-emerald-400 hover:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      <span>Or Try Instant 1-Click Specimen Demo</span>
                     </button>
                   </div>
                 </div>
