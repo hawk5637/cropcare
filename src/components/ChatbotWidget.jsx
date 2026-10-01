@@ -260,73 +260,70 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       let replyContent = '';
       let replySource = 'brain';
 
-      // 1. Try Live Gemini if a valid key is provided
-      if (isGeminiKeyValid) {
-        if (botMode === 'advisor') {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 12000);
+      // 1. Try Live AI backend (Server Gemini or custom key)
+      const reqHeaders = { 'Content-Type': 'application/json' };
+      if (runtimeApiKey) {
+        reqHeaders['x-gemini-api-key'] = runtimeApiKey;
+      }
 
-            const res = await fetch('/api/farm-advisor', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-gemini-api-key': runtimeApiKey
-              },
-              body: JSON.stringify({
-                message: trimmed,
-                history: cleanHistory,
-                plotId: selectedPlotId,
-                language: language,
-                userName: userName || 'Farmer'
-              }),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
+      if (botMode === 'advisor') {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-            if (res.ok) {
-              const data = await res.json();
-              if (data.reply) {
-                replyContent = data.reply;
-                replySource = 'gemini';
-              }
+          const res = await fetch('/api/farm-advisor', {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              message: trimmed,
+              history: cleanHistory,
+              plotId: selectedPlotId,
+              language: language,
+              userName: userName || 'Farmer'
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data.reply) {
+              replyContent = data.reply;
+              replySource = 'gemini';
             }
-          } catch (e) {
-            console.warn('Live advisor backend error, using Agronomy Brain:', e.message);
           }
-        } else {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 12000);
+        } catch (e) {
+          console.warn('Live advisor backend unavailable, using built-in Agronomy Brain:', e.message);
+        }
+      } else {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-            const res = await fetch('/api/chat', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-gemini-api-key': runtimeApiKey
-              },
-              body: JSON.stringify({
-                message: trimmed,
-                history: cleanHistory,
-                language: language,
-                userName: userName,
-                userRole: userRole,
-                image: userMsg.image
-              }),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              message: trimmed,
+              history: cleanHistory,
+              language: language,
+              userName: userName || 'Friend',
+              userRole: userRole || 'user',
+              image: userMsg.image
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
 
-            if (res.ok) {
-              const data = await res.json();
-              if (data.reply) {
-                replyContent = data.reply;
-                replySource = 'gemini';
-              }
+          if (res.ok) {
+            const data = await res.json();
+            if (data.reply) {
+              replyContent = data.reply;
+              replySource = 'gemini';
             }
-          } catch (e) {
-            console.warn('Live chat backend error, using Agronomy Brain:', e.message);
           }
+        } catch (e) {
+          console.warn('Live chat backend unavailable, using built-in Assistant Brain:', e.message);
         }
       }
 

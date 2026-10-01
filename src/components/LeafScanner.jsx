@@ -783,7 +783,7 @@ export default function LeafScanner() {
       const data = imageData.data;
       let totalBrightness = 0, rSum = 0, gSum = 0, bSum = 0;
       let greenPixels = 0, foliageYellowPixels = 0, skinPixels = 0;
-      let variegationPixels = 0, darkGlossyPixels = 0, necroticPixels = 0;
+      let darkGlossyPixels = 0, necroticPixels = 0;
       let minX = width, maxX = 0, minY = height, maxY = 0;
       const step = Math.max(4, Math.floor((data.length / 4) / 10000)) * 4;
       let count = 0;
@@ -804,29 +804,22 @@ export default function LeafScanner() {
 
         let isPlantPixel = false;
 
-        // Foliar Chlorophyll Green
-        if (g > r * 1.04 && g > b * 1.06 && g > 35) {
+        // Foliar Chlorophyll Green: g is clearly dominant over r and b
+        if (g > r * 1.05 && g > b * 1.08 && g > 35) {
           greenPixels++;
           isPlantPixel = true;
-          // Dark glossy foliage (Citrus, Ficus, Mango)
-          if (g < 115 && (r + g + b) < 260) {
+          // Dark glossy foliage (Neem, Citrus, Mango, Ficus)
+          if (g < 125 && (r + g + b) < 280) {
             darkGlossyPixels++;
           }
         }
         // Foliar Yellow / Chlorosis (blight, rust, wheat, seeds)
-        else if (r > 80 && g > 75 && b < 70 && Math.abs(r - g) < 50 && (r + g) > b * 2.2) {
+        else if (r > 85 && g > 80 && b < 65 && Math.abs(r - g) < 40 && (r + g) > b * 2.4) {
           foliageYellowPixels++;
           isPlantPixel = true;
         }
-
-        // Variegation: Cream, white, or ivory foliage border/margins (Cornus, Ficus variegata, Pothos, Hosta)
-        if (r > 165 && g > 165 && b > 135 && Math.abs(r - g) < 40 && lum > 160) {
-          variegationPixels++;
-          isPlantPixel = true;
-        }
-
-        // Necrotic brown/rust foliar spot
-        if (r > 85 && g > 40 && b < 65 && r > g * 1.25 && (r + g + b) < 320) {
+        // Necrotic brown/rust foliar lesion
+        else if (r > 85 && g > 40 && b < 65 && r > g * 1.3 && (r + g + b) < 300) {
           necroticPixels++;
           isPlantPixel = true;
         }
@@ -838,11 +831,11 @@ export default function LeafScanner() {
           if (y > maxY) maxY = y;
         }
 
-        // Human skin tone detection across Fitzpatrick I to VI:
-        // Fair / Medium: R > G > B with clear channel separation
-        const isFairSkin = (r > 90 && g > 45 && b > 25 && r > g && g > b && (r - g) >= 10 && (r - b) >= 18);
-        // Olive / Tan / Brown / South Asian skin:
-        const isDarkSkin = (r > 42 && g > 25 && b > 15 && r >= g && g >= b && (r - b) >= 10 && (g - b) >= 2);
+        // Human skin tone detection across Fitzpatrick types I to VI:
+        // Fair / Medium: R > G > B with clear red-channel prominence
+        const isFairSkin = (r > 85 && g > 45 && b > 25 && r > g && g >= b && (r - g) >= 8 && (r - b) >= 15);
+        // Olive / Tan / Brown / South Asian skin tone:
+        const isDarkSkin = (r > 42 && g > 25 && b > 15 && r >= g && g >= b && (r - b) >= 8 && (g - b) >= 2);
         if (isFairSkin || isDarkSkin) {
           skinPixels++;
         }
@@ -854,7 +847,6 @@ export default function LeafScanner() {
       const greenRatio = count > 0 ? greenPixels / count : 0;
       const foliageYellowRatio = count > 0 ? foliageYellowPixels / count : 0;
       const skinRatio = count > 0 ? skinPixels / count : 0;
-      const variegationRatio = count > 0 ? variegationPixels / count : 0;
       const darkGlossyRatio = count > 0 ? darkGlossyPixels / count : 0;
       const necroticRatio = count > 0 ? necroticPixels / count : 0;
 
@@ -869,7 +861,6 @@ export default function LeafScanner() {
         greenRatio,
         foliageYellowRatio,
         skinRatio,
-        variegationRatio,
         darkGlossyRatio,
         necroticRatio,
         aspectRatio,
@@ -1171,27 +1162,27 @@ export default function LeafScanner() {
       const { 
         avgR = 120, avgG = 120, avgB = 120, 
         greenRatio = 0, foliageYellowRatio = 0, skinRatio = 0,
-        variegationRatio = 0, necroticRatio = 0 
+        darkGlossyRatio = 0, necroticRatio = 0 
       } = sampledColors;
 
-      // Real botanical tissue check: if any foliar green, chlorosis/yellowing, variegation, or necrosis is detected
-      const hasPlantMatter = (greenRatio >= 0.03) || (foliageYellowRatio >= 0.04) || (variegationRatio >= 0.02) || (necroticRatio >= 0.02);
+      // 1. Human Person / Face Detection
+      // Triggered when human skin tones are significantly present and dominate over foliar green
+      const isPerson = (skinRatio > 0.12 && (skinRatio > greenRatio * 0.8 || greenRatio < 0.15)) ||
+                       (skinRatio > 0.20) ||
+                       (skinRatio > 0.08 && greenRatio < 0.04);
 
-      // ONLY flag as human face if image is heavily dominated by skin (>60%) AND virtually zero foliar green/yellow (<0.015)
-      // This prevents a farmer holding a leaf with their hand/fingers from ever being misclassified as a human face!
-      const isPerson = !hasPlantMatter && skinRatio > 0.60 && greenRatio < 0.015 && foliageYellowRatio < 0.02;
-
-      // General non-plant (e.g., bare table or ceiling) only if no plant matter and dark/flat
-      const isNonPlant = isPerson || (!hasPlantMatter && (avgR + avgG + avgB) < 60);
+      // 2. Non-plant object / indoor background (e.g. bare table, wall, room, electronics)
+      const hasBotanicalMatter = (greenRatio >= 0.05) || (foliageYellowRatio >= 0.06) || (necroticRatio >= 0.03);
+      const isNonPlant = isPerson || (!hasBotanicalMatter && (avgR + avgG + avgB < 75 || greenRatio < 0.02));
 
       if (isNonPlant) {
         const title = isPerson ? 'Human Face / Person (Not a Plant)' : 'Non-Plant Subject Detected';
         const whatISee = isPerson
-          ? 'The camera detected a human face / person. No agricultural plant leaves, crop foliage, fruits, or seeds were found.'
-          : 'The camera detected a non-agricultural object or surface. No crop leaves, foliage, fruits, or seeds were found.';
+          ? 'The camera detected a human face / person in the frame. No agricultural crop foliage, leaves, fruits, or seeds were found.'
+          : 'The camera detected an indoor room or non-agricultural object. No plant leaves, fruits, or crops were found.';
         const farmerSummary = isPerson
           ? 'This is a human face, not a plant. Please point your camera at a crop leaf, fruit, or seed to diagnose plant health.'
-          : 'No plant detected. Please photograph a crop leaf, fruit, or seed to get an agronomic diagnosis.';
+          : 'No plant detected. Please point your camera at a crop leaf, fruit, or seed to get an agronomic diagnosis.';
 
         return {
           image_type: 'other',
@@ -1213,7 +1204,7 @@ export default function LeafScanner() {
                 isPerson 
                   ? 'Subject Identified: Human Person / Face (Homo sapiens).'
                   : 'Subject Identified: Non-agricultural everyday object or surface.',
-                'Telemetry: Multi-spectral facial & skin tone distribution detected with zero botanical chlorophyll.',
+                'Telemetry: Facial and skin tone composition detected with zero botanical foliar chlorophyll.',
                 'Safety Protocol: Automatic rejection of agricultural fungicide and pesticide recommendations on non-botanical subjects.'
               ]
             },
@@ -1250,30 +1241,25 @@ export default function LeafScanner() {
       }
     }
 
-    let targetCrop = 'Wheat';
-    let isHealthy = false;
+    let targetCrop = 'Neem';
+    let isHealthy = true;
 
     if (targetFocus && targetFocus !== 'auto') {
       targetCrop = targetFocus;
       const lower = targetFocus.toLowerCase();
-      if (lower.includes('neem') || lower.includes('tulsi') || lower.includes('variegated') || lower.includes('mint') || lower.includes('betel') || lower.includes('aloe') || lower.includes('curry')) {
+      if (lower.includes('neem') || lower.includes('tulsi') || lower.includes('mint') || lower.includes('aloe') || lower.includes('curry')) {
         isHealthy = true;
       }
     } else if (sampledColors) {
       const { 
         avgR = 120, avgG = 120, avgB = 120, 
         greenRatio = 0, foliageYellowRatio = 0, 
-        variegationRatio = 0, darkGlossyRatio = 0, necroticRatio = 0,
+        darkGlossyRatio = 0, necroticRatio = 0,
         aspectRatio = 1.0, avgBrightness = 128
       } = sampledColors;
 
-      // 1. Variegated Foliage: Cream/white margin contrast bordering green central lamina (Cornus, Ficus variegata, Pothos)
-      if (variegationRatio >= 0.035 && greenRatio >= 0.05) {
-        targetCrop = 'Variegated Foliage';
-        isHealthy = true;
-      }
-      // 2. Monocot Slender Blade (aspect ratio < 0.45: Rice, Wheat, Sugarcane, Maize, Bajra)
-      else if (aspectRatio < 0.45) {
+      // 1. Monocot Slender Blade (aspect ratio < 0.52: Rice, Wheat, Sugarcane, Maize, Bajra)
+      if (aspectRatio < 0.52) {
         if (foliageYellowRatio > 0.12 || necroticRatio > 0.04) {
           targetCrop = 'Wheat'; // Yellow / Leaf Rust
           isHealthy = false;
@@ -1285,52 +1271,41 @@ export default function LeafScanner() {
           isHealthy = true;
         }
       }
-      // 3. Heart-shaped (Cordate) or broad glossy climbing vine (Betel Leaf / Paan)
-      else if (aspectRatio > 0.80 && darkGlossyRatio > 0.08) {
-        targetCrop = 'Betel Leaf';
-        isHealthy = true;
-      }
-      // 4. Dark Glossy Foliage with winged petiole (Citrus / Lemon, Mango, Coffee)
-      else if (darkGlossyRatio > 0.10 && greenRatio > 0.18) {
-        if (avgBrightness < 105) targetCrop = 'Mango';
-        else targetCrop = 'Citrus / Lemon';
-        isHealthy = (necroticRatio < 0.04);
-      }
-      // 5. Necrotic Spores / Early Blight chlorotic rings on green (Tomato / Potato / Chilli / Cotton)
-      else if (necroticRatio > 0.035 || (avgR > 130 && avgG > 115 && greenRatio > 0.10)) {
+      // 2. Necrotic Spores / Early Blight chlorotic rings on solanaceous crops (Tomato / Potato / Chilli)
+      else if (necroticRatio > 0.04 || (avgR > 130 && avgG > 115 && greenRatio > 0.08 && foliageYellowRatio > 0.08)) {
         if (avgBrightness > 125) targetCrop = 'Chilli';
         else if (aspectRatio > 0.85) targetCrop = 'Potato';
         else targetCrop = 'Tomato';
         isHealthy = false;
       }
-      // 6. Deep serrations with bright herb foliage (Mint / Rose / Coriander)
-      else if (greenRatio > 0.28 && avgBrightness > 120) {
-        targetCrop = 'Mint';
-        isHealthy = true;
-      }
-      // 7. High green lush leaf (Neem, Tulsi, Guava, Curry Leaf)
-      else if (greenRatio > 0.18) {
-        if (avgBrightness < 112) targetCrop = 'Neem';
-        else targetCrop = 'Tulsi';
-        isHealthy = true;
-      }
-      // 8. Broad leafy vegetables (Cabbage, Cauliflower, Spinach)
-      else if (aspectRatio > 0.90 && greenRatio > 0.15) {
-        targetCrop = 'Cabbage';
-        isHealthy = true;
-      }
-      // 9. Golden / Yellowed seeds or dry foliage (Mustard, Groundnut, Soybean)
-      else if (foliageYellowRatio > 0.12 || (avgR > 140 && avgG > 115 && avgB < 95)) {
+      // 3. Golden / Yellowed seeds or rust disease foliage (Mustard / Soybean)
+      else if (foliageYellowRatio > 0.15) {
         targetCrop = 'Mustard';
         isHealthy = false;
       }
-      // 10. Warm fruit / vegetative bloom
-      else if (avgR > 150 && avgG < 125) {
-        targetCrop = 'Mango';
+      // 4. High lush medicinal green leaf with pinnate serrations (Neem, Tulsi, Curry Leaf)
+      else if (greenRatio > 0.08) {
+        if (darkGlossyRatio > 0.03 || avgBrightness < 125) {
+          targetCrop = 'Neem';
+        } else {
+          targetCrop = 'Tulsi';
+        }
+        isHealthy = (necroticRatio < 0.03);
+      }
+      // 5. Dark Glossy Fruit Foliage (Citrus / Lemon, Mango, Guava)
+      else if (darkGlossyRatio > 0.06) {
+        if (avgBrightness < 110) targetCrop = 'Mango';
+        else targetCrop = 'Citrus / Lemon';
+        isHealthy = true;
+      }
+      // 6. Broad leafy vegetables (Cabbage, Spinach)
+      else if (aspectRatio > 0.85 && greenRatio > 0.10) {
+        targetCrop = 'Cabbage';
         isHealthy = true;
       }
       else {
-        targetCrop = 'Tomato';
+        targetCrop = 'Neem';
+        isHealthy = true;
       }
     }
 
@@ -1674,6 +1649,7 @@ Reply ONLY with valid JSON.`;
       // Step 1: For uploaded/captured photos, check backend /api/analyze if server proxy is running
       if (!networkSuccess && dataUrl) {
         try {
+          const effectiveColors = currentColors || colorStats;
           const headers = { 'Content-Type': 'application/json' };
           if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
@@ -1686,7 +1662,8 @@ Reply ONLY with valid JSON.`;
             body: JSON.stringify({ 
               image: dataUrl, 
               language,
-              targetCrop: (specimenFocus && specimenFocus !== 'auto') ? specimenFocus : 'Tomato'
+              targetCrop: (specimenFocus && specimenFocus !== 'auto') ? specimenFocus : 'auto',
+              colorStats: effectiveColors
             }),
             signal: controller.signal
           });
@@ -1695,7 +1672,12 @@ Reply ONLY with valid JSON.`;
           if (res.ok) {
             const json = await res.json();
             if (json && !json.error && (json.sections || json.title)) {
-              data = json;
+              // Safety guard: if client-side vision detected human skin or zero plant matter, do not let server misdiagnose as crop disease
+              if (effectiveColors && effectiveColors.skinRatio > 0.12 && effectiveColors.greenRatio < 0.10) {
+                data = buildOfflineSpecimenDiagnosis('auto', effectiveColors, null);
+              } else {
+                data = json;
+              }
               networkSuccess = true;
             }
           }

@@ -1,4 +1,5 @@
 import { translations } from '../data/translations.js';
+import { generateGeneralResponse } from '../data/agronomyBrain.js';
 
 export function renderChatbotWidget(currentLang = 'en', understandingMode = 'easy') {
   const t = translations[currentLang] || translations.en;
@@ -371,9 +372,13 @@ Concernant "${query}" :
 • **How to Book:** Tap the "Book / Buy Direct" button in our Marketplace tab or reply with your field acreage and preferred date!`;
   }
 
-  return `🤖 **CropCare Gemini Agro Intelligence:**
-Thank you for your inquiry regarding "${query}". 
-• **General Agronomic Recommendation:** Maintain soil moisture between 32% and 40%, verify all seed lots with our anti-counterfeit QR code reader, and monitor daily Mandi price updates before locking sale agreements.
-• **Diagnostic Feature:** Tap the camera icon beside the input box to scan any sick leaf or seed sample for instant pathology analysis!
-• **Action:** Would you like to connect directly for a free 1-on-1 video call with our senior agronomist, or check today's APMC spot price for your specific crop?`;
+  try {
+    return generateGeneralResponse(query, lang);
+  } catch (e) {
+    return `🤖 **CropCare AI Assistant:**
+Thank you for your question regarding "${query}". 
+
+I can help with general knowledge, calculations, study questions, as well as agricultural advice on crops, fertilizers, pest remedies, and government schemes. Feel free to ask more details!`;
+  }
 }
+

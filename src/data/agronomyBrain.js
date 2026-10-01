@@ -393,59 +393,67 @@ You can ask me:
 }
 
 // -------------------------------------------------------------
-// Core Generator 2: General Agronomy Assistant (Broad Knowledge)
+// Core Generator 2: General Assistant (Broad Universal Knowledge)
 // -------------------------------------------------------------
 export function generateGeneralResponse(query, language = 'en', userName = 'Farmer', activePlot = null) {
   const q = cleanText(query);
+  if (!q) return "Hello! How can I help you today?";
 
-  // 1. Greetings & Conversational
-  if (isGreeting(q)) {
-    return `Hello **${userName}**! 🌱 I am **CropCare Assistant**, your dedicated digital agronomist.
+  // 1. Greetings, Social & Courtesy
+  const socialResp = handleHumorAndSocial(q, userName);
+  if (socialResp) return socialResp;
 
-I can help you with:
-- 🌾 **Crop Care & Cultivation:** Sowing seasons, spacing, seed rates, and soil suitability for 30+ crops.
-- 🔬 **Pest & Disease Diagnosis:** Organic remedies (Neem, Trichoderma) and targeted chemical controls.
-- 🧪 **Fertilizer & NPK Dosing:** Basal DAP, top-dress Urea, and water-soluble foliar sprays (19:19:19, 00:00:50).
-- 💧 **Irrigation & Water:** Drip schedules, moisture management, and drought resilience.
-- 🏛️ **Government Schemes:** PM-KISAN, PMFBY Crop Insurance, Kisan Credit Card (KCC), and subsidies.
-- 📈 **Mandi & Market Trends:** MSP baselines and post-harvest grain storage advice.
+  // 2. Who are you / Capabilities
+  if (q.includes('who are you') || q.includes('what can you do') || q.includes('kisan friend') || q.includes('about you') || q.includes('what are your capabilities')) {
+    return `### 🤖 About CropCare AI Assistant
+I am **CropCare Assistant**, a friendly, versatile, and knowledgeable AI helper.
 
-What crop or farm question can I assist you with today?`;
+**What I can do for you:**
+1. 💡 **General Knowledge & Studies:** Science, geography, history, everyday topics, exam prep, and factual questions.
+2. 🧮 **Calculations & Conversions:** Math, percentages, unit conversions (acres to hectares, quintals to kg, currency, temperature).
+3. 📝 **Everyday Assistance:** Email/letter templates, recipes, productivity tips, health & wellness basics.
+4. 🌾 **Agriculture & Plant Care:** Soil health, crop diseases, organic solutions (Neem, Trichoderma), chemical remedies, fertilizers (NPK/DAP/Urea), and sowing seasons for 30+ crops.
+5. 🏛️ **Government Schemes & Subsidies:** PM-KISAN, PMFBY Crop Insurance, Kisan Credit Card (KCC), soil health cards, and micro-irrigation.
+6. 📈 **Live Mandi Rates:** Real-time commodity prices across APMC mandis and MSP baselines.
+
+Feel free to ask me any general question or farming inquiry!`;
   }
 
-  // 2. Who are you / Bot capabilities
-  if (q.includes('who are you') || q.includes('what can you do') || q.includes('kisan friend') || q.includes('about you')) {
-    return `### 🌾 About CropCare AI Assistant
-I am an intelligent agronomy and plant pathology assistant designed to empower farmers, students, and agricultural entrepreneurs across India.
+  // 3. Mathematical Calculations & Unit Conversions
+  const mathResp = handleMathAndConversions(q, query);
+  if (mathResp) return mathResp;
 
-**My Core Capabilities:**
-1. **Universal Botanical & Crop Expertise:** Detailed agronomic knowledge on cereals, pulses, vegetables, fruits, cash crops, and medicinal herbs.
-2. **Plant Pathology & IPM (Integrated Pest Management):** Identifying fungal, bacterial, viral, and pest damages with safe biological and chemical solutions.
-3. **Telemetry Integration:** In **Farm Advisor** mode, I analyze real-time parcel soil sensors, moisture targets, and growth stages.
-4. **Multilingual Assistance:** You can communicate in English, Hindi (हिंदी), Tamil (தமிழ்), or everyday farming terminology.
+  // 4. General Knowledge, Geography & History
+  const gkResp = handleGeneralKnowledge(q, query);
+  if (gkResp) return gkResp;
 
-Feel free to ask a specific question or attach a photo for examination!`;
-  }
+  // 5. Science & Technology
+  const sciResp = handleScienceAndTechnology(q, query);
+  if (sciResp) return sciResp;
 
-  // 3. Government Scheme Question
+  // 6. Everyday Life, Productivity & Practical Guides
+  const dailyResp = handleEverydayLifeAndProductivity(q, query);
+  if (dailyResp) return dailyResp;
+
+  // 7. Government Schemes Question
   const scheme = findScheme(query);
   if (scheme) {
     return scheme.details;
   }
 
-  // 4. Fertilizer / Nutrition Question
+  // 8. Fertilizer / Nutrition Question
   const fert = findFertilizer(query);
   if (fert) {
     return fert.details;
   }
 
-  // 5. Specific Disease or Pest Question
+  // 9. Specific Disease or Pest Question
   const disease = findDisease(query);
   if (disease) {
     return formatDiseaseResponse(disease);
   }
 
-  // 6. Organic Pesticide / Neem Oil Spray / Home remedies
+  // 10. Organic Pesticide / Neem Oil Spray / Home remedies
   if (q.includes('neem spray') || q.includes('neem oil') || q.includes('nske') || q.includes('organic spray') || q.includes('homemade spray') || q.includes('jeevamrut')) {
     return `### 🌿 Guide to Making Organic Bio-Pesticides & Tonics
 
@@ -464,13 +472,13 @@ Feel free to ask a specific question or attach a photo for examination!`;
 - Ferment in shade for 48 hours, stirring twice daily. Apply via irrigation water (200 L/acre) to activate beneficial soil bacteria.`;
   }
 
-  // 7. Specific Crop Question
+  // 11. Specific Crop Question
   const plant = findPlant(query);
   if (plant) {
     return formatPlantResponse(plant, q);
   }
 
-  // B. Soil Health & pH Management
+  // 12. Soil Health & pH Management
   if (q.includes('soil ph') || q.includes('acidic soil') || q.includes('alkaline soil') || q.includes('saline') || q.includes('kallar')) {
     return `### 🧪 Managing Soil pH & Salinity
 
@@ -487,7 +495,7 @@ Feel free to ask a specific question or attach a photo for examination!`;
 - **Green Manuring:** Grow and incorporate *Sesbania (Dhaincha)* or *Sunnhemp* at 45 days to release organic acids.`;
   }
 
-  // C. Drip Irrigation & Water Saving
+  // 13. Drip Irrigation & Water Saving
   if (q.includes('drip') || q.includes('sprinkler') || q.includes('irrigation method') || q.includes('water save')) {
     return `### 💧 Micro-Irrigation Best Practices (Drip & Sprinkler)
 
@@ -502,7 +510,7 @@ Feel free to ask a specific question or attach a photo for examination!`;
 - **Acid Treatment:** If using hard borewell water, flush lateral lines once per season with dilute Hydrochloric Acid (pH 2.0-3.0) for 15 minutes to dissolve carbonate scales.`;
   }
 
-  // D. Mandi, MSP & Selling Crops
+  // 14. Mandi, MSP & Selling Crops
   if (q.includes('mandi') || q.includes('msp') || q.includes('price') || q.includes('rate') || q.includes('bhav') || q.includes('sell crop') || q.includes('e-nam')) {
     const matched = findMandiRatesForChat(query);
     const commoditiesToDisplay = matched.length > 0 ? matched : getLiveMandiPrices().slice(0, 5);
@@ -519,12 +527,12 @@ Feel free to ask a specific question or attach a photo for examination!`;
 ${ratesTable}
 
 **💡 Key Selling Strategies for Top Realization:**
-1. **Moisture Standard:** Mandi commission agents dock prices heavily if grain moisture exceeds permissible limits. Maintain moisture below **11.5% for Wheat & Mustard**, **10% for Soybean**, and **17% for Paddy**.
-2. **Quality Grading:** Mechanically winnowed and cleaned lots with lustrous bold grains fetch a **₹120 - ₹250/quintal premium** over average arrivals.
-3. **Electronic Nodal Escrow:** You can lock guaranteed buyer contracts directly in CropCare's **Market Module** with instant digital payment assurance.`;
+1. **Moisture Standard:** Maintain moisture below **11.5% for Wheat & Mustard**, **10% for Soybean**, and **17% for Paddy**.
+2. **Quality Grading:** Cleaned, graded lots fetch a **₹120 - ₹250/quintal premium** over average arrivals.
+3. **Electronic Escrow:** You can lock guaranteed buyer contracts directly in CropCare's **Market Module** with instant payment assurance.`;
   }
 
-  // E. Sowing calendar & seasons
+  // 15. Sowing calendar & seasons
   if (q.includes('season') || q.includes('kharif') || q.includes('rabi') || q.includes('zaid') || q.includes('calendar')) {
     return `### 🗓️ Indian Crop Seasons Calendar
 
@@ -541,18 +549,547 @@ ${ratesTable}
 - **Requirements:** Reliable irrigation facilities (drip/tubewell) to counter high summer evaporation.`;
   }
 
-  // 8. General Agronomic Response with Contextual Suggestion
-  return `### 🌾 CropCare Agronomy Advisory
+  // 16. Universal Intelligent Fallback (Accurate, structured answer for any general topic)
+  return handleUniversalGeneralFallback(query, userName);
+}
 
-Thank you for your question about **"${query}"**.
+// -------------------------------------------------------------
+// Specialized Intelligent Handlers for General Questions
+// -------------------------------------------------------------
 
-Here are verified agronomic recommendations:
-1. **Soil & Root Preparation:** Ensure good soil tilth, balanced organic matter (FYM or Vermicompost @ 2-3 tonnes/acre), and verify soil pH (6.5-7.5).
-2. **Nutrient Balancing:** Follow balanced NPK fertilization rather than relying solely on Urea. For flowering and fruiting crops, supplement with water-soluble foliar sprays (**19:19:19** or **00:00:50**).
-3. **Preventive Plant Protection:** Spray 5% Neem Seed Kernel Extract (NSKE) or 10,000 ppm Neem Oil at 15-day intervals to repel sucking insects before they transmit viral diseases.
-4. **Diagnostic Scan:** If you are seeing strange spots, yellowing, or curling on leaves, snap a close-up photo and open the **AI Leaf Doctor** module for an instant multi-parameter diagnosis!
+// A. Mathematical Calculations & Unit Conversions
+function handleMathAndConversions(q, rawQuery) {
+  // Percentage calculation: "what is 18% of 2500", "15% of 500", "20 percent of 1200"
+  const percentMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:%|percent)\s*(?:of)?\s*(\d+(?:\.\d+)?)/i);
+  if (percentMatch) {
+    const p = parseFloat(percentMatch[1]);
+    const num = parseFloat(percentMatch[2]);
+    const result = (p * num) / 100;
+    return `### 🧮 Percentage Calculation
+- **Calculation:** ${p}% of ${num}
+- **Formula:** (${p} × ${num}) ÷ 100
+- **Result:** **${result.toLocaleString()}**`;
+  }
 
-*Feel free to ask about any specific crop (like Wheat, Rice, Tomato, Cotton), disease symptoms, or government subsidies!*`;
+  // Square root: "sqrt of 144", "square root of 81"
+  const sqrtMatch = q.match(/(?:sqrt|square root)\s*(?:of)?\s*(\d+(?:\.\d+)?)/i);
+  if (sqrtMatch) {
+    const val = parseFloat(sqrtMatch[1]);
+    const res = Math.sqrt(val);
+    return `### 🧮 Square Root Calculation
+- **Expression:** √${val}
+- **Result:** **${res}**`;
+  }
+
+  // Basic Arithmetic: "what is 25 * 4", "150 + 350", "1200 / 4", "50 - 18", "25 x 4"
+  const arithMatch = q.match(/(?:what\s+is\s+|calculate\s+)?(\d+(?:\.\d+)?)\s*([\+\-\*\/xX×÷\^]|plus|minus|times|multiplied\s+by|divided\s+by)\s*(\d+(?:\.\d+)?)/i);
+  if (arithMatch) {
+    const n1 = parseFloat(arithMatch[1]);
+    let op = arithMatch[2].toLowerCase().trim();
+    const n2 = parseFloat(arithMatch[3]);
+    let res = 0;
+    let symbol = op;
+
+    if (op === '+' || op === 'plus') { res = n1 + n2; symbol = '+'; }
+    else if (op === '-' || op === 'minus') { res = n1 - n2; symbol = '-'; }
+    else if (op === '*' || op === 'x' || op === '×' || op === 'times' || op === 'multiplied by') { res = n1 * n2; symbol = '×'; }
+    else if (op === '/' || op === '÷' || op === 'divided by') {
+      if (n2 === 0) return `### 🧮 Math Error\nDivision by zero is mathematically undefined.`;
+      res = n1 / n2; symbol = '÷';
+    }
+    else if (op === '^') { res = Math.pow(n1, n2); symbol = '^'; }
+
+    // Format cleanly
+    const formattedRes = Number.isInteger(res) ? res.toLocaleString() : parseFloat(res.toFixed(4));
+    return `### 🧮 Math Result
+- **Problem:** ${n1} ${symbol} ${n2}
+- **Answer:** **${formattedRes}**`;
+  }
+
+  // Unit conversions
+  // 1. Acre to Hectare / Sq Ft / Guntha / Bigha
+  if (q.includes('acre') && (q.includes('hectare') || q.includes('sq ft') || q.includes('square feet') || q.includes('guntha') || q.includes('bigha') || q.includes('convert'))) {
+    const num = extractFirstNumber(q) || 1;
+    const ha = (num * 0.404686).toFixed(3);
+    const sqft = (num * 43560).toLocaleString();
+    const guntha = (num * 40).toFixed(1);
+    const bigha = (num * 1.61).toFixed(2);
+    return `### 📐 Land Area Conversion (${num} Acre${num > 1 ? 's' : ''})
+- **Hectares:** **${ha} ha** (1 Acre = 0.4047 Hectares)
+- **Square Feet:** **${sqft} sq ft** (1 Acre = 43,560 sq ft)
+- **Square Meters:** **${(num * 4046.86).toFixed(1)} m²**
+- **Guntha:** **${guntha} Gunthas** (1 Acre = 40 Gunthas)
+- **Standard Bigha:** **~${bigha} Bighas** *(approx. metric standard)*`;
+  }
+
+  // 2. Hectare to Acre
+  if (q.includes('hectare') && (q.includes('acre') || q.includes('sq ft') || q.includes('convert'))) {
+    const num = extractFirstNumber(q) || 1;
+    const acres = (num * 2.47105).toFixed(3);
+    const sqft = (num * 107639).toLocaleString();
+    return `### 📐 Land Area Conversion (${num} Hectare${num > 1 ? 's' : ''})
+- **Acres:** **${acres} Acres** (1 Hectare = 2.471 Acres)
+- **Square Feet:** **${sqft} sq ft** (1 Hectare = 107,639 sq ft)
+- **Square Meters:** **${(num * 10000).toLocaleString()} m²**`;
+  }
+
+  // 3. Quintal & Ton / Kg
+  if (q.includes('quintal') || q.includes('qtl') || (q.includes('kg') && q.includes('ton'))) {
+    const num = extractFirstNumber(q) || 1;
+    if (q.includes('ton')) {
+      return `### ⚖️ Weight Conversion: Quintals & Tonnes
+- **1 Metric Tonne (Ton)** = **1,000 kg** = **10 Quintals**
+- **1 Quintal** = **100 kg** = **0.1 Metric Tonne**
+- **${num} Tonnes** = **${num * 10} Quintals** = **${(num * 1000).toLocaleString()} kg**`;
+    }
+    return `### ⚖️ Weight Conversion (${num} Quintal${num > 1 ? 's' : ''})
+- **Kilograms (kg):** **${(num * 100).toLocaleString()} kg** (1 Quintal = 100 kg)
+- **Metric Tonnes:** **${(num * 0.1).toFixed(2)} Tonnes** (10 Quintals = 1 Tonne)
+- **Grams:** **${(num * 100000).toLocaleString()} g**`;
+  }
+
+  // 4. Celsius to Fahrenheit / vice versa
+  if (q.includes('celsius') || q.includes('fahrenheit') || q.match(/\b\d+\s*°?[cf]\b/)) {
+    const numMatch = q.match(/(-?\d+(?:\.\d+)?)\s*(?:°|deg|degrees)?\s*(celsius|fahrenheit|c\b|f\b)/i);
+    if (numMatch) {
+      const val = parseFloat(numMatch[1]);
+      const unit = numMatch[2].toLowerCase();
+      if (unit.startsWith('c')) {
+        const f = ((val * 9) / 5 + 32).toFixed(1);
+        return `### 🌡️ Temperature Conversion
+- **${val}°C (Celsius)** = **${f}°F (Fahrenheit)**
+- **Formula:** (°C × 9/5) + 32 = °F`;
+      } else {
+        const c = (((val - 32) * 5) / 9).toFixed(1);
+        return `### 🌡️ Temperature Conversion
+- **${val}°F (Fahrenheit)** = **${c}°C (Celsius)**
+- **Formula:** (°F − 32) × 5/9 = °C`;
+      }
+    }
+  }
+
+  // 5. Kilometers to Miles
+  if ((q.includes('km') || q.includes('kilometer')) && (q.includes('mile') || q.includes('convert'))) {
+    const num = extractFirstNumber(q) || 1;
+    const miles = (num * 0.621371).toFixed(2);
+    return `### 📏 Distance Conversion
+- **${num} Kilometers** = **${miles} Miles** (1 km = 0.6214 miles)
+- **Meters:** **${(num * 1000).toLocaleString()} meters**`;
+  }
+
+  return null;
+}
+
+// B. General Knowledge, Geography & History
+function handleGeneralKnowledge(q, rawQuery) {
+  // Capital of countries
+  const countryCapitals = {
+    'india': 'New Delhi', 'france': 'Paris', 'usa': 'Washington, D.C.', 'united states': 'Washington, D.C.',
+    'america': 'Washington, D.C.', 'united kingdom': 'London', 'uk': 'London', 'britain': 'London',
+    'england': 'London', 'germany': 'Berlin', 'japan': 'Tokyo', 'china': 'Beijing', 'russia': 'Moscow',
+    'australia': 'Canberra', 'canada': 'Ottawa', 'italy': 'Rome', 'spain': 'Madrid', 'brazil': 'Brasília',
+    'south africa': 'Pretoria (Admin), Cape Town (Legis), Bloemfontein (Judic)', 'uae': 'Abu Dhabi',
+    'united arab emirates': 'Abu Dhabi', 'saudi arabia': 'Riyadh', 'nepal': 'Kathmandu', 'bangladesh': 'Dhaka',
+    'sri lanka': 'Sri Jayawardenepura Kotte (Admin) / Colombo', 'pakistan': 'Islamabad', 'bhutan': 'Thimphu',
+    'singapore': 'Singapore', 'thailand': 'Bangkok', 'egypt': 'Cairo', 'switzerland': 'Bern',
+    'new zealand': 'Wellington', 'indonesia': 'Jakarta (Nusantara)', 'mexico': 'Mexico City', 'argentina': 'Buenos Aires'
+  };
+
+  // Capital of Indian States
+  const stateCapitals = {
+    'punjab': 'Chandigarh', 'haryana': 'Chandigarh', 'tamil nadu': 'Chennai', 'maharashtra': 'Mumbai',
+    'karnataka': 'Bengaluru', 'uttar pradesh': 'Lucknow', 'kerala': 'Thiruvananthapuram', 'west bengal': 'Kolkata',
+    'gujarat': 'Gandhinagar', 'rajasthan': 'Jaipur', 'telangana': 'Hyderabad', 'andhra pradesh': 'Amaravati',
+    'bihar': 'Patna', 'madhya pradesh': 'Bhopal', 'odisha': 'Bhubaneswar', 'assam': 'Dispur',
+    'himachal pradesh': 'Shimla', 'goa': 'Panaji', 'jammu and kashmir': 'Srinagar (Summer) / Jammu (Winter)',
+    'uttarakhand': 'Dehradun', 'jharkhand': 'Ranchi', 'chhattisgarh': 'Raipur'
+  };
+
+  if (q.includes('capital')) {
+    for (const [country, cap] of Object.entries(countryCapitals)) {
+      if (q.includes(country)) {
+        return `### 🏛️ Capital City
+The capital of **${capitalizeWords(country)}** is **${cap}**.`;
+      }
+    }
+    for (const [state, cap] of Object.entries(stateCapitals)) {
+      if (q.includes(state)) {
+        return `### 🏛️ State Capital
+The capital of **${capitalizeWords(state)}** is **${cap}**.`;
+      }
+    }
+  }
+
+  // Famous Personalities & Scientists
+  if (q.includes('mahatma gandhi') || q.includes('gandhiji') || q.includes('father of nation')) {
+    return `### 🕊️ Mahatma Gandhi (1869 – 1948)
+- **Full Name:** Mohandas Karamchand Gandhi.
+- **Title:** Father of the Nation in India (*Bapu*).
+- **Philosophy:** *Satyagraha* (non-violent resistance) and *Ahimsa* (truth and non-violence).
+- **Major Movements:** Champaran Satyagraha (1917), Non-Cooperation Movement (1920), Dandi Salt March (1930), Quit India Movement (1942).
+- **Birthday:** October 2 (Celebrated globally as the *International Day of Non-Violence*).`;
+  }
+
+  if (q.includes('apj abdul kalam') || q.includes('abdul kalam') || q.includes('missile man')) {
+    return `### 🚀 Dr. A.P.J. Abdul Kalam (1931 – 2015)
+- **Title:** The "Missile Man of India" and 11th President of India (2002–2007), widely loved as the "People's President".
+- **Contributions:** Key architect of India's civilian space program (SLV-III) and military missile development (Agni, Prithvi) at ISRO and DRDO.
+- **Notable Books:** *Wings of Fire*, *Ignited Minds*, *India 2020*.
+- **Inspiring Quote:** *"Dream, dream, dream. Dreams transform into thoughts and thoughts result in action."*`;
+  }
+
+  if (q.includes('einstein') || q.includes('albert einstein')) {
+    return `### ⚛️ Albert Einstein (1879 – 1955)
+- **Field:** Theoretical Physics, one of the greatest scientists in history.
+- **Key Discoveries:**
+  1. **Theory of Relativity:** Special and General Relativity ($E = mc^2$, showing equivalence of mass and energy).
+  2. **Photoelectric Effect:** Discovered the quantum nature of light (Nobel Prize in Physics, 1921).
+  3. **Brownian Motion:** Confirmed the molecular structure of matter.`;
+  }
+
+  if (q.includes('newton') || q.includes('isaac newton')) {
+    return `### 🍎 Sir Isaac Newton (1643 – 1727)
+- **Key Contributions:**
+  1. **Universal Gravitation:** Formulated the Universal Law of Gravitation ($F = G \\frac{m_1 m_2}{r^2}$).
+  2. **Three Laws of Motion:** Foundation of classical mechanics (Inertia, $F=ma$, Action-Reaction).
+  3. **Optics:** Discovered white light is composed of the rainbow spectrum using prisms.
+  4. **Mathematics:** Co-inventor of Calculus.`;
+  }
+
+  if (q.includes('swaminathan') || q.includes('green revolution')) {
+    return `### 🌾 Dr. M.S. Swaminathan (1925 – 2023)
+- **Title:** Father of the Green Revolution in India (awarded the Bharat Ratna in 2024).
+- **Impact:** Collaborated with Dr. Norman Borlaug to introduce high-yielding semi-dwarf wheat and rice varieties to India in the 1960s, saving the country from catastrophic famines and making India food self-sufficient.
+- **Key Recommendation:** Swaminathan Commission formula: Minimum Support Price (MSP) should be at least **Cost C2 + 50% profit**.`;
+  }
+
+  // Planetary & World Facts
+  if (q.includes('speed of light')) {
+    return `### ⚡ Speed of Light
+- **In a Vacuum:** **299,792,458 meters per second** (approx. **300,000 km/s** or **186,282 miles/s**).
+- Light takes approximately **8 minutes and 20 seconds** to travel from the Sun to Earth!`;
+  }
+
+  if (q.includes('distance') && (q.includes('moon') || q.includes('sun'))) {
+    if (q.includes('moon')) {
+      return `### 🌕 Earth to Moon Distance
+- **Average Distance:** Approx. **384,400 km** (238,855 miles).
+- Light reflected from the Moon reaches Earth in about **1.3 seconds**.`;
+    }
+    return `### ☀️ Earth to Sun Distance
+- **Average Distance:** Approx. **149.6 million km** (93 million miles) — defined as 1 Astronomical Unit (AU).`;
+  }
+
+  if (q.includes('highest mountain') || q.includes('mount everest') || q.includes('tallest peak')) {
+    return `### 🏔️ Mount Everest
+- **Height:** **8,848.86 meters** (29,031.7 feet) above sea level.
+- **Location:** Himalayas on the border between Nepal and Tibet (China).
+- **Local Names:** *Sagarmatha* (Nepal), *Chomolungma* (Tibet).`;
+  }
+
+  if (q.includes('longest river')) {
+    return `### 🌊 Longest Rivers in the World & India
+1. **World's Longest River:** **The Nile River** (Africa) — approx. 6,650 km (4,132 miles).
+2. **World's Largest River by Water Volume:** **The Amazon River** (South America) — approx. 6,400 km.
+3. **India's Longest River:** **Ganga (Ganges)** — approx. 2,525 km, originating from the Gangotri Glacier.`;
+  }
+
+  return null;
+}
+
+// C. Science & Technology Handlers
+function handleScienceAndTechnology(q, rawQuery) {
+  // Photosynthesis
+  if (q.includes('photosynthesis') || (q.includes('how plants make') && q.includes('food'))) {
+    return `### 🌿 Photosynthesis: How Plants Make Food
+Photosynthesis is the biochemical process by which green plants, algae, and some bacteria convert light energy into chemical energy stored in glucose.
+
+**1. Chemical Formula:**
+$$6CO_2 + 6H_2O + \\text{Sunlight} \\xrightarrow{\\text{Chlorophyll}} C_6H_{12}O_6 \\text{ (Glucose)} + 6O_2 \\text{ (Oxygen)}$$
+
+**2. Key Stages:**
+- **Light-Dependent Reactions (in Thylakoids):** Sunlight is absorbed by chlorophyll, splitting water ($H_2O$) to release $O_2$ and generate ATP and NADPH.
+- **Calvin Cycle / Dark Reactions (in Stroma):** Plants capture Carbon Dioxide ($CO_2$) from the air and synthesize glucose sugars.
+
+**3. Factors Affecting Rate:** Light intensity, Carbon Dioxide concentration, temperature (25°C–35°C), and water availability.`;
+  }
+
+  // Water Cycle
+  if (q.includes('water cycle') || q.includes('hydrological cycle')) {
+    return `### 💧 The Water Cycle (Hydrological Cycle)
+The continuous movement of water on, above, and below the surface of the Earth.
+
+**Key Stages:**
+1. **Evaporation & Transpiration:** Heat from the sun turns liquid water from oceans, rivers, and soil into vapor. Plants also release water vapor through leaf stomata (*transpiration*).
+2. **Condensation:** Rising water vapor cools down in the upper atmosphere, forming clouds and fog.
+3. **Precipitation:** Condensed water droplets become too heavy and fall as rain, snow, sleet, or hail.
+4. **Infiltration & Runoff:** Rainwater either soaks into the soil to recharge groundwater aquifers or flows into streams, rivers, and oceans to restart the cycle.`;
+  }
+
+  // Solar Panels / Solar Energy
+  if (q.includes('solar panel') || q.includes('solar energy') || q.includes('photovoltaic') || q.includes('solar power')) {
+    return `### ☀️ How Solar Panels & Solar Energy Work
+
+**1. The Photovoltaic (PV) Effect:**
+- Solar panels contain silicon semiconductor cells.
+- When sunlight photons strike the cell, they knock electrons free from atoms, creating an electrical current (Direct Current - DC).
+
+**2. System Components:**
+- **PV Panels:** Capture sunlight and generate DC electricity.
+- **Solar Inverter:** Converts DC power into standard Alternating Current (AC) used in homes and pump motors.
+- **Net Metering / Battery:** Excess power can be stored in batteries or fed back to the power grid for electricity bill credits.
+
+**3. Agriculture Application (PM-KUSUM Scheme):**
+- Farmers in India can receive up to **60% subsidy** for installing standalone solar irrigation pumps (3 HP to 10 HP), eliminating diesel fuel costs.`;
+  }
+
+  // Artificial Intelligence & Machine Learning
+  if (q.includes('artificial intelligence') || q.includes('what is ai') || q.includes('machine learning') || q.includes('how does ai work') || q.includes('deep learning')) {
+    return `### 🧠 What is Artificial Intelligence (AI) & Machine Learning (ML)?
+
+**1. Definition:**
+- **Artificial Intelligence (AI):** The capability of computers and machines to perform tasks that typically require human intelligence — like recognizing plant diseases in photos, understanding language, solving math, and making predictions.
+- **Machine Learning (ML):** A subset of AI where algorithms learn patterns from large datasets rather than being explicitly programmed with fixed rules.
+
+**2. How AI Powers CropCare:**
+- **Computer Vision (Leaf Doctor):** Trained on 100,000+ plant pathology photos to detect leaf spots, rusts, and nutrient deficiencies.
+- **Grounded Agronomy Reasoning:** Evaluates soil sensors, weather forecasts, and NPK metrics to recommend precise farm actions.
+- **Natural Language Processing (NLP):** Allows you to chat, ask questions, and receive clear advice in multiple languages.`;
+  }
+
+  // Blockchain
+  if (q.includes('blockchain') || q.includes('cryptocurrency') || q.includes('bitcoin')) {
+    return `### 🔗 What is Blockchain?
+A **Blockchain** is a decentralized, distributed, and tamper-proof digital ledger that records transactions across many computers.
+
+**Key Features:**
+1. **Decentralization:** No single central authority controls the ledger.
+2. **Immutability:** Once a block of transactions is verified and added with cryptographic hashes, it cannot be altered or deleted.
+3. **Smart Contracts:** Automated programs that execute agreements when predefined conditions are met (e.g., automated payments when crops are delivered at a warehouse).`;
+  }
+
+  // DNA & Genetics
+  if (q.includes('dna') || q.includes('genetics') || q.includes('gene') || q.includes('chromosome')) {
+    return `### 🧬 DNA & Genetics Basics
+- **DNA (Deoxyribonucleic Acid):** The molecule that carries the genetic blueprint for all living organisms.
+- **Structure:** A double helix structure composed of four nucleotide base pairs: **Adenine (A) pairs with Thymine (T)**, and **Cytosine (C) pairs with Guanine (G)**.
+- **Genes:** Segments of DNA that code for specific proteins, determining traits such as crop yield, drought tolerance, disease resistance, and eye color.
+- **CRISPR / Gene Editing:** Modern molecular tools allowing precise adjustments to DNA to breed climate-resilient crops.`;
+  }
+
+  return null;
+}
+
+// D. Everyday Life, Practical How-To & Productivity
+function handleEverydayLifeAndProductivity(q, rawQuery) {
+  // How to make Tea / Chai
+  if (q.includes('tea') && (q.includes('make') || q.includes('recipe') || q.includes('brew') || q.includes('chai'))) {
+    return `### ☕ How to Make Perfect Indian Masala Chai
+
+**Ingredients (for 2 cups):**
+- 1 cup water + 1 cup fresh milk
+- 2 tsp good black tea leaves
+- 1.5 - 2 tsp sugar (or jaggery to taste)
+- 1 crushed green cardamom pod + 1/2 inch crushed fresh ginger (adrak)
+- *Optional:* 1 clove, pinch of cinnamon
+
+**Step-by-Step Instructions:**
+1. **Boil Water & Spices:** In a saucepan, bring 1 cup water to a boil with crushed ginger and cardamom for 2 minutes to extract flavors.
+2. **Add Tea Leaves & Sugar:** Add 2 tsp tea leaves and sugar. Simmer for 1-2 minutes until rich and dark.
+3. **Add Milk:** Pour in 1 cup of milk and bring to a rolling boil on medium heat.
+4. **Simmer & Strain:** Lower the flame and let it simmer for 2-3 minutes until golden-brown. Strain through a tea strainer into cups and enjoy hot!`;
+  }
+
+  // How to make Coffee
+  if (q.includes('coffee') && (q.includes('make') || q.includes('brew') || q.includes('recipe'))) {
+    return `### ☕ How to Make Delicious Filter / Milk Coffee
+
+**Quick Recipe:**
+1. **Base:** Add 1.5 tsp coffee powder (or 30 ml fresh South Indian filter decoction) and 1.5 tsp sugar into a cup.
+2. **Frothing:** Add 1 tsp warm water and whisk vigorously with a spoon for 1-2 minutes until thick and frothy.
+3. **Hot Milk:** Boil 1 cup of whole milk and pour from a height into the cup to create a creamy top froth. Stir gently and serve!`;
+  }
+
+  // Letter & Email Templates (Sick Leave / Leave Application)
+  if (q.includes('leave letter') || q.includes('sick leave') || q.includes('leave application') || q.includes('email format')) {
+    return `### ✉️ Formal Leave Application Template
+
+**Subject:** Leave Application for [Number of Days] Days – [Your Name]
+
+**To:**
+[Manager / Principal / Supervisor Name]
+[Organization / School / Company Name]
+
+**Dear [Sir / Madam / Manager's Name],**
+
+I am writing to formally request a leave of absence for **[number of days] days**, from **[Start Date]** to **[End Date]**, due to **[reason, e.g., personal illness / family emergency / urgent personal work]**.
+
+I have ensured that my ongoing tasks are updated [or handed over to Name]. I will remain accessible via email or phone for any urgent matters during this period.
+
+Kindly grant me leave for the specified dates. Thank you for your understanding.
+
+Sincerely,  
+**[Your Full Name]**  
+[Your Designation / Roll Number]  
+[Contact Number]`;
+  }
+
+  // Study Tips & Exam Preparation
+  if (q.includes('study tip') || q.includes('how to study') || q.includes('exam prep') || q.includes('memorize') || q.includes('focus')) {
+    return `### 📚 5 Scientifically Proven Study Techniques
+
+1. **Pomodoro Technique (25/5):** Study with 100% focus for 25 minutes, followed by a 5-minute break. After 4 cycles, take a longer 20-minute break.
+2. **Active Recall:** Instead of passively re-reading notes, close the book and test yourself by writing down everything you remember.
+3. **Feynman Technique:** Explain complex concepts in simple, everyday words as if teaching a 10-year-old. This immediately exposes knowledge gaps.
+4. **Spaced Repetition:** Review material at increasing intervals (Day 1, Day 3, Day 7, Day 21) to transfer information into long-term memory.
+5. **Physical Readiness:** Get 7-8 hours of sleep before exam days; sleep is when your brain consolidates neural memory pathways.`;
+  }
+
+  // Time Management & Productivity
+  if (q.includes('time management') || q.includes('productivity') || q.includes('procrastination')) {
+    return `### ⏱️ Top Time Management Strategies
+
+1. **The 2-Minute Rule:** If a task takes less than 2 minutes (replying to a short message, putting away tools), do it immediately.
+2. **Eisenhower Matrix:** Sort tasks into 4 boxes:
+   - *Urgent & Important:* Do first (Deadlines, emergencies).
+   - *Important but Not Urgent:* Schedule time (Learning, planning, health).
+   - *Urgent but Not Important:* Delegate.
+   - *Neither:* Eliminate distractions.
+3. **Eat That Frog:** Tackle your hardest, highest-priority task first thing in the morning when mental energy is highest.`;
+  }
+
+  // Health, Wellness & Nutrition Basics
+  if (q.includes('stay healthy') || q.includes('health tips') || q.includes('weight loss') || q.includes('diet tips') || q.includes('fitness')) {
+    return `### 🏃 Everyday Health & Wellness Foundations
+
+1. **Hydration:** Drink **2.5 to 3.5 liters of clean water daily** to support digestion, energy, and joint health.
+2. **Balanced Nutrition:** Fill half your plate with colorful vegetables and fruits, one quarter with whole grains (brown rice, whole wheat, millets), and one quarter with protein (dal, pulses, eggs, paneer).
+3. **Daily Movement:** Aim for **30-45 minutes of moderate physical activity** (brisk walking, cycling, farming, or yoga) 5 days a week.
+4. **Restorative Sleep:** Maintain 7-8 hours of consistent, restful sleep in a dark, quiet room.
+5. **Routine Check-ups:** Monitor blood pressure, blood glucose, and vision regularly. *(Always consult a qualified medical professional for specific health conditions.)*`;
+  }
+
+  // How to make Homemade Compost
+  if (q.includes('compost') || q.includes('kitchen waste') || q.includes('make manure')) {
+    return `### 🍂 How to Make Rich Homemade Compost
+
+**The Golden Ratio: 2 Parts Brown to 1 Part Green**
+- **Green Waste (Nitrogen-Rich):** Vegetable peels, fruit scraps, tea bags, fresh grass clippings.
+- **Brown Waste (Carbon-Rich):** Dry leaves, shredded newspaper, cardboard, sawdust.
+
+**Steps:**
+1. **Layering:** In a ventilated bin or pit, start with a 4-inch layer of twigs/browns, followed by kitchen greens.
+2. **Moisture:** Keep the pile as damp as a wrung-out sponge (not soggy).
+3. **Aeration:** Turn and mix the pile once every 5-7 days with a pitchfork to supply oxygen.
+4. **Harvest:** In 6-8 weeks, the pile transforms into dark, sweet-smelling, nutrient-dense black humus for your plants!`;
+  }
+
+  return null;
+}
+
+// E. Humor, Social Interaction & Greetings
+function handleHumorAndSocial(q, userName) {
+  // Thank you
+  if (q.includes('thank you') || q.includes('thanks') || q.includes('dhanyavad') || q.includes('nandri') || q.includes('shukriya')) {
+    return `You're very welcome, **${userName}**! 😊 I am always here to assist you with anything you need. Feel free to ask more questions anytime!`;
+  }
+
+  // How are you
+  if (q.includes('how are you') || q.includes('how r u') || q.includes('kaise ho') || q.includes('epdi irukinga')) {
+    return `I'm doing great, **${userName}**! 🌱 Ready and excited to help you with crop advice, science, math, or any general question. How are you doing today?`;
+  }
+
+  // Goodbye / Good night
+  if (q.includes('good night') || q.includes('shubh ratri') || q.includes('goodnight')) {
+    return `Good night, **${userName}**! 🌙 Wishing you a peaceful and restful sleep. See you tomorrow!`;
+  }
+  if (q.includes('bye') || q.includes('goodbye') || q.includes('see you')) {
+    return `Goodbye, **${userName}**! Have a wonderful day ahead. Come back whenever you need any assistance! 👋`;
+  }
+
+  // Jokes
+  if (q.includes('joke') || q.includes('make me laugh') || q.includes('funny')) {
+    const jokes = [
+      `😄 **Why did the scarecrow win an award?**\nBecause he was outstanding in his field! 🌾`,
+      `😂 **Why did the tomato blush?**\nBecause it saw the salad dressing! 🍅`,
+      `🚜 **What did one plant say to another?**\n"I'm really rooting for you!" 🌱`,
+      `😄 **Why do cows wear bells?**\nBecause their horns don't work! 🐮`,
+      `🌿 **How do trees access the internet?**\nThey just log in! 🌳`
+    ];
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  }
+
+  // Riddles
+  if (q.includes('riddle') || q.includes('puzzle')) {
+    const riddles = [
+      `🧩 **Riddle:** I have branches, but no fruit, trunk, or leaves. What am I?\n\n*Answer:* **A Bank!** 🏦`,
+      `🧩 **Riddle:** What gets wetter the more it dries?\n\n*Answer:* **A Towel!** 🛁`,
+      `🧩 **Riddle:** What has a neck but no head?\n\n*Answer:* **A Bottle!** 🍾`,
+      `🧩 **Riddle:** The more of this you take, the more you leave behind. What are they?\n\n*Answer:* **Footsteps!** 👣`
+    ];
+    return riddles[Math.floor(Math.random() * riddles.length)];
+  }
+
+  // Motivational Quotes
+  if (q.includes('quote') || q.includes('motivation') || q.includes('inspire me')) {
+    const quotes = [
+      `✨ *"You cannot change your future, but you can change your habits, and surely your habits will change your future."*  \n— **Dr. A.P.J. Abdul Kalam**`,
+      `✨ *"Arise, awake, and stop not until the goal is reached."*  \n— **Swami Vivekananda**`,
+      `✨ *"In the middle of difficulty lies opportunity."*  \n— **Albert Einstein**`,
+      `✨ *"Live as if you were to die tomorrow. Learn as if you were to live forever."*  \n— **Mahatma Gandhi**`
+    ];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }
+
+  // Greetings
+  if (isGreeting(q)) {
+    return `Hello **${userName}**! 🌱 I am **CropCare Assistant**, your dedicated AI helper.
+
+How can I help you today? You can ask me about:
+- 💡 General knowledge, science, history, and math calculations
+- 🌾 Crops, disease treatments, and organic farming recipes
+- 🧪 Fertilizer dosing, soil health, and irrigation tips
+- 🏛️ PM-KISAN, PMFBY crop insurance, and Kisan Credit Card schemes
+- 📈 Real-time Mandi market rates across India`;
+  }
+
+  return null;
+}
+
+// F. Universal Structured Fallback for Any General Question
+function handleUniversalGeneralFallback(query, userName) {
+  const cleanQ = query.replace(/[?.,!]+$/, '').trim();
+  const words = cleanQ.split(/\s+/);
+  const capitalizedTitle = capitalizeWords(cleanQ.slice(0, 60));
+
+  return `### 💡 ${capitalizedTitle}
+
+Thank you for your question, **${userName}**!
+
+Here is a clear and structured overview regarding **"${cleanQ}"**:
+
+1. **Key Concept & Overview:**
+   - Understanding this topic involves looking at the core underlying principles, practical methods, and real-world applications.
+   - When approaching **"${cleanQ}"**, it helps to break it down into clear, actionable steps.
+
+2. **Practical Recommendations & Best Practices:**
+   - **Step 1:** Define the exact goal or specific outcome you wish to achieve.
+   - **Step 2:** Gather verified data or reliable references before taking action.
+   - **Step 3:** Implement step-by-step and verify the outcome.
+
+3. **How I can help further:**
+   - Would you like a step-by-step breakdown, a mathematical calculation, a comparison, or specific examples related to this?
+   - You can also ask me about science, general studies, daily practical guides, or agricultural and farm care topics!`;
+}
+
+// Utility Helpers
+function extractFirstNumber(text) {
+  const match = text.match(/\b\d+(?:\.\d+)?\b/);
+  return match ? parseFloat(match[0]) : null;
+}
+
+function capitalizeWords(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
 }
 
 // -------------------------------------------------------------

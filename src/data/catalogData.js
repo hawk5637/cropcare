@@ -87,7 +87,7 @@ export const catalogItems = [
     },
     price: 1400,
     unit: "box (10kg)",
-    image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1541344999736-83eca872f241?auto=format&fit=crop&w=800&q=80",
     rating: 4.9,
     origin: "Solapur APMC, Maharashtra",
     specs: { variety: "Bhagwa", arilColor: "Deep Ruby Red", shelfLife: "30 Days", packaging: "Foam Cell Export Tray" }
@@ -104,7 +104,7 @@ export const catalogItems = [
     },
     price: 450,
     unit: "crate (25kg)",
-    image: "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1546470427-e26264be0b11?auto=format&fit=crop&w=800&q=80",
     rating: 4.82,
     origin: "Kolar APMC, Karnataka",
     specs: { variety: "Syngenta Abhinav F1", firmness: "94% Table Hard", shelfLife: "14 Days", packaging: "Poly Vented Crate" }
@@ -189,7 +189,7 @@ export const catalogItems = [
     },
     price: 380,
     unit: "bag (20kg)",
-    image: "https://images.unsplash.com/photo-1628773822503-930a846e49a8?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1628773822503-930a84d94357?auto=format&fit=crop&w=800&q=80",
     rating: 4.65,
     origin: "Karnal APMC, Haryana",
     specs: { variety: "Round Deep Purple", calyx: "Fresh Green Spine-Free", shelfLife: "9 Days", packaging: "Vented Agri Crate" }
@@ -223,7 +223,7 @@ export const catalogItems = [
     },
     price: 520,
     unit: "crate (15kg)",
-    image: "https://images.unsplash.com/photo-1536511135899-7360216298b4?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80",
     rating: 4.82,
     origin: "Prayagraj Mandi, Uttar Pradesh",
     specs: { variety: "Allahabad Safeda", pulp: "Cream White Dense", shelfLife: "10 Days", packaging: "Shock-Absorbing Molded Tray" }
@@ -257,7 +257,7 @@ export const catalogItems = [
     },
     price: 650,
     unit: "bag (10kg)",
-    image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=800&q=80",
     rating: 4.88,
     origin: "Eluru APMC, Andhra Pradesh",
     specs: { variety: "Kagzi Lime", juiceContent: "49.5%", shelfLife: "25 Days", packaging: "Woven Cotton Net Bag" }
@@ -308,7 +308,7 @@ export const catalogItems = [
     },
     price: 350,
     unit: "bag (30kg)",
-    image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c71d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1550828520-4cb496f0c79f?auto=format&fit=crop&w=800&q=80",
     rating: 4.74,
     origin: "Ooty Market, Nilgiris, Tamil Nadu",
     specs: { density: "Extra Compact Head", variety: "Green Express", shelfLife: "20 Days", packaging: "Heavy Poly Mesh Sack" }
@@ -325,7 +325,7 @@ export const catalogItems = [
     },
     price: 490,
     unit: "bag (20kg)",
-    image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c71d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=800&q=80",
     rating: 4.82,
     origin: "Karnal APMC, Haryana",
     specs: { variety: "Pusa Rudhira Red", lycopene: "High Antioxidant Red", shelfLife: "15 Days", packaging: "Hydro-Washed Cold Bags" }
@@ -342,7 +342,7 @@ export const catalogItems = [
     },
     price: 280,
     unit: "bag (20kg)",
-    image: "https://images.unsplash.com/photo-1592417817098-8f3d6910985b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb22509?auto=format&fit=crop&w=800&q=80",
     rating: 4.62,
     origin: "Amritsar Mandi, Punjab",
     specs: { variety: "Japanese White", rootLength: "32-35 cm", shelfLife: "7 Days", packaging: "Tied Fresh Bunches" }
@@ -393,7 +393,7 @@ export const catalogItems = [
     },
     price: 850,
     unit: "quintal (100kg)",
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=800&q=80",
     rating: 4.88,
     origin: "Villupuram Mandi, Tamil Nadu",
     specs: { variety: "Namdhari Sugar Baby", sweetness: "12.5° Brix", shelfLife: "18 Days", packaging: "Straw Bedded Truckload / Bulk" }
@@ -410,7 +410,7 @@ export const catalogItems = [
     },
     price: 680,
     unit: "crate (25kg)",
-    image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c71d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=800&q=80",
     rating: 4.75,
     origin: "Bikaner APMC, Rajasthan",
     specs: { variety: "Kundan Madhur", netting: "Dense Symmetrical", shelfLife: "11 Days", packaging: "Corrugated Cushion Crate" }
@@ -444,7 +444,7 @@ export const catalogItems = [
     },
     price: 780,
     unit: "crate (20kg)",
-    image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=800&q=80",
     rating: 4.84,
     origin: "Nalgonda APMC, Telangana",
     specs: { variety: "Mosambi Gold", juiceContent: "54%", shelfLife: "22 Days", packaging: "High-Strength Mesh Bag" }
@@ -533,7 +533,7 @@ export const catalogItems = [
     },
     price: 2900,
     unit: "bag (30kg)",
-    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&w=800&q=80",
     rating: 4.85,
     origin: "ICAR-IISR Indore, Madhya Pradesh",
     specs: { variety: "JS-9560", purity: "98.9%", germination: "89%", oilContent: "21.2%", maturity: "84-88 Days" }
@@ -567,7 +567,7 @@ export const catalogItems = [
     },
     price: 880,
     unit: "packet (450g + 120g Refuge)",
-    image: "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=800&q=80",
     rating: 4.88,
     origin: "Central Institute for Cotton Research (CICR), Nagpur",
     specs: { trait: "Bollgard II Cry1Ac + Cry2Ab", stapleLength: "30.5 mm", strength: "29.5 g/tex", bollWeight: "5.2g" }
@@ -601,7 +601,7 @@ export const catalogItems = [
     },
     price: 450,
     unit: "bag (3kg)",
-    image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80",
     rating: 4.82,
     origin: "ICRISAT Patancheru, Telangana",
     specs: { variety: "ICTP 8203 Fe (Dhanashakti)", ironContent: "72 ppm Fe + 40 ppm Zn", droughtTolerance: "Extreme", maturity: "80 Days" }
@@ -652,7 +652,7 @@ export const catalogItems = [
     },
     price: 980,
     unit: "pouch (3,000 seeds)",
-    image: "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1546470427-e26264be0b11?auto=format&fit=crop&w=800&q=80",
     rating: 4.97,
     origin: "Syngenta India Certified R&D",
     specs: { variety: "Abhinav F1", germination: "98%", firmness: "Superb Long Distance Transport", fruitWeight: "85-100g", tolerance: "TyLCV & Bacterial Wilt" }
@@ -673,7 +673,7 @@ export const catalogItems = [
     },
     price: 745000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80",
     rating: 4.96,
     origin: "Mahindra & Mahindra Swaraj Tractors OEM",
     specs: { hp: "47 HP @ 2000 RPM", engine: "4-Cylinder Extra Long Stroke ELS DI", pto: "42 HP 540 RPM", liftCapacity: "1500 kg Hydraulic", warranty: "6 Years Industry Warranty" }
@@ -690,7 +690,7 @@ export const catalogItems = [
     },
     price: 1120000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
     rating: 4.93,
     origin: "Sonalika International Hoshiarpur OEM",
     specs: { hp: "75 HP CRDi Trem-IV", engine: "4-Cylinder 4712cc Turbocharged", pto: "65 HP Multi-Speed Reverse", liftCapacity: "2200 kg Exosensing", transmission: "12F + 12R Shuttle Shift" }
@@ -707,7 +707,7 @@ export const catalogItems = [
     },
     price: 980000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
     rating: 4.97,
     origin: "John Deere India OEM, Pune",
     specs: { hp: "55 HP Turbocharged", engine: "John Deere 3029T 3-Cylinder", pto: "46.7 HP Independent", liftCapacity: "2000 kg PowrReverser", brakes: "Self-Adjusting Oil Immersed" }
@@ -724,7 +724,7 @@ export const catalogItems = [
     },
     price: 810000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80",
     rating: 4.91,
     origin: "Swaraj Division (Mahindra), Mohali",
     specs: { hp: "52 HP @ 2000 RPM", engine: "3-Cylinder RB-33 TR 3478cc", pto: "46 HP Multi-Speed & Reverse", liftCapacity: "1700 kg", steering: "Balanced Power Steering" }
@@ -741,7 +741,7 @@ export const catalogItems = [
     },
     price: 895000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
     rating: 4.95,
     origin: "Kubota Agricultural Machinery India",
     specs: { hp: "45 HP Japanese E-CDIS", engine: "4-Cylinder 2434cc 16-Valve", pto: "38.3 HP Dual Speed", liftCapacity: "1640 kg", transmission: "Synchromesh Shuttle" }
@@ -758,7 +758,7 @@ export const catalogItems = [
     },
     price: 790000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
     rating: 4.87,
     origin: "Escorts Kubota Agri Machinery, Faridabad",
     specs: { hp: "55 HP @ 2000 RPM", engine: "3-Cylinder AVL 3514cc", pto: "49 HP Multi-Speed", liftCapacity: "1800 kg Sensi-1", transmission: "16F + 4R Constant Mesh T20" }
@@ -775,7 +775,7 @@ export const catalogItems = [
     },
     price: 2450000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
     rating: 4.96,
     origin: "Preet Agro Industries, Nabha, Punjab",
     specs: { engine: "101 HP 6-Cylinder Water-Cooled", cutterBar: "14 Feet Heavy Duty", grainTank: "2400 Liters Capacity", crops: "Paddy, Wheat, Soybean, Mustard, Gram" }
@@ -809,7 +809,7 @@ export const catalogItems = [
     },
     price: 128000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
     rating: 4.94,
     origin: "Tirth Agro Technology, Rajkot, Gujarat",
     specs: { width: "7 Feet (210 cm Working Width)", blades: "48 L-Type Boron Steel Blades", gearbox: "Multi-Speed Cast Iron Oil Bath", weight: "490 kg Reinforced Chassis" }
@@ -826,7 +826,7 @@ export const catalogItems = [
     },
     price: 42000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
     rating: 4.88,
     origin: "Fieldking Beri Udyog, Karnal",
     specs: { tynes: "9 Drop-Forged Spring Loaded", frame: "Double Heavy Tubular Steel 65x65mm", hitch: "3-Point Cat-II Universal", tractorHP: "35-55 HP Required" }
@@ -843,7 +843,7 @@ export const catalogItems = [
     },
     price: 185000,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
     rating: 4.96,
     origin: "Lemken India Agricultural Machinery, Nagpur",
     specs: { furrows: "2-Bottom Reversible", turnover: "Hydraulic Double-Acting Cylinder", cuttingWidth: "60-90 cm Adjustable", soilDepth: "Up to 35 cm Deep Inversion" }
@@ -860,7 +860,7 @@ export const catalogItems = [
     },
     price: 4850,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
     rating: 4.89,
     origin: "American Spring & Pressing Works (ASPEE), Mumbai",
     specs: { tank: "16 Liters High-Density UV Stabilized PE", battery: "12V 12Ah Sealed Lead-Acid (8hr runtime)", pressure: "4.5 Bar Dual Diaphragm Auto Cut-Off", lance: "Stainless Steel Telescopic with 4 Nozzles" }
@@ -881,7 +881,7 @@ export const catalogItems = [
     },
     price: 2400,
     unit: "piece",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.95,
     origin: "Bosch Rexroth OEM Plant, Bengaluru",
     specs: { nozzleType: "Multi-Hole Micro-Laser Drilled Orifice", sprayPressure: "2200 Bar CRDi Certified", calibration: "ISO 9001 Factory Calibrated", compatibility: "Mahindra, Sonalika, John Deere, Swaraj" }
@@ -898,7 +898,7 @@ export const catalogItems = [
     },
     price: 4850,
     unit: "set",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.92,
     origin: "Schaeffler Luk OEM Division, Hosur",
     specs: { diameter: "280 mm Dual Driven", material: "Heat-Resistant Cerametallic Buttons", dampers: "6 Heavy-Duty Coil Springs", tractors: "Mahindra 575 DI / Swaraj 855 FE / Farmtrac 60" }
@@ -915,7 +915,7 @@ export const catalogItems = [
     },
     price: 7200,
     unit: "unit",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.96,
     origin: "Exide Industries OEM Plant, Haldia",
     specs: { capacity: "12V 88Ah @ 20Hr Rate", cca: "680 Cold Cranking Amps", design: "Heavy-Duty Polyethylene Container with Ribs", warranty: "36 Months (18+18 Pro-Rata)" }
@@ -932,7 +932,7 @@ export const catalogItems = [
     },
     price: 360,
     unit: "per blade (Pack of 48: ₹16,800)",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.97,
     origin: "Shaktiman Genuine Spares, Rajkot",
     specs: { material: "Hardened Boron Steel 30MnB5", thickness: "8 mm Heavy Gauge", hardness: "50 ± 2 HRC", compatibility: "Universal 6ft & 7ft Multi-Speed Rotavators" }
@@ -949,7 +949,7 @@ export const catalogItems = [
     },
     price: 850,
     unit: "piece",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.88,
     origin: "Fleetguard Cummins Filtration, Pune",
     specs: { filtration: "10-Micron Synthetic Beta 200", burstPressure: "35 Bar Continuous Rating", seal: "Dual Nitrile Anti-Leak Gasket", flowRate: "Up to 55 L/min Hydraulic Flow" }
@@ -966,7 +966,7 @@ export const catalogItems = [
     },
     price: 1250,
     unit: "assembly",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.84,
     origin: "MICO Bosch India OEM",
     specs: { diaphragm: "Viton Chemical & Diesel Resistant", primingLever: "Hand Primer Steel Lever", deliveryPressure: "1.0 - 1.4 Bar Stable", fitment: "All 3-Cylinder & 4-Cylinder Diesel Tractors" }
@@ -983,7 +983,7 @@ export const catalogItems = [
     },
     price: 1650,
     unit: "pair (LH + RH)",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.89,
     origin: "Rane Madras OEM Plant, Chennai",
     specs: { material: "Drop-Forged 40Cr Alloy Steel", thread: "M18 x 1.5 Precision Ground", dustBoot: "Chloroprene High-Flex Grease Seal", ballPin: "Induction Hardened Mirror Finish" }
@@ -1000,7 +1000,7 @@ export const catalogItems = [
     },
     price: 1950,
     unit: "set",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.9,
     origin: "Talbros Automotive Components, Faridabad",
     specs: { hardness: "Case Hardened 62 HRC Core 35 HRC", bushings: "Heavy Phosphor Bronze Machined", thrustBearings: "Taper Roller High Load Sealed", kitContains: "2 Pins, 4 Bronze Bushes, 2 Thrust Bearings, Shims" }
@@ -1017,7 +1017,7 @@ export const catalogItems = [
     },
     price: 2100,
     unit: "set",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.93,
     origin: "Kirloskar Brothers Limited, Dewas",
     specs: { material: "SS 410 Investment Cast Stainless Steel", balance: "Dynamically Balanced to ISO 1940 G2.5", seal: "Silicon Carbide vs Carbon Mechanical Face", rating: "Head up to 85m @ 5HP Submersible" }
@@ -1034,7 +1034,7 @@ export const catalogItems = [
     },
     price: 5400,
     unit: "can (20 Liters)",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.98,
     origin: "Castrol India Lubricants, Silvassa",
     specs: { viscosity: "SAE 80W / 10W-30 UTTO", application: "Wet Brakes, Hydraulic Lift, Hydrostatic Steering & Gearbox", antiSquawk: "Wet Brake Anti-Chatter Formula", certification: "John Deere J20C, Massey M1145, Case MS1209" }
@@ -1051,7 +1051,7 @@ export const catalogItems = [
     },
     price: 920,
     unit: "set (Primary + Safety Element)",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.91,
     origin: "Donaldson Filtration Solutions OEM",
     specs: { filtration: "99.9% Dust Removal @ ISO 5011", media: "Flame-Retardant Pleated Cellulose with Wire Mesh", seal: "Urethane Radial Compression Molded", elements: "Primary Outer Element + Inner Safety Secondary" }
@@ -1068,7 +1068,7 @@ export const catalogItems = [
     },
     price: 3400,
     unit: "engine set (4 Cylinders)",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.95,
     origin: "Federal-Mogul Goetze India OEM, Patiala",
     specs: { coating: "Plasma Infilled Molybdenum on Top Ring", boreStandard: "100 mm Standard Bore Size", oilRing: "Chromium Plated Multi-Piece Spiral Expander", compression: "Low Friction High Gas Seal 18:1 Ratio" }
@@ -1085,7 +1085,7 @@ export const catalogItems = [
     },
     price: 1450,
     unit: "pair (Inner + Outer)",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
     rating: 4.96,
     origin: "SKF India OEM Plant, Pune",
     specs: { standard: "SKF Explorer Deep Carburized Steel", rating: "Dynamic Load 48.5 kN / Static Load 62 kN", precision: "ISO Normal Tolerance P0", fitment: "Front Axle Spindles Mahindra, Swaraj, Sonalika, John Deere" }
@@ -1102,7 +1102,7 @@ export const catalogItems = [
     },
     price: 680,
     unit: "piece",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
     rating: 4.87,
     origin: "Gates India Power Transmission, Lalru",
     specs: { reinforcement: "Aramid Tensile Cord (Zero Stretch)", temperature: "-40°C to +130°C Oil & Heat Resistant", profile: "B-Section Raw Edge Molded Cogged", application: "Alternator, Water Pump & Radiator Fan Drive" }
