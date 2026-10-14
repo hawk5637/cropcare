@@ -47,7 +47,7 @@ export default function BuyerManagementModule() {
         <div className="space-y-3">
           {BUYERS.map(b => (
             <div key={b.id} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <img src={b.img} alt={b.name} className="w-14 h-14 rounded-2xl object-cover shrink-0" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80'; }} />
+              <img src={b.img} alt={b.name} loading="lazy" className="w-14 h-14 rounded-2xl object-cover shrink-0" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80'; }} />
               <div className="flex-1">
                 <div className="flex items-center gap-1.5 font-extrabold text-slate-900 dark:text-white">
                   {b.name}

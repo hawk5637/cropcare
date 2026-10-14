@@ -279,8 +279,13 @@ export default function LoginScreen({ onLoginSuccess }) {
       </div>
 
       {/* Footer Info */}
-      <div className="max-w-5xl mx-auto w-full text-center text-xs text-white/60 z-10">
-        CropCare Enterprise Agri-Platform • {t('app.demoBadge')} • &copy; 2026
+      <div className="max-w-5xl mx-auto w-full text-center text-xs text-white/70 z-10 space-y-1">
+        <p>CropCare Enterprise Agri-Platform &bull; {t('app.demoBadge')} &bull; &copy; {new Date().getFullYear()}</p>
+        <p className="flex items-center justify-center gap-3 text-[11px] text-white/60">
+          <a href="tel:+9118002767227" className="hover:text-emerald-300 transition-colors min-h-[44px] inline-flex items-center">Helpline: 1800-276-7227 (Toll-Free)</a>
+          <span>&bull;</span>
+          <a href="mailto:support@cropcare.ag" className="hover:text-emerald-300 transition-colors min-h-[44px] inline-flex items-center">support@cropcare.ag</a>
+        </p>
       </div>
 
     </div>

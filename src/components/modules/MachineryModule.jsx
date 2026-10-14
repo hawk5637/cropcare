@@ -5,7 +5,7 @@ import { Wrench, Search, ShoppingCart, Calendar, Star, Truck, CheckCircle2, Cloc
 const MACHINERY = [
   { id: 'M1', name: 'Mahindra 575 DI', category: 'Tractor', hp: 50, price: '₹850/day', status: 'Available', img: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80', specs: '50 HP, 2WD, Power steering, Oil-immersed brakes', rating: 4.7 },
   { id: 'M2', name: 'Sonalika Tiger DI 75', category: 'Tractor', hp: 75, price: '₹1,100/day', status: 'Available', img: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&w=800&q=80', specs: '75 HP, 4WD, AC cabin, Digital dash', rating: 4.5 },
-  { id: 'M3', name: 'Shaktiman Rotavator', category: 'Implement', hp: null, price: '₹400/day', status: 'Booked', img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80', specs: '7-ft working width, 42 L-blades, Adjustable depth', rating: 4.3 },
+  { id: 'M3', name: 'Shaktiman Rotavator', category: 'Implement', hp: null, price: '₹400/day', status: 'Booked', img: 'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80', specs: '7-ft working width, 42 L-blades, Adjustable depth', rating: 4.3 },
   { id: 'M4', name: 'John Deere 5310', category: 'Tractor', hp: 55, price: '₹950/day', status: 'Available', img: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80', specs: '55 HP, 8F+4R gears, Wet disc brakes', rating: 4.8 }
 ];
 
@@ -59,7 +59,7 @@ export default function MachineryModule() {
           {MACHINERY.map(m => (
             <div key={m.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all">
               <div className="relative h-36">
-                <img src={m.img} alt={m.name} className="w-full h-full object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80'; }} />
+                <img src={m.img} alt={m.name} loading="lazy" className="w-full h-full object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80'; }} />
                 <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-bold ${m.status === 'Available' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}`}>{m.status}</div>
                 <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold bg-black/50 text-white backdrop-blur-sm">{m.category}</div>
               </div>
@@ -119,7 +119,7 @@ export default function MachineryModule() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {PARTS.map(p => (
             <div key={p.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-              <img src={p.img} alt={p.name} className="w-full h-28 object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?auto=format&fit=crop&w=800&q=80'; }} />
+              <img src={p.img} alt={p.name} loading="lazy" className="w-full h-28 object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?auto=format&fit=crop&w=800&q=80'; }} />
               <div className="p-4">
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5">{p.name}</h3>
                 <p className="text-emerald-600 font-bold text-sm mb-3">{p.price}</p>

@@ -18,7 +18,11 @@ import {
   Grid3x3,
   BookOpen,
   Play,
-  CloudSun
+  CloudSun,
+  Menu,
+  X,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 export default function Header() {
@@ -46,10 +50,12 @@ export default function Header() {
 
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const langRef = useRef(null);
   const profileRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
-  // Close dropdowns on outside click
+  // Close dropdowns on outside click or Escape key
   useEffect(() => {
     function handleClickOutside(e) {
       if (langRef.current && !langRef.current.contains(e.target)) {
@@ -58,9 +64,25 @@ export default function Header() {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileMenuOpen(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target) && !e.target.closest('#mobileMenuToggle')) {
+        setMobileMenuOpen(false);
+      }
     }
+
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setLangMenuOpen(false);
+        setProfileMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const currentLocale = SUPPORTED_LOCALES.find(l => l.code === language) || SUPPORTED_LOCALES[0];
@@ -78,8 +100,14 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
           
           {/* Brand Logo & Tagline */}
-          <div 
-            onClick={() => setActiveNav('dashboard')}
+          <a 
+            href="#dashboard"
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveNav('dashboard');
+              setMobileMenuOpen(false);
+            }}
+            aria-label="CropCare Home"
             className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
           >
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-emerald-800 via-emerald-700 to-green-600 flex items-center justify-center shadow-md shadow-emerald-800/20 group-hover:scale-105 transition-transform duration-200">
@@ -98,7 +126,7 @@ export default function Header() {
                 {t('app.tagline')}
               </p>
             </div>
-          </div>
+          </a>
 
           {/* Quick Navigation Tabs (Desktop) */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700/60">
@@ -410,9 +438,118 @@ export default function Header() {
               )}
             </div>
 
+            {/* Mobile Hamburger Toggle (< 768px) */}
+            <button
+              type="button"
+              id="mobileMenuToggle"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobileNavigationDrawer"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-emerald-700 dark:text-emerald-400" /> : <Menu className="w-5 h-5" />}
+            </button>
+
           </div>
         </div>
       </div>
+
+      {/* Mobile Drawer Navigation (< 768px) */}
+      {mobileMenuOpen && (
+        <div 
+          id="mobileNavigationDrawer"
+          ref={mobileMenuRef}
+          aria-label="Mobile Navigation"
+          className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-lg px-4 py-4 space-y-3 shadow-xl transition-all"
+        >
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Navigation Menu</span>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              {roleNameMap[userRole]}
+            </span>
+          </div>
+
+          <nav className="grid grid-cols-2 gap-2" aria-label="Mobile Primary Links">
+            {[
+              { id: 'dashboard', label: t('header.dashboard'), icon: LayoutDashboard },
+              { id: 'scanner', label: t('header.scanner'), icon: Camera },
+              { id: 'weather', label: 'Weather (14D)', icon: CloudSun },
+              { id: 'catalog', label: t('header.marketplace'), icon: Layers },
+              { id: 'modules', label: 'All Modules', icon: Grid3x3 },
+              { id: 'about', label: 'About CropCare', icon: BookOpen }
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveNav(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex items-center gap-2.5 p-2.5 rounded-xl text-xs font-semibold min-h-[44px] transition-colors ${
+                    activeNav === item.id
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span>{item.label}</span>
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Quick Actions & Tour in Drawer */}
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setIsIntroModalOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 min-h-[44px]"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <span>Interactive Tour</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsConfigModalOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 min-h-[44px]"
+            >
+              <Key className="w-4 h-4 text-emerald-600" />
+              <span>API Keys</span>
+            </button>
+          </div>
+
+          {/* Direct Contact Links (Items 9 & 10) */}
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2 text-xs">
+            <div className="text-[11px] font-semibold text-slate-400">Direct Helpline & Support</div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <a
+                href="tel:+9118002767227"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-800 dark:text-emerald-300 font-medium min-h-[44px] hover:bg-emerald-100"
+              >
+                <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>1800-276-7227 (Toll-Free)</span>
+              </a>
+              <a
+                href="mailto:support@cropcare.ag"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium min-h-[44px] hover:bg-slate-200"
+              >
+                <Mail className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>support@cropcare.ag</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Bottom Navigation Bar */}
       <div className="md:hidden flex items-center justify-around bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-2 px-1">

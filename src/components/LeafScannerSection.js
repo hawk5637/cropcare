@@ -78,7 +78,7 @@ export const cropDiseasesDatabase = [
     severity: "42% Moderate Severity",
     severityLevel: "medium",
     confidence: "96.5%",
-    image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=700&q=80",
+    image: "https://images.unsplash.com/photo-1536511135899-8d4847e9eecf?auto=format&fit=crop&w=700&q=80",
     symptoms: {
       en: "Foliage turns dull purplish-bronze, interveinal chlorosis, terminal twigs die back, gradual canopy wilting.",
       hi: "पत्तियां कांस्य-बैंगनी या लाल-पीली पड़ जाती हैं, नसों के बीच पीलापन, टहनियों का ऊपर से सूखना व उकठा लगना।",
@@ -229,7 +229,7 @@ export const cropDiseasesDatabase = [
     severity: "68% High Severity",
     severityLevel: "high",
     confidence: "97.4%",
-    image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80",
+    image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=700&q=80",
     symptoms: {
       en: "Bright yellow pustules forming parallel stripes on leaf blades, powdery yellow dust rubs onto fingers, stunted grain filling.",
       hi: "पत्तियों पर पीले रंग की धारियाँ और हल्दी जैसा पीला पाउडर जो उंगलियों पर चिपकता है; दाना बारीक रह जाता है।",
@@ -479,7 +479,7 @@ export const cropDiseasesDatabase = [
     severity: "76% Critical Stage",
     severityLevel: "critical",
     confidence: "96.7%",
-    image: "https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&w=700&q=80",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=700&q=80",
     symptoms: {
       en: "Upward or downward leaf curling, thick swollen veins, cup-shaped leaf enations, severely stunted bolls.",
       hi: "पत्तियों का ऊपर या नीचे की ओर मुड़ना, नसों का मोटा और गहरा हरा होना, पौधे की बढ़वार रुकना व टिंडे न बनना।",
@@ -631,7 +631,7 @@ export const cropDiseasesDatabase = [
     severity: "Grade A+ (99.2% Purity / 92% Germination)",
     severityLevel: "low",
     confidence: "99.4%",
-    image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80",
+    image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=700&q=80",
     symptoms: {
       en: "Plump amber-colored kernels, uniform 1000-grain weight (42.5g), moisture 10.8%, zero noxious weed seed admixture detected.",
       hi: "चमकदार सुनहरे कठोर दाने, 1000 दानों का वजन 42.5 ग्राम, नमी 10.8%, खरपतवार बीजों की मिलावट शून्य पायी गयी।",

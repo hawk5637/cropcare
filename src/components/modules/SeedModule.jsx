@@ -15,6 +15,7 @@ import {
   Award,
   Sparkles
 } from 'lucide-react';
+import { handleImageError } from '../../utils/imageUtils';
 
 const SEED_CATALOG = [
   // ─── VEGETABLES (14 Items) ──────────────────────────
@@ -132,7 +133,7 @@ const SEED_CATALOG = [
     certification: 'NSC Certified', 
     price: '₹480/50g', 
     season: 'Rabi / Early Winter', 
-    img: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=400&q=80', 
     germination: '92%', 
     purity: '99.0%', 
     suitable: ['Moist Sandy Loam', 'Clay Loam'] 
@@ -183,7 +184,7 @@ const SEED_CATALOG = [
     certification: 'IARI Certified', 
     price: '₹340/50g', 
     season: 'Kharif / Rabi', 
-    img: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1605335508892-d6efc5fa2328?auto=format&fit=crop&w=400&q=80', 
     germination: '90%', 
     purity: '98.5%', 
     suitable: ['Well-drained Loam', 'Silt Loam'] 
@@ -355,7 +356,7 @@ const SEED_CATALOG = [
     certification: 'Syngenta Certified', 
     price: '₹850/50g', 
     season: 'Summer (Jan-March)', 
-    img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=400&q=80', 
     germination: '95%', 
     purity: '99.5%', 
     suitable: ['Riverbed Sandy', 'Sandy Loam'] 
@@ -544,7 +545,7 @@ const SEED_CATALOG = [
     certification: 'MPSDC Certified', 
     price: '₹2,400/30kg bag', 
     season: 'Kharif', 
-    img: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=400&q=80', 
     germination: '90%', 
     purity: '98.0%', 
     suitable: ['Black Cotton', 'Medium Loam'] 
@@ -561,7 +562,7 @@ const SEED_CATALOG = [
     certification: 'IARI Certified', 
     price: '₹1,200/5kg', 
     season: 'Rabi', 
-    img: 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=400&q=80', 
     germination: '93%', 
     purity: '99.0%', 
     suitable: ['Sandy Loam', 'Light Alluvial'] 
@@ -578,7 +579,7 @@ const SEED_CATALOG = [
     certification: 'ICRISAT Certified', 
     price: '₹2,200/25kg', 
     season: 'Rabi', 
-    img: 'https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=400&q=80', 
     germination: '94%', 
     purity: '99.0%', 
     suitable: ['Black Soils', 'Sandy Loam'] 
@@ -595,7 +596,7 @@ const SEED_CATALOG = [
     certification: 'ANGRAU Certified', 
     price: '₹2,350/25kg', 
     season: 'Kharif / Rabi', 
-    img: 'https://images.unsplash.com/photo-1567890669958-87f30dc2a1e7?auto=format&fit=crop&w=400&q=80', 
+    img: 'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80', 
     germination: '91%', 
     purity: '98.5%', 
     suitable: ['Red Sandy Loam', 'Well Drained'] 
@@ -768,6 +769,7 @@ export default function SeedModule() {
               <img 
                 src={seed.img} 
                 alt={seed.variety} 
+                onError={(e) => handleImageError(e, seed.crop)}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>

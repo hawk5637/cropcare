@@ -21,6 +21,12 @@ import { renderEditDataModal, editModalTranslations } from './components/EditDat
 import { getMarketplaceItems } from './data/marketplaceItems.js';
 import { getMandiCommodities } from './data/mandiData.js';
 import { renderLeafScannerSection, cropDiseasesDatabase } from './components/LeafScannerSection.js';
+import { getVegetableImage, getVegetableEmoji, getVegetableImageInfo, handleImageError } from './utils/imageUtils.js';
+
+// Expose globally for vanilla HTML components and inline onError handlers
+window.handleVegetableImgError = handleImageError;
+window.getVegetableImage = getVegetableImage;
+window.getVegetableEmoji = getVegetableEmoji;
 
 import { translations } from './data/translations.js';
 import { pillarsData } from './data/pillarsData.js';
@@ -2212,8 +2218,16 @@ function openEditDataModal(mode, targetId = null) {
           
           <div style="margin-top: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
             <span style="font-size: 0.74rem; color: var(--slate-500); font-weight: 600;">${t.imagePresetsLabel}</span>
-            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥭 Mango</button>
             <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🍅 Tomato</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥔 Potato</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🧅 Onion</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥕 Carrot</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🌶️ Chilli</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥦 Cauliflower</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥬 Cabbage</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥒 Cucumber</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🧄 Garlic</button>
+            <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🥭 Mango</button>
             <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🌾 Rice/Wheat</button>
             <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🚜 Tractor</button>
             <button type="button" class="btn btn-secondary btn-xs preset-img-btn" data-url="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=700&q=80" style="padding: 2px 8px; font-size: 0.72rem;">🔧 Spares</button>
@@ -2447,6 +2461,21 @@ function openEditDataModal(mode, targetId = null) {
     `;
   }
 
+  // Auto-detect matching vegetable image when user types item name
+  const nameInput = document.getElementById('editItemName');
+  const imageInput = document.getElementById('editItemImage');
+  if (nameInput && imageInput) {
+    nameInput.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      if (val.length > 2) {
+        const info = getVegetableImageInfo(val);
+        if (info && info.image) {
+          imageInput.value = info.image;
+        }
+      }
+    });
+  }
+
   // Handle Preset Image Buttons
   bodyEl.querySelectorAll('.preset-img-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2484,9 +2513,10 @@ function handleEditFormSubmit(mode, targetId) {
     const categoryKey = document.getElementById('editItemCategory')?.value || 'produce';
     const price = document.getElementById('editItemPrice')?.value.trim() || '₹100';
     const unit = document.getElementById('editItemUnit')?.value.trim() || '/ kg';
-    const image = document.getElementById('editItemImage')?.value.trim() || 'https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=700&q=80';
-    const easyDesc = document.getElementById('editItemEasyDesc')?.value.trim() || 'Fresh high-quality produce direct from farm.';
-    const techDesc = document.getElementById('editItemTechDesc')?.value.trim() || 'Standardized quality grade with verified harvest telemetry.';
+    const vegInfo = getVegetableImageInfo(name);
+    const image = document.getElementById('editItemImage')?.value.trim() || vegInfo.image;
+    const easyDesc = document.getElementById('editItemEasyDesc')?.value.trim() || `Fresh high-quality ${name} direct from farm.`;
+    const techDesc = document.getElementById('editItemTechDesc')?.value.trim() || `Standardized quality grade ${name} with verified harvest telemetry.`;
     const supplier = document.getElementById('editItemSupplier')?.value.trim() || `${state.userName} Farmgate`;
     const stock = document.getElementById('editItemStock')?.value.trim() || '1,000 kg';
 
@@ -2499,7 +2529,7 @@ function handleEditFormSubmit(mode, targetId) {
     };
 
     const emojis = {
-      produce: '🍎',
+      produce: vegInfo.emoji || '🥬',
       seeds: '🌱',
       vehicles: '🚜',
       spares: '⚙️',

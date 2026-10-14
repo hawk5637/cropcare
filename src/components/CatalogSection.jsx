@@ -14,6 +14,7 @@ import {
   ArrowUpDown,
   Tag
 } from 'lucide-react';
+import { handleImageError } from '../utils/imageUtils';
 
 export default function CatalogSection() {
   const { userRole, mode, addToCart, t, language } = useApp();
@@ -156,9 +157,7 @@ export default function CatalogSection() {
                     src={item.image}
                     alt={localizedName}
                     loading="lazy"
-                    onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80";
-                    }}
+                    onError={(e) => handleImageError(e, item.key || localizedName || item.category)}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 backdrop-blur-sm text-[10px] font-extrabold uppercase text-white tracking-wider">

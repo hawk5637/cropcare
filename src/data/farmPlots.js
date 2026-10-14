@@ -370,110 +370,52 @@ export function getDiagnosticSamples(lang = 'en') {
     en: [
       {
         id: "sample-wheat-rust",
-        crop: "Wheat",
-        label: "Yellow Stripe Rust (Puccinia striiformis)",
+        crop: { en: "Wheat (HD-2967)", hi: "गेहूं (HD-2967)", ta: "கோதுமை", fr: "Blé" },
+        diseaseName: { en: "Yellow Stripe Rust (Puccinia striiformis)", hi: "पीला रतुआ / हल्दी रोग", ta: "மஞ்சள் துரு நோய்", fr: "Rouille Jaune Striée" },
         confidence: "98.4%",
+        image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=700&q=80",
         status: "Fungal Pathogen Detected",
-        remedy: "Apply Propiconazole 25% EC @ 200 ml in 200 liters of water per acre. Repeat after 15 days if yellow stripes persist. Restrict excessive nitrogen fertilization."
+        symptoms: { en: "Bright yellow-orange linear pustules arranged parallel along leaf veins.", hi: "पत्तियों पर नसों के समानांतर चमकीली पीली-नारंगी धारियां।", ta: "இலை நரம்புகளுக்கு இணையாக மஞ்சள் கோடுகள்.", fr: "Lignes jaunes-orangées parallèles sur le limbe foliaire." },
+        organicTreatment: { en: "Spray fermented butter-milk (Chaach) 5% with cow urine & neem oil @ 5ml/L every 7 days.", hi: "5% खट्टी छाछ और गोमूत्र में नीम का तेल (5 मिली/लीटर) मिलाकर 7 दिन में छिड़कें।", ta: "புளித்த மோர் மற்றும் வேப்ப எண்ணெய் தெளிக்கவும்.", fr: "Purin d'ortie et huile de neem à 5ml/L tous les 7 jours." },
+        remedy: "Apply Propiconazole 25% EC @ 200 ml in 200 liters of water per acre. Repeat after 15 days if yellow stripes persist."
       },
       {
         id: "sample-tomato-blight",
-        crop: "Tomato",
-        label: "Early Blight (Alternaria solani)",
+        crop: { en: "Tomato (Abhinav F1)", hi: "टमाटर (अभिनव F1)", ta: "தக்காளி", fr: "Tomate" },
+        diseaseName: { en: "Early Blight (Alternaria solani)", hi: "अगेती झुलसा रोग", ta: "ஆரம்ப இலை கருகல் நோய்", fr: "Alternariose Foliaire" },
         confidence: "96.7%",
+        image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=700&q=80",
         status: "Concentric Leaf Spots Identified",
-        remedy: "Spray Mancozeb 75% WP @ 2.5 g/liter or Chlorothalonil 75% WP. Remove lower infected leaves and avoid overhead sprinkler wetting."
+        symptoms: { en: "Dark brown target-board concentric rings with chlorotic yellow halo on lower foliage.", hi: "निचली पत्तियों पर गोल छल्लेदार गहरे भूरे धब्बे और पीला घेरा।", ta: "வட்ட வடிவ கரும்பழுப்பு புள்ளிகள்.", fr: "Taches concentriques brunes en cible entourées d'un halo jaune." },
+        organicTreatment: { en: "Foliar spray Trichoderma harzianum @ 5g/L + Copper hydroxide 50% WP @ 2.5g/L.", hi: "ट्राइकोडर्मा 5 ग्राम/लीटर और कॉपर हाइड्रोक्साइड 2.5 ग्राम/लीटर का छिड़काव करें।", ta: "ட்ரைக்கோடெர்மா பூஞ்சை தெளிக்கவும்.", fr: "Pulvérisation de Trichoderma harzianum 5g/L et hydroxyde de cuivre." },
+        remedy: "Spray Mancozeb 75% WP @ 2.5 g/liter or Chlorothalonil 75% WP. Remove lower infected leaves."
+      },
+      {
+        id: "sample-chilli-curl",
+        crop: { en: "Chilli (Teja 4)", hi: "मिर्च (तेजा 4)", ta: "மிளகாய்", fr: "Piment" },
+        diseaseName: { en: "Leaf Curl Virus (Begomovirus / Thrips)", hi: "पत्ती मरोड़ / चुर्रा रोग", ta: "இலை சுருள் நோய்", fr: "Virus de l'Enroulement" },
+        confidence: "97.5%",
+        image: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=700&q=80",
+        status: "Upward Leaf Cupping & Stunting",
+        symptoms: { en: "Boat-shaped upward puckering of leaves, shortened internodes and flower drop.", hi: "पत्तियों का नाव की तरह ऊपर की ओर मुड़ना और पौधों का बौनापन।", ta: "இலைகள் மேல்நோக்கி படகு போல சுருங்குதல்.", fr: "Enroulement foliaire en cuillère vers le haut et nanisme." },
+        organicTreatment: { en: "Install yellow/blue sticky traps (20/acre) and spray 10,000 ppm Neem oil @ 3ml/L.", hi: "पीले व नीले चिपचिपे कार्ड लगाएं और 10,000 ppm नीम का तेल 3 मिली/लीटर छिड़कें।", ta: "மஞ்சள் அட்டை பொறிகள் அமைத்து வேப்ப எண்ணெய் தெளிக்கவும்.", fr: "Pièges jaunes englués et pulvérisation d'huile de neem." },
+        remedy: "Spray Diafenthiuron 50% WP @ 1.25 g/L or Fipronil 5% SC @ 2 ml/L to control vector thrips."
       },
       {
         id: "sample-healthy-leaf",
-        crop: "Bell Pepper",
-        label: "Healthy Foliage (Vigorous Canopy)",
+        crop: { en: "Bell Pepper / Capsicum", hi: "शिमला मिर्च", ta: "குடைமிளகாய்", fr: "Poivron" },
+        diseaseName: { en: "Healthy Foliage (Vigorous Green)", hi: "स्वस्थ पत्ती (उत्कृष्ट हरियाली)", ta: "ஆரோக்கியமான இலை", fr: "Feuillage Sain" },
         confidence: "99.1%",
+        image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=700&q=80",
         status: "Zero Pathogens Detected",
-        remedy: "Plant vigour is optimal. Continue balanced micro-drip fertigation and maintain regular yellow sticky trap monitoring for preventive thrips management."
-      }
-    ],
-    hi: [
-      {
-        id: "sample-wheat-rust",
-        crop: "गेहूं",
-        label: "पीला रतुआ / हल्दी रोग (Puccinia striiformis)",
-        confidence: "98.4%",
-        status: "फफूंद रोग की पहचान हुई",
-        remedy: "प्रोपिकोनाज़ोल 25% EC @ 200 मिली को 200 लीटर पानी में मिलाकर प्रति एकड़ छिड़कें। 15 दिन बाद आवश्यकतानुसार दोहराएं। यूरिया का अत्यधिक उपयोग न करें।"
-      },
-      {
-        id: "sample-tomato-blight",
-        crop: "टमाटर",
-        label: "अगेती झुलसा रोग (Alternaria solani)",
-        confidence: "96.7%",
-        status: "पत्तियों पर गोल धब्बे पाए गए",
-        remedy: "मैंकोज़ेब 75% WP @ 2.5 ग्राम प्रति लीटर पानी में मिलाकर छिड़कें। नीचे की रोगग्रस्त पत्तियों को तोड़कर नष्ट कर दें।"
-      },
-      {
-        id: "sample-healthy-leaf",
-        crop: "शिमला मिर्च",
-        label: "स्वस्थ पत्ती (उत्कृष्ट हरियाली)",
-        confidence: "99.1%",
-        status: "कोई बीमारी नहीं पाई गई",
-        remedy: "फसल पूर्णतः स्वस्थ है। नियमित संतुलित ड्रिप फर्टिगेशन जारी रखें और रसचूसक कीटों की रोकथाम हेतु पीले स्टिकी ट्रैप लगाएं।"
-      }
-    ],
-    ta: [
-      {
-        id: "sample-wheat-rust",
-        crop: "கோதுமை",
-        label: "மஞ்சள் துரு நோய் (Puccinia striiformis)",
-        confidence: "98.4%",
-        status: "பூஞ்சை தொற்று கண்டறியப்பட்டது",
-        remedy: "புரோபிகோனசோல் 25% EC மருந்தை ஏக்கருக்கு 200 மி.லி வீதம் 200 லிட்டர் தண்ணீரில் கலந்து தெளிக்கவும். தழைச்சத்தை அளவுக்கு அதிகமாக இடவேண்டாம்."
-      },
-      {
-        id: "sample-tomato-blight",
-        crop: "தக்காளி",
-        label: "ஆரம்ப இலை கருகல் நோய் (Alternaria solani)",
-        confidence: "96.7%",
-        status: "வட்ட வடிவ இலை புள்ளிகள்",
-        remedy: "மேன்கோசெப் 75% WP மருந்தை லிட்டருக்கு 2.5 கிராம் வீதம் கலந்து தெளிக்கவும். பாதிக்கப்பட்ட கீழ் இலைகளை அகற்றி அழிக்கவும்."
-      },
-      {
-        id: "sample-healthy-leaf",
-        crop: "குடைமிளகாய்",
-        label: "ஆரோக்கியமான இலை (சிறந்த வளர்ச்சி)",
-        confidence: "99.1%",
-        status: "நோய் தொற்று இல்லை",
-        remedy: "பயிர் ஆரோக்கியமாக உள்ளது. சீரான சொட்டு நீர் பாசனத்தை தொடருங்கள். பூச்சி தடுப்பிற்கு மஞ்சள் ஒட்டும் பொறிகளை பராமரிக்கவும்."
-      }
-    ],
-    fr: [
-      {
-        id: "sample-wheat-rust",
-        crop: "Blé",
-        label: "Rouille Jaune Striée (Puccinia striiformis)",
-        confidence: "98.4%",
-        status: "Pathogène Fongique Détecté",
-        remedy: "Appliquer du Propiconazole 25% EC à raison de 200 ml dans 200 litres d'eau par hectare. Renouveler après 15 jours si nécessaire. Limiter les apports excessifs d'azote."
-      },
-      {
-        id: "sample-tomato-blight",
-        crop: "Tomate",
-        label: "Alternariose / Mildiou Précoce (Alternaria solani)",
-        confidence: "96.7%",
-        status: "Taches Foliaires Concentriques Identifiées",
-        remedy: "Pulvériser du Mancozèbe 75% WP à 2.5 g/litre ou Chlorothalonil. Supprimer les feuilles basses infectées et éviter l'aspersion directe sur le feuillage."
-      },
-      {
-        id: "sample-healthy-leaf",
-        crop: "Poivron",
-        label: "Feuillage Sain (Canopée Vigoureuse)",
-        confidence: "99.1%",
-        status: "Aucun Pathogène Détecté",
-        remedy: "La vigueur de la plante est optimale. Poursuivez la fertigation équilibrée au goutte-à-goutte et maintenez les pièges chromatiques jaunes pour le suivi des thrips."
+        symptoms: { en: "Lush green photosynthetic blade with uniform cuticle and robust vascular ribs.", hi: "पूर्ण रूप से हरी, चमकदार और रोगमुक्त पत्तियां।", ta: "செழிப்பான ஆரோக்கியமான இலைகள்.", fr: "Feuillage vigoureux vert dense sans aucune nécrose." },
+        organicTreatment: { en: "Continue micro-drip fertigation with seaweed extract (Ascophyllum nodosum) @ 2 ml/L.", hi: "समुद्री शैवाल का अर्क (सीवीड) 2 मिली/लीटर ड्रिप में दें।", ta: "கடல்பாசி திரவம் 2 மிலி/லிட்டர் பாசனம் செய்யவும்.", fr: "Maintenir l'irrigation fertilisante avec extrait d'algues à 2 ml/L." },
+        remedy: "Plant vigour is optimal. Continue balanced micro-drip fertigation and monitoring."
       }
     ]
   };
 
-  return samples[lang] || samples.en;
+  return samples.en;
 }
 
 export const farmPlots = basePlots.map(p => ({

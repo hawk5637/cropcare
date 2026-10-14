@@ -17,6 +17,7 @@ import PlatformIntroModal from './components/PlatformIntroModal.jsx';
 import AnimatedOpeningLogo from './components/AnimatedOpeningLogo.jsx';
 import AnimatedIntroScreen from './components/AnimatedIntroScreen.jsx';
 import LiveMandiTicker from './components/LiveMandiTicker.jsx';
+import Footer from './components/Footer.jsx';
 
 // All 18 modules
 import LandSoilModule from './components/modules/LandSoilModule.jsx';
@@ -140,6 +141,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
         {renderActiveView()}
       </main>
+      <Footer />
       <PlatformIntroModal 
         isOpen={isIntroModalOpen} 
         onClose={() => setIsIntroModalOpen(false)} 

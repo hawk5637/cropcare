@@ -326,7 +326,7 @@ export function renderMarketplaceSection(activeFilter = 'all', currentLang = 'en
                     src="${item.image}" 
                     alt="${item.name}" 
                     loading="lazy" 
-                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80';"
+                    onerror="if(window.handleVegetableImgError) { window.handleVegetableImgError({currentTarget: this}, '${(typeof item.name === 'string' ? item.name : (item.name?.en || '')).replace(/'/g, "\\'")}'); } else { this.onerror=null; this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80'; }"
                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;"
                     class="market-img"
                   />

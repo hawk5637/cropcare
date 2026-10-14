@@ -53,7 +53,7 @@ export default function ExpertSupportModule() {
           {EXPERTS.map(e => (
             <div key={e.id} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="relative">
-                <img src={e.img} alt={e.name} className="w-16 h-16 rounded-2xl object-cover" onError={el => { el.target.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80'; }} />
+                <img src={e.img} alt={e.name} loading="lazy" className="w-16 h-16 rounded-2xl object-cover" onError={el => { el.target.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80'; }} />
                 <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${e.available ? 'bg-emerald-500' : 'bg-slate-400'}`} />
               </div>
               <div className="flex-1 min-w-0">

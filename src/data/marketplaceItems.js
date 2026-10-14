@@ -295,7 +295,7 @@ const baseItems = [
       ta: "முதல் தரம்",
       fr: "Qualité Extra Calibre A"
     },
-    image: "https://images.unsplash.com/photo-1546470427-e26264be0b11?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Plump, naturally ripened, long shelf life (7+ days). Perfect for everyday curries and fresh salads.",
       hi: "प्राकृतिक रूप से पके हुए ठोस टमाटर, 7 दिन तक खराब नहीं होते। होटल, रसोई व थोक बाज़ार हेतु उत्तम।",
@@ -555,7 +555,7 @@ const baseItems = [
       ta: "மென்மையான சதைப்பகுதி",
       fr: "Chair Tendre & Peu de Graines"
     },
-    image: "https://images.unsplash.com/photo-1628773822503-930a84d94357?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1605335508892-d6efc5fa2328?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Glossy purple skin, soft melt-in-mouth texture when cooked, zero bitterness. Great for bharta or curries!",
       hi: "चमकदार बैंगनी छिलका, पकने पर मक्खन जैसा मुलायम, कोई कड़वाहट नहीं। भरता व सब्जी के लिए एकदम सही।",
@@ -659,7 +659,7 @@ const baseItems = [
       ta: "வைட்டமின் சி நிறைந்தது",
       fr: "Riche en Vitamine C & Fibres"
     },
-    image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1536511135899-8d4847e9eecf?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Crisp snowy-white flesh, soft edible seeds, intense sweet aroma, harvested ripe from orchards. Delicious everyday fruit!",
       hi: "बर्फ जैसा सफेद गूदा, मुलायम चबाने योग्य बीज, मनमोहक खुशबू। बाग से सीधे तोड़ा गया मीठा अमरूद!",
@@ -711,7 +711,7 @@ const baseItems = [
       ta: "அடர்ந்த சதைப்பகுதி",
       fr: "Chair Dense & Petite Cavité"
     },
-    image: "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1617112848923-cc2234396a8d?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Deep red-orange flesh, melt-in-mouth sweet taste, digestion boosting papain enzyme. No bad odor, long shelf life.",
       hi: "गहरा लाल गूदा, शहद जैसी मिठास, पाचन शक्ति बढ़ाने वाला। कोई दुर्गंध नहीं, कई दिनों तक ताज़ा रहे।",
@@ -763,7 +763,7 @@ const baseItems = [
       ta: "மெல்லிய தோல், அதிக சாறு",
       fr: "Peau Fine & Très Juteux"
     },
-    image: "https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Paper-thin skin, brimming with zesty tangy juice, barely any seeds. One lemon yields twice as much juice as market lemons!",
       hi: "कागज़ जैसा पतला छिलका, रस से लबालब भरा, बीज न के बराबर। एक नींबू में बाज़ार के दो नींबू जितना रस निकलता है!",
@@ -815,7 +815,7 @@ const baseItems = [
       ta: "இயற்கை மருத்துவ குணம்",
       fr: "Qualité Maraîchère Extra"
     },
-    image: "https://images.unsplash.com/photo-1603048297172-c92544798d5a?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Tender, crunchy dark green ridges with pleasant mild bitterness. Packed with charantin for healthy blood sugar!",
       hi: "गहरे हरे कांटेदार छिलके वाला कोमल करेला, कम कड़वा और स्वादिष्ट। शुगर नियंत्रण और स्वास्थ्य के लिए वरदान!",
@@ -867,7 +867,7 @@ const baseItems = [
       ta: "நீர்ச்சத்து நிறைந்தது",
       fr: "92% Teneur en Eau Naturelle"
     },
-    image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Silky light green skin, soft and seedless core, cooks quickly with melt-in-mouth texture. Cooling for the stomach!",
       hi: "चमकदार हल्की हरी, बिल्कुल मुलायम बिना कड़े बीजों की लौकी। तुरंत पकने वाली, पेट को ठंडक व हल्कापन दे!",
@@ -919,7 +919,7 @@ const baseItems = [
       ta: "உறுதியான முட்டைகோஸ்",
       fr: "Pommes Denses & Fermes"
     },
-    image: "https://images.unsplash.com/photo-1550828520-4cb496f0c79f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Rock solid heads with sweet crunchy leaves. Kept cold from the farm so it stays crisp in your kitchen for over two weeks!",
       hi: "पत्थर जैसी ठोस गड्डी, मीठी और कुरकुरी पत्तियां। खेत से कोल्ड-वैन द्वारा सीधी डिलीवरी, 2 हफ्ते तक बिल्कुल ताज़ी!",
@@ -971,7 +971,7 @@ const baseItems = [
       ta: "மென்மையான சிவப்பு மையம்",
       fr: "Cœur Rouge Tendre Sans Bois"
     },
-    image: "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Vibrant deep red color, crunchy sweet bite without tough yellow wood in the middle. Perfect for fresh juicing and gajar halwa!",
       hi: "गहरा लाल रंग, अत्यधिक मीठी और कुरकुरी गाजर, बीच में कोई पीली लकड़ी नहीं। गाजर के हलवे व जूस के लिए सर्वोत्तम!",
@@ -1023,7 +1023,7 @@ const baseItems = [
       ta: "திடமான முள்ளங்கி",
       fr: "Racines Pleines Non Creuses"
     },
-    image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb22509?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Long straight white radishes with sharp peppery crunch and tender green tops. Never hollow or spongy!",
       hi: "लंबी सीधी सफेद मूली, कुरकुरी और तीखी, हरी ताज़ी पत्तियों सहित। कभी अंदर से खोखली या स्पंज जैसी नहीं निकलेगी!",
@@ -1075,7 +1075,7 @@ const baseItems = [
       ta: "முழுமையான இனிப்பு மணிகள்",
       fr: "Gousses Pleines 9-11 Grains"
     },
-    image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Plump green pods packed with naturally sweet, tender green peas. Easy to shell, perfect for curries, pulao, and freezing!",
       hi: "प्राकृतिक मिठास से भरपूर ताज़ी हरी फलियां, जिनमें 9 से 11 भरे हुए दाने होते हैं। मटर पनीर, पुलाव और फ्रोजन के लिए सर्वोत्तम!",
@@ -1127,7 +1127,7 @@ const baseItems = [
       ta: "கசப்பு இல்லாத வெள்ளரி",
       fr: "Garantie Sans Aucune Amertume"
     },
-    image: "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Super crisp, thin-skinned green cucumbers packed with refreshing hydration. Never bitter, thin skin needs no peeling!",
       hi: "पतले छिलके वाला, रसदार और कुरकुरा खीरा। बिना कड़वाहट और तुरंत ताजगी देने वाला!",
@@ -1231,7 +1231,7 @@ const baseItems = [
       ta: "தேன் போன்ற இனிப்பு மற்றும் மணம்",
       fr: "Arôme Mielleux & Chair Orangée"
     },
-    image: "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1596707325608-251f251e60f0?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Dense golden-orange flesh with a rich musky honey aroma. Super juicy and sweet, perfect for breakfast bowls and shakes!",
       hi: "केसरिया नारंगी गूदा, मनमोहक भीनी-भीनी खुशबू और शहद जैसी मिठास। सुबह नाश्ते और शेक के लिए सबसे पौष्टिक फल!",
@@ -1443,7 +1443,7 @@ const baseItems = [
       ta: "12F + 12R ஷட்டில் கியர்",
       fr: "Boîte Synchronisée 12AV + 12AR"
     },
-    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Beast of a 75 HP engine. Pulls massive 9-foot rotavators, heavy laser levellers, and loaded sugar trailers without sweating.",
       hi: "75 एचपी का महाबली इंजन। 9 फीट रोटावेटर, लेज़र लेवलर और भारी गन्ना ट्रॉली को बिना किसी परेशानी के खींचे।",
@@ -1605,7 +1605,7 @@ const baseItems = [
       ta: "சக்திவாய்ந்த 45 HP என்ஜின்",
       fr: "Moteur Diesel 45 CV Éprouvé"
     },
-    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Legendary 45 HP workhorse. Renowned fuel economy, heavy hauling capability, balanced weight for rotavator and trolley work.",
       hi: "भारत का दिग्गज 45 HP ट्रैक्टर। सबसे कम डीजल खपत, भारी ट्रॉली खींचने में माहिर और रोटावेटर के लिए सबसे संतुलित मशीन।",
@@ -1713,7 +1713,7 @@ const baseItems = [
       ta: "மல்டி-ஸ்பீடு கியர்பாக்ஸ்",
       fr: "Boîtier Multi-Vitesses Renforcé"
     },
-    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Chops paddy straw, sugarcane stubble, and pulverizes soil into fine seedbeds in a single pass. Saves 50% diesel!",
       hi: "धान की पराली व गन्ने की जड़ों को बारीक काटे और 1 ही चक्कर में मिट्टी को बिल्कुल भुरभुरा बनाए। 50% डीजल की बचत!",
@@ -1767,7 +1767,7 @@ const baseItems = [
       ta: "அரசு மானியம் உண்டு",
       fr: "Éligible Subvention de l'État"
     },
-    image: "https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Lightweight, easy to turn in tight orchard rows, vegetable beds, and hilly terraced farms. Electric self-start.",
       hi: "हल्का, बागवानी, सब्जी की क्यारियों और पहाड़ी सीढ़ीदार खेतों में आसानी से मुड़ने वाला। चाबी से सेल्फ-स्टार्ट।",
@@ -1823,7 +1823,7 @@ const baseItems = [
       ta: "அதிக கடினத்தன்மை கொண்ட எஃகு",
       fr: "Trempé Haute Dureté 50-52 HRC"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Super sharp, wears 3x slower in rocky soil. Universal fit for Shaktiman, Fieldking, Maschio, and Mahindra rotavators.",
       hi: "अत्यधिक मजबूत और धारदार, पथरीली मिट्टी में भी 3 गुना अधिक चले। सभी प्रमुख रोटावेटर ब्रांड्स के लिए उपयुक्त।",
@@ -1875,7 +1875,7 @@ const baseItems = [
       ta: "சறுக்கல் இல்லாத உழைப்பு",
       fr: "Anti-Patinage Haute Charge"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Stops tractor clutch burning during heavy trolley haulage or rotavator use. Smooth shifting, lasts years without replacing!",
       hi: "भारी ट्रॉली खींचने या रोटावेटर चलाने पर क्लच जलने की समस्या खत्म। गियर आसानी से बदलें, सालों-साल चले!",
@@ -1927,7 +1927,7 @@ const baseItems = [
       ta: "பல் உடைதல் இல்லாத உழைப்பு",
       fr: "Cémenté Anti-Ébréchure"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Hardened steel gear parts for smooth tiller shifting. Prevents gear slippage and oil leaks under deep wetland tilling.",
       hi: "कठोर स्टील गियर, जिससे टिलर का गियर आराम से बदलता है। गीले खेत में काम करते समय गियर टूटने का डर नहीं।",
@@ -1979,7 +1979,7 @@ const baseItems = [
       ta: "10-மைக்ரான் நுண் வடிகட்டி",
       fr: "Fibre de Verre 10 Microns"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Keeps your hydraulic lift fast and smooth. Prevents pump choking, jerking, and costly breakdown repairs.",
       hi: "हाइड्रोलिक लिफ्ट को तेज़ और सुचारू रखे। पंप में कचरा फंसने और झटके लगने की समस्या से हमेशा सुरक्षित रखे।",
@@ -2031,7 +2031,7 @@ const baseItems = [
       ta: "கருப்பு புகையை தடுக்கும்",
       fr: "Anti-Fumée Noire & Économie"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Stops black smoke, saves diesel, makes your tractor start with one quick key turn on cold winter mornings.",
       hi: "ट्रैक्टर का काला धुआं बंद करे, डीज़ल बचाए और सर्दियों की सुबह में भी एक ही सेल्फ में स्टार्ट करे।",
@@ -2083,7 +2083,7 @@ const baseItems = [
       ta: "உறுதியான ஸ்பிரிங் எஃகு",
       fr: "Acier Forgé Ressort Haute Tenacité"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Springs back automatically when hitting underground rocks without bending or breaking. Turn points around when worn!",
       hi: "ज़मीन में छुपे पत्थर से टकराने पर स्प्रिंग झटका झेल लेता है और मुड़ता नहीं। घिसने पर खुरपा पलटकर दोबारा चलाएं!",
@@ -2135,7 +2135,7 @@ const baseItems = [
       ta: "அதிக வெப்பத்தை தாங்கும் தரம்",
       fr: "Résiste à 140°C EPDM Renforcé"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Stops tractor engine overheating in blazing summer heat. Flexible synthetic rubber won't crack or leak coolant.",
       hi: "भीषण गर्मी में भी ट्रैक्टर इंजन को ठंडा रखे। मजबूत रबर जो कभी फटे या लीक नहीं होता।",
@@ -2187,7 +2187,7 @@ const baseItems = [
       ta: "துல்லியமான ஸ்டீயரிங் திருப்பம்",
       fr: "Goujon Forgé Cémenté"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Fixes loose, wobbly steering wheels. Makes your tractor turn smoothly with zero play or vibration on bumpy field roads.",
       hi: "स्टीयरिंग के कंपन और ढीलेपन को पूरी तरह ठीक करे। ऊबड़-खाबड़ खेत में भी बिल्कुल सीधा और आसान घुमाव।",
@@ -2239,7 +2239,7 @@ const baseItems = [
       ta: "அதிர்வு இல்லாத ஸ்டீயரிங்",
       fr: "Acier 20MnCr5 Cémenté Rectifié"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Eliminates dangerous front wheel shaking and uneven tire wear when driving on rough rural dirt tracks.",
       hi: "कच्ची सड़कों और खेत में ट्रैक्टर के अगले पहियों का कांपना और टायर एक तरफ घिसना पूरी तरह बंद करे।",
@@ -2291,7 +2291,7 @@ const baseItems = [
       ta: "குளிர்ந்த காலையிலும் தொடங்கும்",
       fr: "Amorçage Manuel Rapide"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Pumps diesel effortlessly from tank to engine. Built-in hand primer clears air locks instantly if you run out of fuel.",
       hi: "डीजल टैंक से इंजन तक ईंधन की निर्बाध सप्लाई। डीज़ल खत्म होने पर हैंड प्राइमर से हवा तुरंत निकालें।",
@@ -2343,7 +2343,7 @@ const baseItems = [
       ta: "காப்பர் சுருள் தரம்",
       fr: "Composants Électriques Renforcés"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Keeps your tractor battery fully charged for bright nighttime headlights, GPS monitors, and instant morning starts.",
       hi: "रात में तेज हेडलाइट और सुबह एक झटके में स्टार्ट के लिए बैटरी को हमेशा फुल चार्ज रखे। बैटरी डिस्चार्ज होना बंद!",
@@ -2395,7 +2395,7 @@ const baseItems = [
       ta: "எண்ணெய் கசிவு இல்லாத உத்தரவாதம்",
       fr: "Anti-Fuite Haute Pression 250 Bar"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Stops your rear tractor cultivator or plow from slowly sinking while you work. No more oil leaks under your seat!",
       hi: "काम करते समय कल्टीवेटर या हल का धीरे-धीरे नीचे गिरना बंद करे। सीट के नीचे से तेल टपकने की समस्या खत्म!",
@@ -2447,7 +2447,7 @@ const baseItems = [
       ta: "என்ஜின் பாதுகாப்பு உத்தரவாதம்",
       fr: "Protection Cylindres 99.9% Poussière"
     },
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Traps fine dust and chaff in dry harvest fields. Protects your engine from eating sand, giving your tractor 10 extra years of life!",
       hi: "थ्रेशर और खेत की धूल को इंजन के अंदर जाने से रोके। इंजन के पिस्टन और लाइनर को घिसने से बचाकर उम्र 10 साल बढ़ाए!",
@@ -2499,7 +2499,7 @@ const baseItems = [
       ta: "உயர் செயல்திறன் ரிங் செட்",
       fr: "Revêtement Chrome-Molybdène Inusable"
     },
-    image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Restores like-new pulling power and stops white/blue engine oil smoke. Restores factory compression so your tractor pulls anything!",
       hi: "ट्रैक्टर की खोई हुई ताकत और माइलेज वापस लाए। इंजन से सफेद व नीला धुआं निकलना बंद करे, नया जैसा पिकअप दे!",
@@ -2605,7 +2605,7 @@ const baseItems = [
       ta: "நீளமான அரிசி தானியம்",
       fr: "Grain Extra Long 8.4mm"
     },
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "World record holding aromatic basmati rice! Fetches the highest cash price at the mandi from export buyers.",
       hi: "विश्व रिकॉर्ड लंबा सुगंधित बासमती चावल! मंडी में व्यापारियों द्वारा सबसे ऊंची नकद कीमत पर खरीदा जाता है।",
@@ -2709,7 +2709,7 @@ const baseItems = [
       ta: "காய் வெடிக்காத பாதுகாப்பு",
       fr: "Résistant à l'Égrenage"
     },
-    image: "https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Matures in 95-100 days. Pods don't split open even if rain delays harvesting, preventing heavy grain loss in the field.",
       hi: "95-100 दिन में पककर तैयार। बारिश होने पर भी फलियां चटकती नहीं हैं, जिससे खेत में फसल बर्बाद होने का खतरा नहीं रहता।",
@@ -2761,7 +2761,7 @@ const baseItems = [
       ta: "அதிக எண்ணெய் தரும் தரம்",
       fr: "Rendement en Huile 42%"
     },
-    image: "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Large black grains packed with oil. Oil mill owners pay top premium price for Pusa Bold harvest.",
       hi: "मोटे चमकदार काले दाने जिसमें तेल सबसे ज्यादा निकलता है। तेल मिल मालिक इसके लिए मंडी में सबसे ऊंचा भाव देते हैं।",
@@ -2813,7 +2813,7 @@ const baseItems = [
       ta: "நீண்ட இழை பருத்தி",
       fr: "Fibre Extra-Longue Staple"
     },
-    image: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1471189374-c9b3fa71be7e?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Huge bolls that burst open with fluffy white cotton. Protected against caterpillars so you spend less on spray chemicals.",
       hi: "बड़े-बड़े टिंडे जो खिलकर भरपूर सफेद रुई देते हैं। सुंडी से सुरक्षित जिससे कीटनाशक दवा का खर्चा आधा हो जाता है।",
@@ -2865,7 +2865,7 @@ const baseItems = [
       ta: "வெறும் 60 நாட்களில் அறுவடை",
       fr: "Récolte Express en 60 Jours"
     },
-    image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Takes only 60 days from planting to harvest! Grow it between wheat and rice crops to make extra cash and enrich soil with nitrogen.",
       hi: "बुवाई के मात्र 60 दिनों में कटाई के लिए तैयार! गेहूं और धान के बीच खाली समय में उगाएं, अतिरिक्त कमाई करें और जमीन को उपजाऊ बनाएं।",
@@ -2969,7 +2969,7 @@ const baseItems = [
       ta: "இரும்பு மற்றும் துத்தநாக சத்து நிறைந்தது",
       fr: "Biofortifié en Fer & Zinc"
     },
-    image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Fast-maturing 80-85 day Bajra with thick compact earheads and exceptional tolerance to extreme heat and water stress.",
       hi: "80-85 दिन में पकने वाला संकर बाजरा। ठोस लंबी बालियां, कम बारिश और भीषण गर्मी में भी बंपर पैदावार देने में सक्षम।",
@@ -3073,7 +3073,7 @@ const baseItems = [
       ta: "100% நீரில் கரையும்",
       fr: "100% Soluble dans l'Eau"
     },
-    image: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Balanced plant food for root and fruit growth. Use via drip irrigation or spray pump for quick greening.",
       hi: "जड़ों के विकास और फलों के आकार के लिए संतुलित खाद। ड्रिप या स्प्रे पंप से सीधे पौधों को तुरंत ताकत दे।",
@@ -3127,7 +3127,7 @@ const baseItems = [
       ta: "அரசு உரிமம் பெற்ற பைலட்டுகள்",
       fr: "Pilotes Certifiés DGCA"
     },
-    image: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Spray 1 acre in just 7 minutes with zero soil stomping. Uniform mist covers underneath leaves where pests hide.",
       hi: "मात्र 7 मिनट में 1 एकड़ में छिड़काव, फसल को पैरों से कोई नुकसान नहीं। पत्तियों के नीचे तक बारीक फुहार पहुंचे।",
@@ -3179,7 +3179,7 @@ const baseItems = [
       ta: "எளிதான பயன்பாடு",
       fr: "Prêt à l'Emploi"
     },
-    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
     specsEasy: {
       en: "Stick it into the soil, see water level on your phone. Tells you exactly when and how long to water your field.",
       hi: "खेत में गाड़ें और फोन पर मिट्टी की नमी देखें। यह आपको बताएगा कि कब और कितनी देर पानी देना है।",

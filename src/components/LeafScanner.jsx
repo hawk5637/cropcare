@@ -392,7 +392,7 @@ const SAMPLE_SPECIMENS = [
     condition: 'Healthy Sacred Herb',
     category: 'Medicinal Plants',
     icon: '🌱',
-    img: 'https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=600&q=80',
+    img: 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=600&q=80',
     severity: 'healthy',
     status: 'healthy',
     what_i_see: 'Aromatic green leaves with purple vein tinges. Firm leaf margins with rich trichomes and zero pest marks.',
