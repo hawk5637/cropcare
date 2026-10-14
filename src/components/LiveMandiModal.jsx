@@ -20,6 +20,9 @@ import {
   getLiveMandiPrices, 
   triggerLiveMandiTick, 
   searchMandiPrices, 
+  fetchLiveMandiRates,
+  getMandiApiStatus,
+  subscribeToMandiUpdates,
   APMC_STATES, 
   COMMODITY_CATEGORIES,
   MANDI_DATA_SOURCES 
@@ -35,13 +38,20 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
   const [activeItem, setActiveItem] = useState(preSelectedCommodity || null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(null);
+  const [apiStatus, setApiStatus] = useState(getMandiApiStatus());
   const [lastSync, setLastSync] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
 
   useEffect(() => {
     loadData();
+    const unsubscribe = subscribeToMandiUpdates((updatedList, status) => {
+      setCommodities([...updatedList]);
+      if (status) setApiStatus(status);
+    });
+    return () => unsubscribe();
   }, [language]);
 
-  const loadData = () => {
+  const loadData = async () => {
+    // 1. Immediately display instant cached/preloaded items
     const list = getLiveMandiPrices(language);
     setCommodities([...list]);
     if (preSelectedCommodity) {
@@ -50,20 +60,40 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
     } else if (list.length > 0) {
       setActiveItem(list[0]);
     }
+
+    // 2. Asynchronously fetch live Data.gov.in Agmarknet rates
+    try {
+      const liveList = await fetchLiveMandiRates({ state: selectedState, lang: language });
+      if (liveList && liveList.length > 0) {
+        setCommodities([...liveList]);
+        setApiStatus(getMandiApiStatus());
+        setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      }
+    } catch (err) {
+      console.warn('Live Gov API fetch error in modal:', err);
+    }
   };
 
-  const handleManualSync = () => {
+  const handleManualSync = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
+    try {
+      const liveList = await fetchLiveMandiRates({ state: selectedState, lang: language, fresh: true });
+      triggerLiveMandiTick();
+      if (liveList && liveList.length > 0) {
+        setCommodities([...liveList]);
+        if (activeItem) {
+          const refreshed = liveList.find(x => x.id === activeItem.id) || liveList[0];
+          if (refreshed) setActiveItem(refreshed);
+        }
+      }
+      setApiStatus(getMandiApiStatus());
+      setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    } catch (e) {
       const updated = triggerLiveMandiTick();
       setCommodities([...updated]);
-      if (activeItem) {
-        const refreshed = updated.find(x => x.id === activeItem.id);
-        if (refreshed) setActiveItem(refreshed);
-      }
-      setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-      setIsRefreshing(false);
-    }, 600);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 400);
+    }
   };
 
   const handleSetAlert = (cropName) => {
@@ -93,12 +123,13 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-extrabold tracking-tight">Real Live Mandi Prices</h2>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-black text-[10px] uppercase">
-                  Agmarknet / e-NAM Live
+                <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-black text-[10px] uppercase flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span>
+                  Data.gov.in Live API
                 </span>
               </div>
               <p className="text-xs text-emerald-200 mt-0.5">
-                Official APMC spot auction prices, government MSP benchmarks, and multi-source daily arrivals • Last synced {lastSync}
+                Official APMC spot auctions • Data.gov.in Active Key: <code className="bg-emerald-950/60 text-emerald-300 px-1 py-0.2 rounded font-mono text-[11px]">{apiStatus?.keyPreview || '579b464d...ac571b'}</code> • Last synced {lastSync}
               </p>
             </div>
           </div>

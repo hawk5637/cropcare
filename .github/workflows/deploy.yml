@@ -37,6 +37,7 @@ jobs:
         env:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg' }}
           VITE_GEMINI_MODEL: 'gemini-2.5-flash'
+          VITE_MANDI_API_KEY: ${{ secrets.VITE_MANDI_API_KEY || '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b' }}
         run: npm run build
 
       - name: Setup Pages

@@ -12,7 +12,13 @@ import {
   X
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { getLiveMandiPrices, triggerLiveMandiTick, APMC_STATES } from '../services/mandiService';
+import { 
+  getLiveMandiPrices, 
+  triggerLiveMandiTick, 
+  fetchLiveMandiRates, 
+  subscribeToMandiUpdates, 
+  APMC_STATES 
+} from '../services/mandiService';
 import LiveMandiModal from './LiveMandiModal';
 
 export default function LiveMandiTicker() {
@@ -25,10 +31,24 @@ export default function LiveMandiTicker() {
   const [selectedState, setSelectedState] = useState('All India');
   const scrollContainerRef = useRef(null);
 
-  // Initialize and subscribe to live ticks
+  // Initialize and subscribe to live ticks and Gov API sync
   useEffect(() => {
     const initial = getLiveMandiPrices(language);
     setCommodities([...initial]);
+
+    // Initial background sync with Data.gov.in
+    fetchLiveMandiRates({ state: selectedState, lang: language }).then(liveList => {
+      if (liveList && liveList.length > 0) {
+        setCommodities([...liveList]);
+        setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      }
+    }).catch(err => console.warn('Ticker live fetch fallback:', err));
+
+    // Subscribe to store updates
+    const unsubscribe = subscribeToMandiUpdates((updated) => {
+      setCommodities([...updated]);
+      setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    });
 
     // Live auction tick interval (every 12 seconds)
     const interval = setInterval(() => {
@@ -41,8 +61,11 @@ export default function LiveMandiTicker() {
       }
     }, 12000);
 
-    return () => clearInterval(interval);
-  }, [language, isLivePaused]);
+    return () => {
+      clearInterval(interval);
+      unsubscribe();
+    };
+  }, [language, isLivePaused, selectedState]);
 
   // Filter for ticker display if a specific state is chosen
   const displayedItems = selectedState === 'All India' 

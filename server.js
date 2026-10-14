@@ -8,6 +8,7 @@ import { findPlantEntry, getPlants, getAllDiseases, searchKnowledge } from './ap
 import { buildFarmAdvisorPrompt, PROJECT_DATA } from './api/_advisorContext.js';
 import { getMandiCommodities } from './src/data/mandiData.js';
 import weatherHandler from './api/weather.js';
+import mandiHandler from './api/mandi.js';
 
 dotenv.config();
 
@@ -887,36 +888,14 @@ app.get('/api/plants/:name', (req, res) => {
   res.status(404).json({ success: false, message: 'Plant not found in knowledge base' });
 });
 
-// GET /api/mandi — Live APMC Mandi prices
-app.get('/api/mandi', (req, res) => {
-  const { state, crop, lang = 'en' } = req.query;
-  let commodities = getMandiCommodities(lang);
+// GET /api/weather — 14-day Agro-Meteorological Weather
+app.get('/api/weather', (req, res) => weatherHandler(req, res));
 
-  if (state && state !== 'All India') {
-    commodities = commodities.filter(m => 
-      (m.state && m.state.toLowerCase() === state.toLowerCase()) || 
-      (m.mandi && m.mandi.toLowerCase().includes(state.toLowerCase()))
-    );
-  }
-
-  if (crop) {
-    commodities = commodities.filter(m => 
-      (m.name && m.name.toLowerCase().includes(crop.toLowerCase())) || 
-      (m.crop && m.crop.toLowerCase().includes(crop.toLowerCase()))
-    );
-  }
-
-  res.json({
-    status: 'success',
-    timestamp: new Date().toISOString(),
-    source: 'Agmarknet / e-NAM APMC Grid',
-    count: commodities.length,
-    commodities
-  });
-});
-
+// GET /api/mandi — Live APMC Mandi prices (Data.gov.in Agmarknet API)
+app.get('/api/mandi', (req, res) => mandiHandler(req, res));
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[CropCare Server] API proxy running on http://0.0.0.0:${PORT}`);
   console.log(`[CropCare Server] GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? 'CONFIGURED' : 'NOT SET (.env or header required)'}`);
+  console.log(`[CropCare Server] MANDI_API_KEY: ${process.env.MANDI_API_KEY ? 'CONFIGURED (Data.gov.in Live)' : 'DEFAULT KEY ACTIVE'}`);
 });

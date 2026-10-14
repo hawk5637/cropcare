@@ -18,9 +18,17 @@ export default async function handler(req, res) {
     process.env.VITE_GEMINI_API_KEY
   );
 
+  const hasMandiApiKey = !!(
+    process.env.MANDI_API_KEY ||
+    process.env.DATA_GOV_IN_API_KEY ||
+    process.env.VITE_MANDI_API_KEY
+  );
+
   res.status(200).json({
     status: 'ok',
     hasApiKey,
+    hasMandiApiKey,
+    mandi_source: 'Data.gov.in (Agmarknet Live)',
     timestamp: new Date().toISOString()
   });
 }
