@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { FlaskConical, Calculator, CheckCircle2, AlertCircle, ShoppingCart, Calendar, BookOpen } from 'lucide-react';
+import { handleImageError } from '../../utils/imageUtils';
 
 const NPK_DATA = {
   Wheat: { n: [40, 40, 40], p: [60, 0, 0], k: [40, 0, 0], stages: ['Basal (Sowing)', 'CRI Stage (21 DAP)', 'Jointing (45 DAP)'] },
@@ -142,7 +143,7 @@ export default function FertilizerModule() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {FERTILIZER_ITEMS.map(item => (
             <div key={item.name} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all">
-              <img src={item.img} alt={item.name} loading="lazy" className="w-full h-28 object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=400&q=80'; }} />
+              <img src={item.img} alt={item.name} loading="lazy" className="w-full h-28 object-cover" onError={(e) => handleImageError(e, 'fertilizer')} />
               <div className="p-4">
                 <div className="font-extrabold text-slate-900 dark:text-white mb-0.5">{item.name}</div>
                 <div className="text-xs text-slate-500 mb-3">{item.cat} Fertilizer • {item.price}</div>

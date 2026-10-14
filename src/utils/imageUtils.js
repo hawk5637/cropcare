@@ -1,435 +1,561 @@
-// Smart Image Resolution & Fallback Utility for CropCare
-// Provides verified high-resolution real-world images for vegetables, fruits, crops, and agricultural products.
+// Smart Animated Produce & Crop Artwork Generator for CropCare
+// Provides vibrant, lightweight vector animated illustrations for all vegetables, fruits, crops, and agricultural products.
+// Completely replaces real-world photographs with lively CSS-animated SVG artwork.
 
+function hashCode(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Generates a vibrant, self-contained animated SVG illustration data URI for any produce item.
+ * Includes floating bobbing motion, glowing radial aura, twinkling sparkles, and crisp typography.
+ */
+export function generateAnimatedProduceSvg(name, emoji = '🌱', mainColor = '#15803D') {
+  const safeName = (name || 'Fresh Produce').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const id = 'crop_' + hashCode(safeName);
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="${id}_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="${mainColor}" stop-opacity="0.92"/>
+      <stop offset="55%" stop-color="${mainColor}" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0.96"/>
+    </linearGradient>
+    <radialGradient id="${id}_glow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="${mainColor}" stop-opacity="0.75"/>
+      <stop offset="65%" stop-color="${mainColor}" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="${mainColor}" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="${id}_shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+  <style>
+    @keyframes floatAnim {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-13px) rotate(2.5deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(0.92); opacity: 0.4; }
+      50% { transform: scale(1.18); opacity: 0.85; }
+    }
+    @keyframes sparkle1 {
+      0%, 100% { transform: scale(0.3) rotate(0deg); opacity: 0.2; }
+      50% { transform: scale(1.3) rotate(90deg); opacity: 1; }
+    }
+    @keyframes sparkle2 {
+      0%, 100% { transform: scale(1.2) rotate(45deg); opacity: 0.9; }
+      50% { transform: scale(0.3) rotate(135deg); opacity: 0.15; }
+    }
+    .anim-body {
+      animation: floatAnim 3.2s ease-in-out infinite;
+      transform-origin: 300px 175px;
+    }
+    .anim-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+      transform-origin: 300px 175px;
+    }
+    .anim-sparkle1 {
+      animation: sparkle1 2.2s ease-in-out infinite;
+      transform-origin: 200px 115px;
+    }
+    .anim-sparkle2 {
+      animation: sparkle2 2.7s ease-in-out infinite;
+      transform-origin: 400px 120px;
+    }
+  </style>
+  
+  <!-- Background Card -->
+  <rect width="100%" height="100%" fill="url(#${id}_bg)" rx="24"/>
+  
+  <!-- Animated Glow Rings -->
+  <circle cx="300" cy="175" r="145" fill="url(#${id}_glow)" class="anim-glow"/>
+  <circle cx="300" cy="175" r="100" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="6 6"/>
+  <circle cx="300" cy="175" r="80" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+
+  <!-- Twinkling Sparkles -->
+  <g class="anim-sparkle1">
+    <path d="M200 105 L203 113 L211 116 L203 119 L200 127 L197 119 L189 116 L197 113 Z" fill="#FDE047"/>
+  </g>
+  <g class="anim-sparkle2">
+    <path d="M400 110 L403 118 L411 121 L403 124 L400 132 L397 124 L389 121 L397 118 Z" fill="#67E8F9"/>
+  </g>
+
+  <!-- Shadow Underneath Produce -->
+  <ellipse cx="300" cy="252" rx="72" ry="12" fill="rgba(0,0,0,0.38)"/>
+
+  <!-- Floating Produce Illustration -->
+  <g class="anim-body" filter="url(#${id}_shadow)">
+    <text x="300" y="190" font-size="96" text-anchor="middle" dominant-baseline="central" style="filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35));">${emoji}</text>
+  </g>
+
+  <!-- Organic Quality Badge -->
+  <rect x="180" y="278" width="240" height="28" rx="14" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+  <text x="300" y="296" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" fill="#34D399" text-anchor="middle" letter-spacing="1">★ ANIMATED FARM PRODUCE ★</text>
+
+  <!-- Typography -->
+  <text x="300" y="342" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="-0.3">${safeName}</text>
+  <text x="300" y="368" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="rgba(255,255,255,0.75)" text-anchor="middle">CropCare 100% Certified Harvest</text>
+</svg>`;
+
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+// Master Dictionary of Animated Illustrations for Vegetables, Fruits & Crops
 export const VEGETABLE_AND_CROP_IMAGE_MAP = {
   // ─── Vegetables ───────────────────────────────────────
   'tomato': {
     name: 'Tomato',
     emoji: '🍅',
-    image: 'https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Fresh Tomato', '🍅', '#EF4444'),
     color: '#EF4444'
   },
   'potato': {
     name: 'Potato',
     emoji: '🥔',
-    image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Golden Potato', '🥔', '#D97706'),
     color: '#D97706'
   },
   'onion': {
     name: 'Onion',
     emoji: '🧅',
-    image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Red Onion', '🧅', '#DC2626'),
     color: '#DC2626'
   },
   'garlic': {
     name: 'Garlic',
     emoji: '🧄',
-    image: 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=800&q=80',
-    color: '#E5E7EB'
+    image: generateAnimatedProduceSvg('White Garlic', '🧄', '#64748B'),
+    color: '#64748B'
   },
   'ginger': {
     name: 'Ginger',
     emoji: '🫚',
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Fresh Ginger', '🫚', '#B45309'),
     color: '#B45309'
   },
   'chilli': {
     name: 'Chilli (Hot Pepper)',
     emoji: '🌶️',
-    image: 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Hot Chilli', '🌶️', '#DC2626'),
     color: '#DC2626'
+  },
+  'green chilli': {
+    name: 'Green Chilli',
+    emoji: '🌶️',
+    image: generateAnimatedProduceSvg('Green Chilli', '🌶️', '#15803D'),
+    color: '#15803D'
   },
   'capsicum': {
     name: 'Capsicum / Bell Pepper',
     emoji: '🫑',
-    image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Bell Pepper', '🫑', '#16A34A'),
     color: '#16A34A'
   },
   'brinjal': {
     name: 'Brinjal / Eggplant',
     emoji: '🍆',
-    image: 'https://images.unsplash.com/photo-1605335508892-d6efc5fa2328?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Purple Brinjal', '🍆', '#7C3AED'),
     color: '#7C3AED'
   },
   'eggplant': {
     name: 'Eggplant',
     emoji: '🍆',
-    image: 'https://images.unsplash.com/photo-1605335508892-d6efc5fa2328?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Eggplant', '🍆', '#7C3AED'),
     color: '#7C3AED'
   },
   'cabbage': {
     name: 'Cabbage',
     emoji: '🥬',
-    image: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=800&q=80',
-    color: '#22C55E'
+    image: generateAnimatedProduceSvg('Crisp Cabbage', '🥬', '#16A34A'),
+    color: '#16A34A'
   },
   'cauliflower': {
     name: 'Cauliflower',
     emoji: '🥦',
-    image: 'https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=80',
-    color: '#F3F4F6'
-  },
-  'spinach': {
-    name: 'Spinach (Palak)',
-    emoji: '🌱',
-    image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80',
-    color: '#15803D'
+    image: generateAnimatedProduceSvg('Cauliflower', '🥦', '#65A30D'),
+    color: '#65A30D'
   },
   'okra': {
     name: 'Okra (Bhindi)',
     emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?auto=format&fit=crop&w=800&q=80',
-    color: '#16A34A'
+    image: generateAnimatedProduceSvg('Fresh Okra', '🌿', '#15803D'),
+    color: '#15803D'
   },
   'bhindi': {
     name: 'Bhindi (Okra)',
     emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?auto=format&fit=crop&w=800&q=80',
-    color: '#16A34A'
+    image: generateAnimatedProduceSvg('Fresh Bhindi', '🌿', '#15803D'),
+    color: '#15803D'
+  },
+  'ladyfinger': {
+    name: 'Ladyfinger (Okra)',
+    emoji: '🌿',
+    image: generateAnimatedProduceSvg('Ladyfinger', '🌿', '#15803D'),
+    color: '#15803D'
   },
   'carrot': {
     name: 'Carrot',
     emoji: '🥕',
-    image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Sweet Carrot', '🥕', '#EA580C'),
     color: '#EA580C'
   },
-  'radish': {
-    name: 'Radish (Mooli)',
-    emoji: '🥗',
-    image: 'https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=800&q=80',
-    color: '#F9FAFB'
+  'peas': {
+    name: 'Green Peas',
+    emoji: '🫛',
+    image: generateAnimatedProduceSvg('Sweet Green Peas', '🫛', '#16A34A'),
+    color: '#16A34A'
+  },
+  'green peas': {
+    name: 'Green Peas',
+    emoji: '🫛',
+    image: generateAnimatedProduceSvg('Green Peas', '🫛', '#16A34A'),
+    color: '#16A34A'
   },
   'cucumber': {
-    name: 'Cucumber (Kheera)',
+    name: 'Cucumber',
     emoji: '🥒',
-    image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Crisp Cucumber', '🥒', '#059669'),
+    color: '#059669'
+  },
+  'spinach': {
+    name: 'Spinach (Palak)',
+    emoji: '🥬',
+    image: generateAnimatedProduceSvg('Fresh Spinach', '🥬', '#15803D'),
+    color: '#15803D'
+  },
+  'palak': {
+    name: 'Palak (Spinach)',
+    emoji: '🥬',
+    image: generateAnimatedProduceSvg('Palak', '🥬', '#15803D'),
+    color: '#15803D'
+  },
+  'coriander': {
+    name: 'Coriander (Dhaniya)',
+    emoji: '🌿',
+    image: generateAnimatedProduceSvg('Fresh Coriander', '🌿', '#16A34A'),
     color: '#16A34A'
+  },
+  'mint': {
+    name: 'Mint (Pudina)',
+    emoji: '🍃',
+    image: generateAnimatedProduceSvg('Fresh Mint', '🍃', '#10B981'),
+    color: '#10B981'
+  },
+  'beetroot': {
+    name: 'Beetroot',
+    emoji: '🟣',
+    image: generateAnimatedProduceSvg('Sweet Beetroot', '🟣', '#BE185D'),
+    color: '#BE185D'
   },
   'bitter gourd': {
     name: 'Bitter Gourd (Karela)',
     emoji: '🥒',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Bitter Gourd', '🥒', '#15803D'),
     color: '#15803D'
   },
   'karela': {
     name: 'Karela',
     emoji: '🥒',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Karela', '🥒', '#15803D'),
     color: '#15803D'
   },
   'bottle gourd': {
     name: 'Bottle Gourd (Lauki)',
     emoji: '🥒',
-    image: 'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=800&q=80',
-    color: '#84CC16'
+    image: generateAnimatedProduceSvg('Bottle Gourd', '🥒', '#10B981'),
+    color: '#10B981'
   },
   'lauki': {
     name: 'Lauki',
     emoji: '🥒',
-    image: 'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=800&q=80',
-    color: '#84CC16'
-  },
-  'pumpkin': {
-    name: 'Pumpkin (Kaddu)',
-    emoji: '🎃',
-    image: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80',
-    color: '#D97706'
-  },
-  'peas': {
-    name: 'Green Peas (Matar)',
-    emoji: '🫛',
-    image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80',
-    color: '#22C55E'
-  },
-  'matar': {
-    name: 'Green Peas',
-    emoji: '🫛',
-    image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80',
-    color: '#22C55E'
-  },
-  'coriander': {
-    name: 'Coriander (Dhaniya)',
-    emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=800&q=80',
-    color: '#15803D'
-  },
-  'mint': {
-    name: 'Mint (Pudina)',
-    emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Lauki', '🥒', '#10B981'),
     color: '#10B981'
   },
-  'fenugreek': {
-    name: 'Fenugreek (Methi)',
+  'pumpkin': {
+    name: 'Pumpkin',
+    emoji: '🎃',
+    image: generateAnimatedProduceSvg('Orange Pumpkin', '🎃', '#EA580C'),
+    color: '#EA580C'
+  },
+  'radish': {
+    name: 'Radish (Mooli)',
     emoji: '🌱',
-    image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80',
-    color: '#15803D'
-  },
-  'beetroot': {
-    name: 'Beetroot',
-    emoji: '🫐',
-    image: 'https://images.unsplash.com/photo-1525607551316-4a8e16d1f9ba?auto=format&fit=crop&w=800&q=80',
-    color: '#BE185D'
-  },
-  'broccoli': {
-    name: 'Broccoli',
-    emoji: '🥦',
-    image: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=800&q=80',
-    color: '#166534'
-  },
-  'mushroom': {
-    name: 'Mushroom',
-    emoji: '🍄',
-    image: 'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?auto=format&fit=crop&w=800&q=80',
-    color: '#D1D5DB'
-  },
-  'sweet potato': {
-    name: 'Sweet Potato (Shakarkandi)',
-    emoji: '🍠',
-    image: 'https://images.unsplash.com/photo-1596097635121-14b63b7a0c19?auto=format&fit=crop&w=800&q=80',
-    color: '#9A3412'
-  },
-
-  // ─── Grains & Cereals ─────────────────────────────────
-  'rice': {
-    name: 'Rice (Paddy)',
-    emoji: '🌾',
-    image: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80',
-    color: '#CA8A04'
-  },
-  'wheat': {
-    name: 'Wheat (Gehun)',
-    emoji: '🌾',
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
-    color: '#D97706'
-  },
-  'maize': {
-    name: 'Maize (Corn)',
-    emoji: '🌽',
-    image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
-    color: '#EAB308'
-  },
-  'corn': {
-    name: 'Sweet Corn',
-    emoji: '🌽',
-    image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
-    color: '#EAB308'
-  },
-  'bajra': {
-    name: 'Pearl Millet (Bajra)',
-    emoji: '🌾',
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
-    color: '#78716C'
-  },
-  'jowar': {
-    name: 'Sorghum (Jowar)',
-    emoji: '🌾',
-    image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
-    color: '#A8A29E'
-  },
-  'ragi': {
-    name: 'Finger Millet (Ragi)',
-    emoji: '🌾',
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
-    color: '#78350F'
+    image: generateAnimatedProduceSvg('White Radish', '🌱', '#64748B'),
+    color: '#64748B'
   },
 
   // ─── Fruits ───────────────────────────────────────────
   'mango': {
-    name: 'Mango',
+    name: 'Mango (Alphonso)',
     emoji: '🥭',
-    image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Alphonso Mango', '🥭', '#F59E0B'),
     color: '#F59E0B'
   },
-  'banana': {
-    name: 'Banana',
-    emoji: '🍌',
-    image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&q=80',
-    color: '#EAB308'
+  'orange': {
+    name: 'Orange',
+    emoji: '🍊',
+    image: generateAnimatedProduceSvg('Nagpur Orange', '🍊', '#EA580C'),
+    color: '#EA580C'
   },
   'apple': {
     name: 'Apple',
     emoji: '🍎',
-    image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Kashmir Apple', '🍎', '#DC2626'),
     color: '#DC2626'
   },
-  'orange': {
-    name: 'Orange (Santra)',
-    emoji: '🍊',
-    image: 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=800&q=80',
-    color: '#F97316'
+  'banana': {
+    name: 'Banana',
+    emoji: '🍌',
+    image: generateAnimatedProduceSvg('Ripe Banana', '🍌', '#EAB308'),
+    color: '#EAB308'
+  },
+  'grapes': {
+    name: 'Grapes',
+    emoji: '🍇',
+    image: generateAnimatedProduceSvg('Nashik Grapes', '🍇', '#7C3AED'),
+    color: '#7C3AED'
   },
   'pomegranate': {
     name: 'Pomegranate (Anar)',
     emoji: '🍎',
-    image: 'https://images.unsplash.com/photo-1541344999736-83eca872f241?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Bhagwa Pomegranate', '🍎', '#BE123C'),
     color: '#BE123C'
   },
-  'watermelon': {
-    name: 'Watermelon (Tarbooz)',
-    emoji: '🍉',
-    image: 'https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=800&q=80',
-    color: '#15803D'
+  'anar': {
+    name: 'Anar (Pomegranate)',
+    emoji: '🍎',
+    image: generateAnimatedProduceSvg('Anar', '🍎', '#BE123C'),
+    color: '#BE123C'
   },
   'papaya': {
     name: 'Papaya',
-    emoji: '🍈',
-    image: 'https://images.unsplash.com/photo-1617112848923-cc2234396a8d?auto=format&fit=crop&w=800&q=80',
-    color: '#EA580C'
+    emoji: '🥭',
+    image: generateAnimatedProduceSvg('Red Lady Papaya', '🥭', '#F97316'),
+    color: '#F97316'
   },
   'guava': {
-    name: 'Guava (Amrood)',
+    name: 'Guava',
     emoji: '🍐',
-    image: 'https://images.unsplash.com/photo-1536511135899-8d4847e9eecf?auto=format&fit=crop&w=800&q=80',
-    color: '#65A30D'
+    image: generateAnimatedProduceSvg('Allahabad Guava', '🍐', '#84CC16'),
+    color: '#84CC16'
   },
-  'grapes': {
-    name: 'Grapes (Angoor)',
-    emoji: '🍇',
-    image: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=800&q=80',
-    color: '#7C3AED'
+  'watermelon': {
+    name: 'Watermelon',
+    emoji: '🍉',
+    image: generateAnimatedProduceSvg('Sweet Watermelon', '🍉', '#15803D'),
+    color: '#15803D'
+  },
+  'muskmelon': {
+    name: 'Muskmelon',
+    emoji: '🍈',
+    image: generateAnimatedProduceSvg('Honey Muskmelon', '🍈', '#FBBF24'),
+    color: '#FBBF24'
+  },
+  'strawberry': {
+    name: 'Strawberry',
+    emoji: '🍓',
+    image: generateAnimatedProduceSvg('Sweet Strawberry', '🍓', '#E11D48'),
+    color: '#E11D48'
+  },
+  'lemon': {
+    name: 'Lemon',
+    emoji: '🍋',
+    image: generateAnimatedProduceSvg('Juicy Lemon', '🍋', '#FACC15'),
+    color: '#FACC15'
+  },
+  'pineapple': {
+    name: 'Pineapple',
+    emoji: '🍍',
+    image: generateAnimatedProduceSvg('Sweet Pineapple', '🍍', '#EAB308'),
+    color: '#EAB308'
   },
   'coconut': {
-    name: 'Coconut (Nariyal)',
+    name: 'Coconut',
     emoji: '🥥',
-    image: 'https://images.unsplash.com/photo-1544860707-c352cc5a92e3?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Fresh Coconut', '🥥', '#78350F'),
     color: '#78350F'
   },
+  'custard apple': {
+    name: 'Custard Apple (Sitaphal)',
+    emoji: '🍈',
+    image: generateAnimatedProduceSvg('Sitaphal', '🍈', '#65A30D'),
+    color: '#65A30D'
+  },
 
-  // ─── Cash Crops & Spices ──────────────────────────────
+  // ─── Grains, Spices & Cash Crops ──────────────────────
+  'wheat': {
+    name: 'Wheat',
+    emoji: '🌾',
+    image: generateAnimatedProduceSvg('Golden Wheat', '🌾', '#D97706'),
+    color: '#D97706'
+  },
+  'rice': {
+    name: 'Rice (Paddy)',
+    emoji: '🌾',
+    image: generateAnimatedProduceSvg('Basmati Rice', '🌾', '#EAB308'),
+    color: '#EAB308'
+  },
+  'paddy': {
+    name: 'Paddy',
+    emoji: '🌾',
+    image: generateAnimatedProduceSvg('Golden Paddy', '🌾', '#EAB308'),
+    color: '#EAB308'
+  },
+  'maize': {
+    name: 'Maize (Corn)',
+    emoji: '🌽',
+    image: generateAnimatedProduceSvg('Sweet Corn', '🌽', '#EAB308'),
+    color: '#EAB308'
+  },
+  'corn': {
+    name: 'Corn',
+    emoji: '🌽',
+    image: generateAnimatedProduceSvg('Sweet Corn', '🌽', '#EAB308'),
+    color: '#EAB308'
+  },
   'cotton': {
-    name: 'Cotton (Kapas)',
+    name: 'Cotton',
     emoji: '☁️',
-    image: 'https://images.unsplash.com/photo-1471189374-c9b3fa71be7e?auto=format&fit=crop&w=800&q=80',
-    color: '#E2E8F0'
+    image: generateAnimatedProduceSvg('Raw White Cotton', '☁️', '#0284C7'),
+    color: '#0284C7'
   },
   'sugarcane': {
-    name: 'Sugarcane (Ganna)',
+    name: 'Sugarcane',
     emoji: '🎋',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Juicy Sugarcane', '🎋', '#16A34A'),
     color: '#16A34A'
   },
   'mustard': {
-    name: 'Mustard (Sarson)',
+    name: 'Mustard',
     emoji: '🌼',
-    image: 'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Yellow Mustard', '🌼', '#EAB308'),
     color: '#EAB308'
   },
   'soybean': {
     name: 'Soybean',
     emoji: '🫘',
-    image: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Nutritious Soybean', '🫘', '#CA8A04'),
     color: '#CA8A04'
   },
   'groundnut': {
     name: 'Groundnut / Peanut',
     emoji: '🥜',
-    image: 'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Bold Peanut', '🥜', '#92400E'),
     color: '#92400E'
   },
   'peanut': {
     name: 'Peanut',
     emoji: '🥜',
-    image: 'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Peanut', '🥜', '#92400E'),
     color: '#92400E'
   },
   'chickpea': {
     name: 'Chickpea (Chana)',
     emoji: '🫘',
-    image: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Desi Chana', '🫘', '#D97706'),
     color: '#D97706'
   },
   'chana': {
     name: 'Chana (Gram)',
     emoji: '🫘',
-    image: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Gram', '🫘', '#D97706'),
     color: '#D97706'
   },
   'turmeric': {
     name: 'Turmeric (Haldi)',
     emoji: '🟡',
-    image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Salem Turmeric', '🟡', '#EAB308'),
     color: '#EAB308'
   },
   'cardamom': {
     name: 'Cardamom (Elaichi)',
     emoji: '🫛',
-    image: 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Green Cardamom', '🫛', '#65A30D'),
     color: '#65A30D'
   },
   'black pepper': {
-    name: 'Black Pepper (Kali Mirch)',
+    name: 'Black Pepper',
     emoji: '⚫',
-    image: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Black Pepper', '⚫', '#1F2937'),
     color: '#1F2937'
   },
   'tea': {
     name: 'Tea (Chai)',
     emoji: '🍵',
-    image: 'https://images.unsplash.com/photo-1563822249548-9a72b6353cd1?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Assam Tea', '🍵', '#15803D'),
     color: '#15803D'
   },
   'coffee': {
     name: 'Coffee',
     emoji: '☕',
-    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Arabica Coffee', '☕', '#78350F'),
     color: '#78350F'
   },
+  'sunflower': {
+    name: 'Sunflower',
+    emoji: '🌻',
+    image: generateAnimatedProduceSvg('Sunflower', '🌻', '#F59E0B'),
+    color: '#F59E0B'
+  },
   'tulsi': {
-    name: 'Tulsi (Holy Basil)',
+    name: 'Holy Basil (Tulsi)',
     emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Holy Basil (Tulsi)', '🌿', '#15803D'),
     color: '#15803D'
   },
   'neem': {
     name: 'Neem',
     emoji: '🍃',
-    image: 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80',
-    color: '#15803D'
+    image: generateAnimatedProduceSvg('Organic Neem', '🍃', '#16A34A'),
+    color: '#16A34A'
   },
   'rose': {
     name: 'Rose',
     emoji: '🌹',
-    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Damask Rose', '🌹', '#E11D48'),
     color: '#E11D48'
   },
-  'sunflower': {
-    name: 'Sunflower',
-    emoji: '🌻',
-    image: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=800&q=80',
-    color: '#F59E0B'
-  },
-
-  // ─── Farm Machinery & Spares ──────────────────────────
   'tractor': {
     name: 'Tractor',
     emoji: '🚜',
-    image: 'https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Power Tractor', '🚜', '#DC2626'),
     color: '#DC2626'
   },
   'harvester': {
     name: 'Combine Harvester',
     emoji: '🚜',
-    image: 'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Combine Harvester', '🚜', '#D97706'),
     color: '#D97706'
   },
   'drone': {
-    name: 'Agri Spraying Drone',
+    name: 'Agri Drone',
     emoji: '🚁',
-    image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Agri Drone Sprayer', '🚁', '#2563EB'),
     color: '#2563EB'
   },
   'spares': {
     name: 'Agricultural Spares',
-    emoji: '🔧',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+    emoji: '⚙️',
+    image: generateAnimatedProduceSvg('Machinery Spares', '⚙️', '#475569'),
     color: '#475569'
   },
   'fertilizer': {
-    name: 'Fertilizer',
+    name: 'Fertilizer & Nutrients',
     emoji: '🧪',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg('Bio-Fertilizer', '🧪', '#7C3AED'),
     color: '#7C3AED'
+  },
+  'pesticide': {
+    name: 'Crop Protection',
+    emoji: '🛡️',
+    image: generateAnimatedProduceSvg('Bio-Pesticide', '🛡️', '#0284C7'),
+    color: '#0284C7'
   }
 };
 
@@ -441,7 +567,7 @@ export function getVegetableImageInfo(nameOrQuery) {
     return {
       name: 'Fresh Agricultural Produce',
       emoji: '🌱',
-      image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80',
+      image: generateAnimatedProduceSvg('Farm Produce', '🌱', '#16A34A'),
       color: '#16A34A'
     };
   }
@@ -464,13 +590,13 @@ export function getVegetableImageInfo(nameOrQuery) {
   return {
     name: nameOrQuery,
     emoji: '🌿',
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80',
+    image: generateAnimatedProduceSvg(nameOrQuery, '🌿', '#059669'),
     color: '#059669'
   };
 }
 
 /**
- * Returns a verified image URL according to the vegetable / produce name
+ * Returns an animated illustration SVG URL according to the vegetable / produce name
  */
 export function getVegetableImage(nameOrQuery) {
   return getVegetableImageInfo(nameOrQuery).image;
@@ -484,36 +610,18 @@ export function getVegetableEmoji(nameOrQuery) {
 }
 
 /**
- * Generate a dynamic lightweight SVG fallback image data-URI
+ * Dynamic lightweight SVG fallback
  */
 export function generateVegetableSvg(name, emoji = '🌱', color = '#15803D') {
-  const safeName = (name || 'Fresh Produce').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
-    <defs>
-      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>
-        <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95"/>
-      </linearGradient>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#g)"/>
-    <circle cx="300" cy="180" r="85" fill="rgba(255,255,255,0.1)"/>
-    <text x="50%" y="48%" font-size="76" dominant-baseline="middle" text-anchor="middle">${emoji}</text>
-    <text x="50%" y="78%" font-size="22" font-family="system-ui, -apple-system, sans-serif" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">${safeName}</text>
-    <text x="50%" y="87%" font-size="12" font-family="system-ui, -apple-system, sans-serif" font-weight="600" fill="rgba(255,255,255,0.7)" text-anchor="middle">CropCare Verified Produce</text>
-  </svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  return generateAnimatedProduceSvg(name, emoji, color);
 }
 
 /**
- * Handles image loading errors gracefully across all components
+ * Handles image loading errors gracefully by switching to animated SVG
  */
 export function handleImageError(event, fallbackName = 'Produce') {
   const target = event.currentTarget || event.target;
   if (!target) return;
   const info = getVegetableImageInfo(fallbackName);
-  if (target.src !== info.image) {
-    target.src = info.image;
-  } else {
-    target.src = generateVegetableSvg(info.name, info.emoji, info.color);
-  }
+  target.src = info.image;
 }

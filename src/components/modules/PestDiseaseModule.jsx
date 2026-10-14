@@ -5,6 +5,7 @@ import {
   ArrowRight, Search, Filter, Sparkles, Sprout, BookOpen, ShieldCheck 
 } from 'lucide-react';
 import plantKnowledgeBase from '../../data/plantKnowledgeBase.json';
+import { getVegetableImage } from '../../utils/imageUtils';
 
 const OUTBREAK_ALERTS = [
   { district: 'Ludhiana, Punjab', disease: 'Wheat Stripe Rust', severity: 'High', date: '2026-09-25', affected: '3,200 acres' },
@@ -14,40 +15,40 @@ const OUTBREAK_ALERTS = [
 ];
 
 const CROP_IMAGES = {
-  'Rice': 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80',
-  'Wheat': 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
-  'Maize (Corn)': 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
-  'Tomato': 'https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=800&q=80',
-  'Potato': 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
-  'Cotton': 'https://images.unsplash.com/photo-1471189374-c9b3fa71be7e?auto=format&fit=crop&w=800&q=80',
-  'Sugarcane': 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&q=80',
-  'Mustard / Rapeseed': 'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=800&q=80',
-  'Onion': 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=80',
-  'Chilli (Hot Pepper)': 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=800&q=80',
-  'Soybean': 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=800&q=80',
-  'Groundnut (Peanut)': 'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=800&q=80',
-  'Chickpea (Gram / Chana)': 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=800&q=80',
-  'Pigeon Pea (Arhar / Tur)': 'https://images.unsplash.com/photo-1543362906-acfc16c67564?auto=format&fit=crop&w=800&q=80',
-  'Mango': 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80',
-  'Banana': 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&q=80',
-  'Neem (Margosa)': 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80',
-  'Holy Basil (Tulsi)': 'https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80',
-  'Turmeric': 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=800&q=80',
-  'Ginger': 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80',
-  'Brinjal (Eggplant / Aubergine)': 'https://images.unsplash.com/photo-1605335508892-d6efc5fa2328?auto=format&fit=crop&w=800&q=80',
-  'Cabbage': 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=800&q=80',
-  'Cauliflower': 'https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=80',
-  'Spinach / Palak': 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80',
-  'Okra / Bhindi': 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?auto=format&fit=crop&w=800&q=80',
-  'Carrot / Gajar': 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=80',
-  'Cucumber / Kheera': 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=800&q=80',
-  'Garlic / Lehsun': 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=800&q=80',
-  'Watermelon': 'https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=800&q=80',
-  'Papaya': 'https://images.unsplash.com/photo-1617112848923-cc2234396a8d?auto=format&fit=crop&w=800&q=80',
-  'Apple / Seb': 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=80'
+  'Rice': getVegetableImage('rice'),
+  'Wheat': getVegetableImage('wheat'),
+  'Maize (Corn)': getVegetableImage('maize'),
+  'Tomato': getVegetableImage('tomato'),
+  'Potato': getVegetableImage('potato'),
+  'Cotton': getVegetableImage('cotton'),
+  'Sugarcane': getVegetableImage('sugarcane'),
+  'Mustard / Rapeseed': getVegetableImage('mustard'),
+  'Onion': getVegetableImage('onion'),
+  'Chilli (Hot Pepper)': getVegetableImage('chilli'),
+  'Soybean': getVegetableImage('soybean'),
+  'Groundnut (Peanut)': getVegetableImage('groundnut'),
+  'Chickpea (Gram / Chana)': getVegetableImage('chickpea'),
+  'Pigeon Pea (Arhar / Tur)': getVegetableImage('chickpea'),
+  'Mango': getVegetableImage('mango'),
+  'Banana': getVegetableImage('banana'),
+  'Neem (Margosa)': getVegetableImage('neem'),
+  'Holy Basil (Tulsi)': getVegetableImage('tulsi'),
+  'Turmeric': getVegetableImage('turmeric'),
+  'Ginger': getVegetableImage('ginger'),
+  'Brinjal (Eggplant / Aubergine)': getVegetableImage('brinjal'),
+  'Cabbage': getVegetableImage('cabbage'),
+  'Cauliflower': getVegetableImage('cauliflower'),
+  'Spinach / Palak': getVegetableImage('spinach'),
+  'Okra / Bhindi': getVegetableImage('okra'),
+  'Carrot / Gajar': getVegetableImage('carrot'),
+  'Cucumber / Kheera': getVegetableImage('cucumber'),
+  'Garlic / Lehsun': getVegetableImage('garlic'),
+  'Watermelon': getVegetableImage('watermelon'),
+  'Papaya': getVegetableImage('papaya'),
+  'Apple / Seb': getVegetableImage('apple')
 };
 
-const DEFAULT_CROP_IMG = 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80';
+const DEFAULT_CROP_IMG = getVegetableImage('produce');
 
 export default function PestDiseaseModule() {
   const { setActiveNav } = useApp();

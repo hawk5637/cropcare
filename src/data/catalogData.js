@@ -3,7 +3,9 @@
 // Categories: 'produce' (26), 'seeds' (12), 'machinery' (12), 'spares' (14) = 64 Total SKUs
 // Fully localized names across English (en), Hindi (hi), Tamil (ta), and French (fr)
 
-export const catalogItems = [
+import { getVegetableImage } from '../utils/imageUtils.js';
+
+const rawCatalogItems = [
   // ═════════════════════════════════════════════════════════════════
   // ─── 1. FRESH FRUITS & VEGETABLES (26 items) ─────────────────────
   // ═════════════════════════════════════════════════════════════════
@@ -1108,3 +1110,13 @@ export const catalogItems = [
     specs: { reinforcement: "Aramid Tensile Cord (Zero Stretch)", temperature: "-40°C to +130°C Oil & Heat Resistant", profile: "B-Section Raw Edge Molded Cogged", application: "Alternator, Water Pump & Radiator Fan Drive" }
   }
 ];
+
+export const catalogItems = rawCatalogItems.map(item => {
+  if (item.category === 'produce' || item.category === 'seeds') {
+    return {
+      ...item,
+      image: getVegetableImage(item.key || item.id.replace('prod-', '').replace('seed-', ''))
+    };
+  }
+  return item;
+});

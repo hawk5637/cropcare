@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Wrench, Search, ShoppingCart, Calendar, Star, Truck, CheckCircle2, Clock, User } from 'lucide-react';
+import { handleImageError, getVegetableImage } from '../../utils/imageUtils';
 
 const MACHINERY = [
   { id: 'M1', name: 'Mahindra 575 DI', category: 'Tractor', hp: 50, price: '₹850/day', status: 'Available', img: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80', specs: '50 HP, 2WD, Power steering, Oil-immersed brakes', rating: 4.7 },
@@ -59,7 +60,7 @@ export default function MachineryModule() {
           {MACHINERY.map(m => (
             <div key={m.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all">
               <div className="relative h-36">
-                <img src={m.img} alt={m.name} loading="lazy" className="w-full h-full object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80'; }} />
+                <img src={m.img} alt={m.name} loading="lazy" className="w-full h-full object-cover" onError={(e) => handleImageError(e, m.category || 'tractor')} />
                 <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-bold ${m.status === 'Available' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}`}>{m.status}</div>
                 <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold bg-black/50 text-white backdrop-blur-sm">{m.category}</div>
               </div>
@@ -119,7 +120,7 @@ export default function MachineryModule() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {PARTS.map(p => (
             <div key={p.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-              <img src={p.img} alt={p.name} loading="lazy" className="w-full h-28 object-cover" onError={e => { e.target.src = 'https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?auto=format&fit=crop&w=800&q=80'; }} />
+              <img src={p.img} alt={p.name} loading="lazy" className="w-full h-28 object-cover" onError={(e) => handleImageError(e, 'spares')} />
               <div className="p-4">
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5">{p.name}</h3>
                 <p className="text-emerald-600 font-bold text-sm mb-3">{p.price}</p>

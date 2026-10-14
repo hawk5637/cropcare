@@ -1,5 +1,6 @@
 // Verified Agritech Marketplace Catalog: Real-World Produce, Tractors, Spares, Seeds & Tech
 // Fully localized across English (en), Hindi (hi), Tamil (ta), and French (fr)
+import { getVegetableImage } from '../utils/imageUtils.js';
 
 const baseItems = [
   // ================= VEGETABLES & FRUITS =================
@@ -3202,19 +3203,26 @@ const baseItems = [
 ];
 
 export function getMarketplaceItems(lang = 'en') {
-  return baseItems.map(item => ({
-    ...item,
-    name: item.name[lang] || item.name.en,
-    category: item.category[lang] || item.category.en,
-    unit: item.unit[lang] || item.unit.en,
-    badge: typeof item.badge === 'object' ? (item.badge[lang] || item.badge.en) : item.badge,
-    discount: typeof item.discount === 'object' ? (item.discount[lang] || item.discount.en) : item.discount,
-    description: (item.specsEasy && item.specsEasy[lang]) ? item.specsEasy[lang] : (item.name[lang] || item.name.en),
-    specsEasy: item.specsEasy ? (item.specsEasy[lang] || item.specsEasy.en) : '',
-    specsDetailed: item.specsDetailed ? (item.specsDetailed[lang] || item.specsDetailed.en) : '',
-    easyEmoji: item.easyEmoji || '🌿',
-    quickMetrics: item.quickMetrics || {}
-  }));
+  return baseItems.map(item => {
+    let itemImage = item.image;
+    if (item.categoryKey === 'produce' || (item.category && (item.category.en === 'Vegetables & Fruits' || item.category === 'Vegetables & Fruits'))) {
+      itemImage = getVegetableImage(item.id.replace('prod-', '') || item.easyEmoji || (item.name && item.name.en));
+    }
+    return {
+      ...item,
+      image: itemImage,
+      name: item.name[lang] || item.name.en,
+      category: item.category[lang] || item.category.en,
+      unit: item.unit[lang] || item.unit.en,
+      badge: typeof item.badge === 'object' ? (item.badge[lang] || item.badge.en) : item.badge,
+      discount: typeof item.discount === 'object' ? (item.discount[lang] || item.discount.en) : item.discount,
+      description: (item.specsEasy && item.specsEasy[lang]) ? item.specsEasy[lang] : (item.name[lang] || item.name.en),
+      specsEasy: item.specsEasy ? (item.specsEasy[lang] || item.specsEasy.en) : '',
+      specsDetailed: item.specsDetailed ? (item.specsDetailed[lang] || item.specsDetailed.en) : '',
+      easyEmoji: item.easyEmoji || '🌿',
+      quickMetrics: item.quickMetrics || {}
+    };
+  });
 }
 
 export const marketplaceItems = getMarketplaceItems('en');
