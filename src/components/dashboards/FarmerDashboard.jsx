@@ -211,25 +211,25 @@ export default function FarmerDashboard() {
 
       {/* 4 Role KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.land')}</div>
           <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">14.5 Acres</div>
           <div className="text-xs text-emerald-600 font-semibold mt-1">{t('roles.farmer.kpis.landSub')}</div>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.yield')}</div>
           <div className="text-2xl font-black text-amber-600 mt-1">242 Qtls</div>
           <div className="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-1">{t('roles.farmer.kpis.yieldSub')}</div>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.income')}</div>
           <div className="text-2xl font-black text-blue-600 mt-1">₹13,00,100</div>
           <div className="text-xs text-blue-700 dark:text-blue-400 font-semibold mt-1">{t('roles.farmer.kpis.incomeSub')}</div>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.escrow')}</div>
           <div className="text-2xl font-black text-emerald-600 mt-1">₹3,76,500</div>
           <div className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1">{t('roles.farmer.kpis.escrowSub')}</div>
@@ -240,13 +240,13 @@ export default function FarmerDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div 
           onClick={() => setActiveNav('scanner')}
-          className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/60 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group"
+          className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/60 shadow-sm card-hover cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center group-hover:rotate-6 transition-transform">
-              <Camera className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-emerald-600/30">
+              <Camera className="w-5 h-5 animate-pulse" />
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 animate-soft-float">
               {dLoc.spotlight1.badge}
             </span>
           </div>
@@ -260,13 +260,14 @@ export default function FarmerDashboard() {
 
         <div 
           onClick={() => setActiveDashboardTab('mandi')}
-          className="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/20 border border-amber-200 dark:border-amber-800/60 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group"
+          className="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/20 border border-amber-200 dark:border-amber-800/60 shadow-sm card-hover cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center group-hover:rotate-6 transition-transform">
+            <div className="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-amber-600/30">
               <TrendingUp className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
               {dLoc.spotlight2.badge}
             </span>
           </div>
@@ -280,13 +281,13 @@ export default function FarmerDashboard() {
 
         <div 
           onClick={() => setActiveNav('modules')}
-          className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800/60 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group"
+          className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800/60 shadow-sm card-hover cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center group-hover:rotate-6 transition-transform">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-blue-600/30">
               <Sprout className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
               {dLoc.spotlight3.badge}
             </span>
           </div>
@@ -300,13 +301,13 @@ export default function FarmerDashboard() {
 
         <div 
           onClick={() => setIsIntroModalOpen(true)}
-          className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/40 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800/60 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group"
+          className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/40 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800/60 shadow-sm card-hover cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center group-hover:rotate-6 transition-transform">
-              <Sparkles className="w-5 h-5 text-yellow-300" />
+            <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-purple-600/30">
+              <Sparkles className="w-5 h-5 animate-pulse" />
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-200 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-200 dark:bg-purple-900 text-purple-800 dark:text-purple-200 animate-pulse">
               {dLoc.spotlight4.badge}
             </span>
           </div>

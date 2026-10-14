@@ -37,6 +37,7 @@ export default function ChatbotWidget() {
   const [isMaximized, setIsMaximized] = useState(false);
   const [botMode, setBotMode] = useState('advisor'); // 'advisor' (Farm Advisor AI) | 'general' (General Assistant)
   const [selectedPlotId, setSelectedPlotId] = useState(PROJECT_DATA.parcels[0].id);
+  const [detailLevel, setDetailLevel] = useState('auto'); // 'short' | 'auto' | 'detailed'
 
   // Key configuration panel
   const [showKeyConfig, setShowKeyConfig] = useState(false);
@@ -86,8 +87,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
 
   const isGeminiKeyValid = Boolean(
     runtimeApiKey && 
-    !runtimeApiKey.startsWith('AQ.') && 
-    (runtimeApiKey.startsWith('AIza') || runtimeApiKey.length >= 35)
+    (runtimeApiKey.startsWith('AIza') || runtimeApiKey.startsWith('AQ.') || runtimeApiKey.length >= 35)
   );
 
   useEffect(() => {
@@ -218,8 +218,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       return;
     }
 
-    if (trimmed.startsWith('AQ.') || trimmed.length < 25) {
-      setKeyNotice({ type: 'error', text: 'Invalid key. Google Gemini keys start with "AIzaSy..."' });
+    if (trimmed.length < 25) {
+      setKeyNotice({ type: 'error', text: 'Invalid key length. Gemini API keys are typically 35+ characters.' });
       return;
     }
 
@@ -254,7 +254,7 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
 
     const cleanHistory = activeMessages
       .filter(m => m.sender && m.text && !m.id.startsWith('welcome-') && !m.isError && !m.text.startsWith('⚠️'))
-      .slice(-8);
+      .slice(-10);
 
     try {
       let replyContent = '';
@@ -279,7 +279,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               history: cleanHistory,
               plotId: selectedPlotId,
               language: language,
-              userName: userName || 'Farmer'
+              userName: userName || 'Farmer',
+              detailLevel
             }),
             signal: controller.signal
           });
@@ -309,7 +310,8 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               language: language,
               userName: userName || 'Friend',
               userRole: userRole || 'user',
-              image: userMsg.image
+              image: userMsg.image,
+              detailLevel
             }),
             signal: controller.signal
           });
@@ -330,9 +332,9 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       // 2. Intelligent Agronomy Brain fallback / offline engine
       if (!replyContent) {
         if (botMode === 'advisor') {
-          replyContent = generateAdvisorResponse(trimmed, selectedPlotId, language, userName);
+          replyContent = generateAdvisorResponse(trimmed, selectedPlotId, language, userName, detailLevel);
         } else {
-          replyContent = generateGeneralResponse(trimmed, language, userName, currentPlot);
+          replyContent = generateGeneralResponse(trimmed, language, userName, currentPlot, detailLevel, cleanHistory);
         }
         replySource = 'brain';
       }
@@ -350,10 +352,10 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
       ]);
     } catch (err) {
       console.error('Chat error:', err);
-      // Even on severe error, never show broken canned reply; provide helpful agronomy response
+      // Even on severe error, never show broken canned reply; provide helpful direct response
       const fallbackReply = botMode === 'advisor'
-        ? generateAdvisorResponse(trimmed, selectedPlotId, language, userName)
-        : generateGeneralResponse(trimmed, language, userName, currentPlot);
+        ? generateAdvisorResponse(trimmed, selectedPlotId, language, userName, detailLevel)
+        : generateGeneralResponse(trimmed, language, userName, currentPlot, detailLevel, cleanHistory);
 
       setActiveMessages(prev => [
         ...prev,
@@ -624,6 +626,52 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
               </button>
             </div>
 
+            {/* Response Length & Depth Mode: Short | Smart Auto | Full Detail */}
+            <div className="flex items-center justify-between bg-black/25 px-2 py-1 rounded-xl text-[10px] border border-white/10 gap-1">
+              <span className="text-emerald-200/90 font-bold uppercase tracking-wider text-[9px] flex items-center gap-1 shrink-0">
+                <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                <span>Response Depth:</span>
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setDetailLevel('short')}
+                  className={`px-2 py-0.5 rounded-lg font-bold text-[10px] transition-all cursor-pointer flex items-center gap-1 ${
+                    detailLevel === 'short'
+                      ? 'bg-amber-400 text-slate-950 shadow-sm font-extrabold'
+                      : 'text-emerald-100/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  title="Short & direct: 2-4 key bullet points, concise answers"
+                >
+                  <span>⚡ Short</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDetailLevel('auto')}
+                  className={`px-2 py-0.5 rounded-lg font-bold text-[10px] transition-all cursor-pointer flex items-center gap-1 ${
+                    detailLevel === 'auto'
+                      ? 'bg-emerald-400 text-slate-950 shadow-sm font-extrabold'
+                      : 'text-emerald-100/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  title="Smart Auto: balanced executive summary + core points"
+                >
+                  <span>🤖 Auto</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDetailLevel('detailed')}
+                  className={`px-2 py-0.5 rounded-lg font-bold text-[10px] transition-all cursor-pointer flex items-center gap-1 ${
+                    detailLevel === 'detailed'
+                      ? 'bg-sky-300 text-slate-950 shadow-sm font-extrabold'
+                      : 'text-emerald-100/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  title="Full Detail: structured guide with headings, dosages, action steps & safety"
+                >
+                  <span>📖 Full Detail</span>
+                </button>
+              </div>
+            </div>
+
             {/* Plot Selection Bar (Only in Advisor mode) */}
             {botMode === 'advisor' && (
               <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pt-0.5">
@@ -814,12 +862,36 @@ Tap a starter question below or ask why a crop or fertilizer was recommended for
                 <>
                   <button
                     type="button"
-                    onClick={() => handleQuickQuestion('What are today\'s real live mandi prices across APMCs?')}
+                    onClick={() => {
+                      setDetailLevel('short');
+                      handleQuickQuestion('Give me a quick 2-bullet summary of today\'s essential farm actions.');
+                    }}
                     disabled={isTyping}
                     className="px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-[10px] font-bold text-amber-800 dark:text-amber-200 hover:bg-amber-100 border border-amber-300 dark:border-amber-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
                   >
-                    <span>📈</span>
-                    <span>Live Mandi Rates</span>
+                    <span>⚡</span>
+                    <span>Answer in Short</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDetailLevel('detailed');
+                      handleQuickQuestion('Explain in full detail: step-by-step organic pest control and dosages for crops.');
+                    }}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-[10px] font-bold text-sky-800 dark:text-sky-200 hover:bg-sky-100 border border-sky-300 dark:border-sky-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>📖</span>
+                    <span>Explain in Full Detail</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickQuestion('What is the certified seed rate, sowing depth, and seed treatment for Wheat and Mustard?')}
+                    disabled={isTyping}
+                    className="px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-[10px] font-bold text-emerald-800 dark:text-emerald-200 hover:bg-emerald-100 border border-emerald-300 dark:border-emerald-700 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+                  >
+                    <span>🌾</span>
+                    <span>Seed Sowing & Treatment</span>
                   </button>
                   <button
                     type="button"

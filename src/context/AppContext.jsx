@@ -68,7 +68,7 @@ export function AppProvider({ children }) {
   const [hasServerApiKey, setHasServerApiKey] = useState(true);
   const [runtimeApiKey, setRuntimeApiKey] = useState(() => {
     const saved = localStorage.getItem('cropcare_runtime_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '';
-    return saved && !saved.startsWith('AQ.') ? saved.trim() : '';
+    return saved ? saved.trim() : '';
   });
   const [expertQueue, setExpertQueue] = useState([]);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);

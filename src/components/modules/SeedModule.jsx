@@ -767,7 +767,7 @@ export default function SeedModule() {
             {/* Image Header with Badge */}
             <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
               <img 
-                src={(seed.category === 'Vegetables' || seed.category === 'Fruits') ? getVegetableImage(seed.crop) : seed.img} 
+                src={getVegetableImage(seed.crop) || seed.img} 
                 alt={seed.variety} 
                 onError={(e) => handleImageError(e, seed.crop)}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

@@ -1112,11 +1112,15 @@ const rawCatalogItems = [
 ];
 
 export const catalogItems = rawCatalogItems.map(item => {
-  if (item.category === 'produce' || item.category === 'seeds') {
-    return {
-      ...item,
-      image: getVegetableImage(item.key || item.id.replace('prod-', '').replace('seed-', ''))
-    };
-  }
-  return item;
+  const cleanId = (item.id || '')
+    .replace(/^prod-/, '')
+    .replace(/^seed-/, '')
+    .replace(/^mach-/, '')
+    .replace(/^spar-/, '');
+  const svgImage = getVegetableImage(cleanId || item.key || (item.name && item.name.en));
+  return {
+    ...item,
+    image: svgImage || item.image
+  };
 });
+

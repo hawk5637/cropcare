@@ -133,7 +133,7 @@ Select a plot above or tap one of the starter questions below to see how soil, w
     setInputText('');
     setIsTyping(true);
 
-    const effectiveKey = runtimeApiKey || import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
+    const effectiveKey = runtimeApiKey || import.meta.env.VITE_GEMINI_API_KEY || '';
 
     const cleanHistory = messages
       .filter(m => m.sender && m.text && m.id !== 'welcome-advisor' && !m.isError)

@@ -3,8 +3,8 @@ const BASE = "https://generativelanguage.googleapis.com/v1beta";
 export function isLikelyGeminiKey(key) {
   if (!key || typeof key !== 'string') return false;
   const k = key.trim();
-  if (k.startsWith('AQ.') || k.length < 25) return false;
-  return k.startsWith('AIza') || k.length >= 35;
+  if (k.length < 25) return false;
+  return k.startsWith('AIza') || k.startsWith('AQ.') || k.length >= 35;
 }
 
 const KEY = (customKey) => {
@@ -15,12 +15,12 @@ const KEY = (customKey) => {
 };
 
 const PREFERRED_ORDER = [
-  process.env.GEMINI_MODEL && !process.env.GEMINI_MODEL.includes('3.5') ? process.env.GEMINI_MODEL : null,
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-  "gemini-2.5-flash-lite",
+  process.env.GEMINI_MODEL || "gemini-3.8-flash",
+  "gemini-3.5-flash",
+  "gemini-3.7-flash",
+  "gemini-3.1-flash-lite-preview",
   "gemini-flash-latest",
+  "gemini-2.5-flash",
 ].filter(Boolean);
 
 let cache = { at: 0, models: null };

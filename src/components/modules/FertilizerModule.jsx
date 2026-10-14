@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { FlaskConical, Calculator, CheckCircle2, AlertCircle, ShoppingCart, Calendar, BookOpen } from 'lucide-react';
-import { handleImageError } from '../../utils/imageUtils';
+import { handleImageError, getVegetableImage } from '../../utils/imageUtils';
 
 const NPK_DATA = {
   Wheat: { n: [40, 40, 40], p: [60, 0, 0], k: [40, 0, 0], stages: ['Basal (Sowing)', 'CRI Stage (21 DAP)', 'Jointing (45 DAP)'] },
@@ -20,9 +20,9 @@ const DEFICIENCY_GUIDE = [
 ];
 
 const FERTILIZER_ITEMS = [
-  { name: 'Urea', cat: 'N', price: '₹266/bag', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80' },
-  { name: 'DAP', cat: 'P', price: '₹1,350/bag', img: 'https://images.unsplash.com/photo-1565108264043-39be61b756b1?auto=format&fit=crop&w=400&q=80' },
-  { name: 'Vermicompost', cat: 'Organic', price: '₹12/kg', img: 'https://images.unsplash.com/photo-1616849778027-1d0a72a1ca21?auto=format&fit=crop&w=400&q=80' }
+  { name: 'Urea', cat: 'N', price: '₹266/bag', img: getVegetableImage('urea') },
+  { name: 'DAP', cat: 'P', price: '₹1,350/bag', img: getVegetableImage('dap') },
+  { name: 'Vermicompost', cat: 'Organic', price: '₹12/kg', img: getVegetableImage('vermicompost') }
 ];
 
 export default function FertilizerModule() {

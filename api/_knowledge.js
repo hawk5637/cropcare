@@ -3,9 +3,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 let plants = [];
+let fruitMedical = [];
 
 try {
-  // Resolve plantKnowledgeBase.json from multiple possible locations (local vs Vercel)
+  // Resolve plantKnowledgeBase.json and fruitMedicalDatabase.json from multiple possible locations
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const candidatePaths = [
     path.join(__dirname, '..', 'src', 'data', 'plantKnowledgeBase.json'),
@@ -20,12 +21,45 @@ try {
       break;
     }
   }
+
+  const candidateMedicalPaths = [
+    path.join(__dirname, '..', 'src', 'data', 'fruitMedicalDatabase.json'),
+    path.join(process.cwd(), 'src', 'data', 'fruitMedicalDatabase.json'),
+    path.join(process.cwd(), 'data', 'fruitMedicalDatabase.json')
+  ];
+
+  for (const mp of candidateMedicalPaths) {
+    if (fs.existsSync(mp)) {
+      const content = fs.readFileSync(mp, 'utf8');
+      fruitMedical = JSON.parse(content);
+      break;
+    }
+  }
 } catch (err) {
-  console.warn('[KnowledgeBase] Could not load plantKnowledgeBase.json:', err.message);
+  console.warn('[KnowledgeBase] Could not load botanical/medical database:', err.message);
 }
 
 export function getPlants() {
   return plants;
+}
+
+export function getFruitMedicalDatabase() {
+  return fruitMedical;
+}
+
+export function getFruitMedicalProfile(name, scientificName) {
+  if (!name && !scientificName) return null;
+  const qN = (name || '').toLowerCase().trim();
+  const qS = (scientificName || '').toLowerCase().trim();
+
+  return fruitMedical.find(item => {
+    const itemN = item.name.toLowerCase();
+    const itemS = (item.scientific || '').toLowerCase();
+    return qN === itemN || 
+           qN.includes(itemN) || 
+           itemN.includes(qN) ||
+           (qS && (qS === itemS || qS.includes(itemS) || itemS.includes(qS)));
+  }) || null;
 }
 
 export function findPlantEntry(name, scientificName) {

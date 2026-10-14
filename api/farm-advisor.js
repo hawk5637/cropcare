@@ -25,7 +25,8 @@ export default async function handler(req, res) {
       history = [], 
       plotId = 'plot-1', 
       language = 'en', 
-      userName = 'Farmer'
+      userName = 'Farmer',
+      detailLevel = 'auto' // 'short' | 'detailed' | 'auto'
     } = req.body || {};
 
     if (!message || typeof message !== 'string' || !message.trim()) {
@@ -36,12 +37,13 @@ export default async function handler(req, res) {
       req.headers['x-gemini-api-key'] || 
       process.env.GEMINI_API_KEY || 
       process.env.VITE_GEMINI_API_KEY || 
-      'AQ.Ab8RN6IL44AqGUqWRl1p4Qa8aIsrpjtvi9j3u1j4t9aLkTkQpg';
+      '';
 
     const { systemPrompt, selectedPlot } = buildFarmAdvisorPrompt({
       plotId,
       language,
-      userName
+      userName,
+      detailLevel
     });
 
     const rawHistory = [];
@@ -84,12 +86,12 @@ export default async function handler(req, res) {
 
     const generationConfig = {
       temperature: 0.1, // Low temperature for high factual adherence to project data
-      maxOutputTokens: 600
+      maxOutputTokens: 2048
     };
 
     const { data, model } = await callGemini(
       { systemInstruction: systemPrompt, contents, generationConfig },
-      15000,
+      20000,
       apiKey
     );
 

@@ -1,0 +1,473 @@
+[
+  {
+    "id": "mango",
+    "name": "Mango",
+    "scientific": "Mangifera indica",
+    "family": "Anacardiaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Mangiferin",
+        "role": "Potent xanthone polyphenol; clinically researched for glycemic regulation, insulin sensitivity, and cardioprotection."
+      },
+      {
+        "compound": "Quercetin & Gallic Acid",
+        "role": "Cellular antioxidant defense; neutralizes free radicals and supports vascular endothelial integrity."
+      },
+      {
+        "compound": "Amylase Enzymes",
+        "role": "Breaks down complex carbohydrates into simple sugars, easing gastrointestinal transit."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "60 kcal",
+      "vitamin_c": "36.4 mg (60% DV)",
+      "vitamin_a": "54 μg (15% DV)",
+      "dietary_fiber": "1.6 g (6% DV)",
+      "potassium": "168 mg",
+      "folate": "43 μg (11% DV)"
+    },
+    "medical_benefits": [
+      "Rich in Vitamin C and carotenoids that support collagen synthesis, skin elasticity, and immune barrier defence.",
+      "Bioactive mangiferin exerts anti-inflammatory, hepatoprotective, and anti-diabetic effects by inhibiting α-glucosidase.",
+      "Soluble prebiotic pectin fiber feeds beneficial bifidobacteria and reduces serum low-density lipoprotein (LDL) levels."
+    ],
+    "actionable_insight": "Consume with Greek yogurt or healthy plant fats to optimize the bioavailability of fat-soluble beta-carotene.",
+    "usda_fdc_id": "169910",
+    "pubmed_ref": "PMID: 28411333 (Mangiferin: A natural miracle bioactive compound against lifestyle-related disorders)"
+  },
+  {
+    "id": "guava",
+    "name": "Guava",
+    "scientific": "Psidium guajava",
+    "family": "Myrtaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Lycopene",
+        "role": "High-potency carotenoid antioxidant; protects cellular DNA against oxidative stress and photo-damage."
+      },
+      {
+        "compound": "Guajaverin & Quercetin",
+        "role": "Flavonoid glycosides that inhibit aldose reductase and provide broad antimicrobial properties."
+      },
+      {
+        "compound": "Soluble Pectin",
+        "role": "High-viscosity dietary fiber that forms a gel matrix in intestines, attenuating rapid postprandial glucose surges."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "68 kcal",
+      "vitamin_c": "228.3 mg (254% DV - 4x orange)",
+      "vitamin_a": "31 μg (4% DV)",
+      "dietary_fiber": "5.4 g (20% DV)",
+      "potassium": "417 mg (9% DV)",
+      "magnesium": "22 mg"
+    },
+    "medical_benefits": [
+      "Exceptional Vitamin C content stimulates neutrophil chemotaxis and enhances antibody titers.",
+      "High dietary fiber (5.4g/100g) aids bowel regularity and helps control blood cholesterol and blood pressure.",
+      "Low glycemic index (GI ≈ 31) with high polyphenol density makes it ideal for type 2 diabetes management."
+    ],
+    "actionable_insight": "Eat the edible peel with the flesh where up to 75% of the total ascorbic acid and polyphenols are concentrated.",
+    "usda_fdc_id": "173044",
+    "pubmed_ref": "PMID: 28945642 (Phytochemical and pharmacological properties of Psidium guajava)"
+  },
+  {
+    "id": "papaya",
+    "name": "Papaya",
+    "scientific": "Carica papaya",
+    "family": "Caricaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Papain & Chymopapain",
+        "role": "Proteolytic cysteine endopeptidases that hydrolyze animal and plant proteins, relieving post-meal bloating."
+      },
+      {
+        "compound": "Carpaine",
+        "role": "Major alkaloid of papaya; exerts smooth muscle relaxant and cardioprotective actions."
+      },
+      {
+        "compound": "Lycopene & Beta-Cryptoxanthin",
+        "role": "Bioavailable carotenoids linked to reduced lipid peroxidation and anti-aging cell defense."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "43 kcal",
+      "vitamin_c": "60.9 mg (68% DV)",
+      "folate": "37 μg (9% DV)",
+      "dietary_fiber": "1.7 g (7% DV)",
+      "potassium": "182 mg",
+      "calcium": "20 mg"
+    },
+    "medical_benefits": [
+      "Natural papain digestive enzymes accelerate protein breakdown and alleviate chronic functional dyspepsia.",
+      "High carotenoid density protects against age-related macular degeneration and supports epithelial wound repair.",
+      "Papaya leaf and fruit extracts stimulate thrombopoietin expression, aiding healthy blood platelet counts."
+    ],
+    "actionable_insight": "Consume 30 minutes after heavy protein-rich meals to maximize natural enzymatic digestion.",
+    "usda_fdc_id": "171726",
+    "pubmed_ref": "PMID: 23524622 (Papaya preparation in digestive disorders: double-blind placebo-controlled trial)"
+  },
+  {
+    "id": "banana",
+    "name": "Banana",
+    "scientific": "Musa acuminata",
+    "family": "Musaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Resistant Starch",
+        "role": "Prebiotic dietary fiber in semi-ripe bananas that ferments into butyrate, protecting the colon lining."
+      },
+      {
+        "compound": "Dopamine & Norepinephrine",
+        "role": "Natural catecholamine antioxidants that scavenger free radicals and reduce lipid peroxidation."
+      },
+      {
+        "compound": "Fructooligosaccharides (FOS)",
+        "role": "Feeds beneficial probiotic Bifidobacterium species and improves colonic mineral absorption."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "89 kcal",
+      "potassium": "358 mg (8% DV)",
+      "vitamin_b6": "0.4 mg (31% DV)",
+      "vitamin_c": "8.7 mg (10% DV)",
+      "dietary_fiber": "2.6 g (10% DV)",
+      "magnesium": "27 mg (7% DV)"
+    },
+    "medical_benefits": [
+      "High potassium to sodium ratio helps counter hypertension and supports myocardial electromechanical conductivity.",
+      "Vitamin B6 supports neurotransmitter synthesis (serotonin and GABA) and healthy red blood cell hemoglobin formation.",
+      "Antacid mucosal-coating effect: stimulates epithelial mucus production, protecting stomach lining against gastric ulcers."
+    ],
+    "actionable_insight": "Choose greenish-yellow bananas for maximum gut-healthy resistant starch; choose ripe spotted bananas for rapid workout energy.",
+    "usda_fdc_id": "173944",
+    "pubmed_ref": "PMID: 27041787 (Nutritional and therapeutic potential of banana starch and polyphenols)"
+  },
+  {
+    "id": "pomegranate",
+    "name": "Pomegranate",
+    "scientific": "Punica granatum",
+    "family": "Lythraceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Punicalagins",
+        "role": "Massive hydrolyzable ellagitannins; delivers more than 3x the antioxidant activity of green tea or red wine."
+      },
+      {
+        "compound": "Punicic Acid",
+        "role": "Conjugated linolenic acid (omega-5) concentrated in seeds; reduces systemic endothelial inflammation."
+      },
+      {
+        "compound": "Ellagic Acid & Urolithins",
+        "role": "Gut microbiome metabolizes ellagitannins into urolithin A, stimulating cellular mitochondrial mitophagy."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "83 kcal",
+      "dietary_fiber": "4.0 g (16% DV)",
+      "vitamin_c": "10.2 mg (11% DV)",
+      "vitamin_k": "16.4 μg (14% DV)",
+      "potassium": "236 mg",
+      "folate": "38 μg"
+    },
+    "medical_benefits": [
+      "Inhibits low-density lipoprotein (LDL) oxidation and macrophage atherogenesis, supporting clear arterial blood flow.",
+      "Punicalagins and urolithins promote mitochondrial rejuvenation (mitophagy) and muscle endurance.",
+      "Demonstrates potent anti-proliferative and anti-inflammatory properties in prostate, breast, and articular joint tissues."
+    ],
+    "actionable_insight": "Chew the fibrous crunchy seeds rather than just drinking the strained juice to gain omega-5 punicic acid and prebiotic lignin.",
+    "usda_fdc_id": "169134",
+    "pubmed_ref": "PMID: 24575134 (Pomegranate for prevention and treatment of cardiovascular diseases and cancer)"
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "scientific": "Malus domestica",
+    "family": "Rosaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Quercetin-3-glucoside",
+        "role": "Flavonoid antioxidant concentrated in peel; dampens histamine release and supports cerebral blood perfusion."
+      },
+      {
+        "compound": "Phloridzin",
+        "role": "Specific dihydrochalcone glucoside that inhibits intestinal SGLT1 glucose transporters, blunting sugar absorption."
+      },
+      {
+        "compound": "Soluble Apple Pectin",
+        "role": "Feeds Akkermansia muciniphila in the colonic mucosa, enhancing gut barrier integrity."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "52 kcal",
+      "dietary_fiber": "2.4 g (10% DV)",
+      "vitamin_c": "4.6 mg (5% DV)",
+      "potassium": "107 mg",
+      "carbs": "13.8 g"
+    },
+    "medical_benefits": [
+      "Soluble pectin binds dietary bile acids in the gut, effectively lowering circulating total and LDL cholesterol.",
+      "Phloridzin and polyphenols moderate carbohydrate digestion enzymes (α-amylase and α-glucosidase), supporting glycemic balance.",
+      "Clinical cohort studies correlate regular apple intake with lower risk of ischemic stroke and neurodegenerative decline."
+    ],
+    "actionable_insight": "Wash thoroughly and eat with the skin; the peel contains 5 times more polyphenol antioxidants than the inner flesh.",
+    "usda_fdc_id": "171688",
+    "pubmed_ref": "PMID: 26016654 (Apples and cardiovascular health—is the gut microbiota a key player?)"
+  },
+  {
+    "id": "citrus",
+    "name": "Lemon & Citrus",
+    "scientific": "Citrus limon",
+    "family": "Rutaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Hesperidin & Naringin",
+        "role": "Citrus flavanones that improve microvascular permeability and stimulate nitric oxide endothelial release."
+      },
+      {
+        "compound": "Citric Acid & Potassium Citrate",
+        "role": "Alkalinizes urinary pH and chelates calcium, preventing kidney stone crystal nucleation."
+      },
+      {
+        "compound": "D-Limonene",
+        "role": "Terpene found in peel oil; upregulates phase I and phase II hepatic detoxification enzymes."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "29 kcal",
+      "vitamin_c": "53.0 mg (88% DV)",
+      "potassium": "138 mg",
+      "citric_acid": "4.5 g",
+      "dietary_fiber": "2.8 g"
+    },
+    "medical_benefits": [
+      "High urinary citrate secretion reduces the recurrence rate of calcium oxalate nephrolithiasis (kidney stones).",
+      "Ascorbic acid acidifies gastric juice, tripling non-heme iron absorption from plant pulses and green leafy vegetables.",
+      "Hesperidin and citrus bioflavonoids strengthen vein walls and reduce capillary fragility in varicose conditions."
+    ],
+    "actionable_insight": "Squeeze fresh lemon juice over spinach, lentils, or beans to maximize non-heme iron absorption by up to 300%.",
+    "usda_fdc_id": "167746",
+    "pubmed_ref": "PMID: 25529483 (Citrus fruits as a treasure trove of active natural metabolites that potentially provide health benefits)"
+  },
+  {
+    "id": "dragonfruit",
+    "name": "Dragon Fruit",
+    "scientific": "Selenicereus undatus",
+    "family": "Cactaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Betacyanins & Betalains",
+        "role": "Natural nitrogenous pigments that scavenge lipid peroxy radicals and protect vascular endothelial cells."
+      },
+      {
+        "compound": "Prebiotic Oligosaccharides",
+        "role": "Non-digestible sugars that selectively promote the proliferation of friendly gut Lactobacilli."
+      },
+      {
+        "compound": "Essential Unsaturated Fatty Acids",
+        "role": "Tiny black seeds contain linoleic acid (omega-6) and oleic acid (omega-9) for membrane health."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "57 kcal",
+      "dietary_fiber": "2.9 g (11% DV)",
+      "vitamin_c": "9.0 mg (10% DV)",
+      "iron": "0.65 mg (8% DV)",
+      "magnesium": "40 mg (10% DV)"
+    },
+    "medical_benefits": [
+      "Natural betalains provide anti-inflammatory and cellular protection against chronic oxidative stress.",
+      "Prebiotic fiber promotes a balanced microbiome ecosystem, reducing systemic endotoxemia and insulin resistance.",
+      "Contains bioavailable plant iron and magnesium that contribute to cellular energy ATP synthesis."
+    ],
+    "actionable_insight": "Red-fleshed pitaya contains up to 3x higher betacyanin antioxidant concentration compared to white-fleshed varieties.",
+    "usda_fdc_id": "2344730",
+    "pubmed_ref": "PMID: 32679782 (Comparative review on betalains and bioactives in dragon fruit)"
+  },
+  {
+    "id": "jackfruit",
+    "name": "Jackfruit",
+    "scientific": "Artocarpus heterophyllus",
+    "family": "Moraceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "Artocarpin",
+        "role": "Prenylated flavonoid that inhibits melanogenesis and reduces pro-inflammatory cytokine secretion."
+      },
+      {
+        "compound": "Morin & Isoflavones",
+        "role": "Phytoestrogenic and anti-atherosclerotic bioactives that enhance endothelial nitric oxide."
+      },
+      {
+        "compound": "Lutein & Cryptoxanthin",
+        "role": "Macular carotenoids that filter blue light and protect photoreceptor cell membranes."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "95 kcal",
+      "potassium": "448 mg (10% DV)",
+      "vitamin_c": "13.7 mg (15% DV)",
+      "dietary_fiber": "1.5 g (6% DV)",
+      "magnesium": "29 mg (7% DV)"
+    },
+    "medical_benefits": [
+      "Unripe/green jackfruit has a remarkably low glycemic index (GI ≈ 17), making it a clinically proven staple for diabetic glycemic control.",
+      "High potassium and magnesium content relaxes vascular smooth muscle, assisting blood pressure reduction.",
+      "Rich in prenylated flavonoids that exert wound-healing and antimicrobial activity."
+    ],
+    "actionable_insight": "Use raw green jackfruit as a nutrient-dense, low-GI whole food substitute for refined grains and red meat.",
+    "usda_fdc_id": "174687",
+    "pubmed_ref": "PMID: 33767222 (Green jackfruit flour in type 2 diabetes mellitus: randomized double-blind placebo-controlled trial)"
+  },
+  {
+    "id": "watermelon",
+    "name": "Watermelon",
+    "scientific": "Citrullus lanatus",
+    "family": "Cucurbitaceae",
+    "category": "fruit",
+    "bioactives": [
+      {
+        "compound": "L-Citrulline",
+        "role": "Non-essential amino acid precursor to L-arginine, boosting vascular endothelial nitric oxide synthesis."
+      },
+      {
+        "compound": "Lycopene",
+        "role": "Bioavailable carotenoid (4.5 mg/100g - 40% higher than raw tomatoes); defends cardiovascular cells."
+      },
+      {
+        "compound": "Cucurbitacin E",
+        "role": "Triterpene that blocks cyclooxygenase-2 (COX-2) enzyme activity, relieving muscle soreness."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "30 kcal",
+      "water": "91.4 g",
+      "vitamin_c": "8.1 mg (9% DV)",
+      "potassium": "112 mg",
+      "lycopene": "4532 μg"
+    },
+    "medical_benefits": [
+      "L-Citrulline promotes systemic vasodilation, reduces arterial stiffness, and attenuates exercise-induced delayed onset muscle soreness.",
+      "High natural water content (92%) and electrolytes restore hydration and renal excretory balance.",
+      "Lycopene reduces lipid peroxidation and protects epidermal cells against UV-induced erythema."
+    ],
+    "actionable_insight": "Consume a slice with the light-green inner rind where L-Citrulline concentration is naturally the highest.",
+    "usda_fdc_id": "167765",
+    "pubmed_ref": "PMID: 23862644 (Watermelon juice: potential functional drink for sore muscle relief in athletes)"
+  },
+  {
+    "id": "tomato",
+    "name": "Tomato",
+    "scientific": "Solanum lycopersicum",
+    "family": "Solanaceae",
+    "category": "fruit_vegetable",
+    "bioactives": [
+      {
+        "compound": "Lycopene",
+        "role": "Major carotenoid antioxidant; prevents LDL oxidation and protects prostate epithelial cells."
+      },
+      {
+        "compound": "Chlorogenic Acid",
+        "role": "Phenylpropanoid that inhibits glucose absorption in the small intestine, supporting blood pressure control."
+      },
+      {
+        "compound": "Tomatidine",
+        "role": "Steroidal alkaloid that promotes skeletal muscle hypertrophy and inhibits muscle atrophy."
+      }
+    ],
+    "nutrition_per_100g": {
+      "calories": "18 kcal",
+      "lycopene": "2573 μg",
+      "vitamin_c": "13.7 mg (15% DV)",
+      "vitamin_k": "7.9 μg (7% DV)",
+      "potassium": "237 mg"
+    },
+    "medical_benefits": [
+      "High dietary lycopene consumption is clinically correlated with reduced risk of cardiovascular disease and prostate neoplasia.",
+      "Potassium and chlorogenic acid promote arterial vasodilation and healthy blood pressure levels.",
+      "Lutein and zeaxanthin in tomatoes filter blue light and protect the retinal macula from oxidative breakdown."
+    ],
+    "actionable_insight": "Cooking tomatoes with extra virgin olive oil or mustard oil increases lycopene bioavailability by over 400%.",
+    "usda_fdc_id": "170457",
+    "pubmed_ref": "PMID: 29087531 (Tomato and lycopene consumption in cardiovascular health and disease)"
+  },
+  {
+    "id": "neem",
+    "name": "Neem",
+    "scientific": "Azadirachta indica",
+    "family": "Meliaceae",
+    "category": "medicinal",
+    "bioactives": [
+      {
+        "compound": "Azadirachtin",
+        "role": "Complex tetranortriterpenoid; potent bio-pesticide and insect growth regulator."
+      },
+      {
+        "compound": "Nimbin & Nimbidin",
+        "role": "Anti-inflammatory, anti-pyretic, and broad-spectrum antifungal agents."
+      },
+      {
+        "compound": "Gedunin & Quercetin",
+        "role": "Suppresses bacterial biofilms and demonstrates anti-malarial and hepatoprotective properties."
+      }
+    ],
+    "nutrition_per_100g": {
+      "crude_protein": "14.3 g",
+      "calcium": "510 mg",
+      "iron": "17 mg",
+      "phosphorus": "80 mg"
+    },
+    "medical_benefits": [
+      "Broad-spectrum antimicrobial activity clears oral periodontal pathogens, acne vulgaris, and dermatological fungal infections.",
+      "Nimbidin extracts demonstrate anti-ulcerogenic and gastroprotective properties by inhibiting acid secretion.",
+      "Purifies blood and modulates immune lymphocyte activation in traditional Ayurvedic and Unani systems."
+    ],
+    "actionable_insight": "Use boiled neem leaf water as an organic topical rinse for fungal skin conditions, or neem twigs for antimicrobial dental care.",
+    "usda_fdc_id": "N/A - Botanical Specimen",
+    "pubmed_ref": "PMID: 15777222 (Therapeutic roles of Azadirachta indica: a review)"
+  },
+  {
+    "id": "tulsi",
+    "name": "Holy Basil / Tulsi",
+    "scientific": "Ocimum tenuiflorum",
+    "family": "Lamiaceae",
+    "category": "medicinal",
+    "bioactives": [
+      {
+        "compound": "Eugenol (1-hydroxy-2-methoxy-4-allylbenzene)",
+        "role": "Phenolic essential oil with analgesic, antiseptic, and cyclooxygenase-inhibiting actions."
+      },
+      {
+        "compound": "Ursolic Acid & Rosmarinic Acid",
+        "role": "Powerful anti-inflammatory and antiviral triterpenes that protect cellular membranes."
+      },
+      {
+        "compound": "Ocimunosides A & B",
+        "role": "Glycoside adaptogens that mitigate psychological and physiological stress responses."
+      }
+    ],
+    "nutrition_per_100g": {
+      "vitamin_k": "414 μg (345% DV)",
+      "vitamin_a": "264 μg (33% DV)",
+      "calcium": "177 mg (14% DV)",
+      "iron": "3.17 mg (18% DV)"
+    },
+    "medical_benefits": [
+      "Potent adaptogen: lowers salivary cortisol levels and enhances resilience against physical, chemical, and metabolic stress.",
+      "Anti-microbial against common respiratory pathogens; eases cough, bronchitis, and allergic airway inflammation.",
+      "Supports pancreatic beta-cell function and enhances insulin secretion, assisting blood sugar homeostasis."
+    ],
+    "actionable_insight": "Steep freshly crushed leaves in warm water for 5 minutes with a touch of ginger and honey for adaptogenic respiratory relief.",
+    "usda_fdc_id": "172232",
+    "pubmed_ref": "PMID: 28400848 (Tulsi - Ocimum sanctum: A herb for all reasons)"
+  }
+]

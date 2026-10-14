@@ -3204,10 +3204,14 @@ const baseItems = [
 
 export function getMarketplaceItems(lang = 'en') {
   return baseItems.map(item => {
-    let itemImage = item.image;
-    if (item.categoryKey === 'produce' || (item.category && (item.category.en === 'Vegetables & Fruits' || item.category === 'Vegetables & Fruits'))) {
-      itemImage = getVegetableImage(item.id.replace('prod-', '') || item.easyEmoji || (item.name && item.name.en));
-    }
+    const cleanId = (item.id || '')
+      .replace(/^prod-/, '')
+      .replace(/^veh-/, '')
+      .replace(/^spare-/, '')
+      .replace(/^spar-/, '')
+      .replace(/^seed-/, '')
+      .replace(/^item-/, '');
+    const itemImage = getVegetableImage(cleanId || item.easyEmoji || (item.name && item.name.en)) || item.image;
     return {
       ...item,
       image: itemImage,

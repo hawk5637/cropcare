@@ -4,10 +4,10 @@ import { Wrench, Search, ShoppingCart, Calendar, Star, Truck, CheckCircle2, Cloc
 import { handleImageError, getVegetableImage } from '../../utils/imageUtils';
 
 const MACHINERY = [
-  { id: 'M1', name: 'Mahindra 575 DI', category: 'Tractor', hp: 50, price: '₹850/day', status: 'Available', img: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80', specs: '50 HP, 2WD, Power steering, Oil-immersed brakes', rating: 4.7 },
-  { id: 'M2', name: 'Sonalika Tiger DI 75', category: 'Tractor', hp: 75, price: '₹1,100/day', status: 'Available', img: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&w=800&q=80', specs: '75 HP, 4WD, AC cabin, Digital dash', rating: 4.5 },
-  { id: 'M3', name: 'Shaktiman Rotavator', category: 'Implement', hp: null, price: '₹400/day', status: 'Booked', img: 'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80', specs: '7-ft working width, 42 L-blades, Adjustable depth', rating: 4.3 },
-  { id: 'M4', name: 'John Deere 5310', category: 'Tractor', hp: 55, price: '₹950/day', status: 'Available', img: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80', specs: '55 HP, 8F+4R gears, Wet disc brakes', rating: 4.8 }
+  { id: 'M1', name: 'Mahindra 575 DI', category: 'Tractor', hp: 50, price: '₹850/day', status: 'Available', img: getVegetableImage('mahindra-575'), specs: '50 HP, 2WD, Power steering, Oil-immersed brakes', rating: 4.7 },
+  { id: 'M2', name: 'Sonalika Tiger DI 75', category: 'Tractor', hp: 75, price: '₹1,100/day', status: 'Available', img: getVegetableImage('sonalika-tiger'), specs: '75 HP, 4WD, AC cabin, Digital dash', rating: 4.5 },
+  { id: 'M3', name: 'Shaktiman Rotavator', category: 'Implement', hp: null, price: '₹400/day', status: 'Booked', img: getVegetableImage('shaktiman-rotavator'), specs: '7-ft working width, 42 L-blades, Adjustable depth', rating: 4.3 },
+  { id: 'M4', name: 'John Deere 5310', category: 'Tractor', hp: 55, price: '₹950/day', status: 'Available', img: getVegetableImage('johndeere-5310'), specs: '55 HP, 8F+4R gears, Wet disc brakes', rating: 4.8 }
 ];
 
 const LABOUR = [
@@ -17,9 +17,9 @@ const LABOUR = [
 ];
 
 const PARTS = [
-  { id: 'P1', name: 'Rotavator Blades (Boron Steel)', price: '₹2,800/set', img: 'https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?auto=format&fit=crop&w=800&q=80' },
-  { id: 'P2', name: 'Clutch Plate & Cover Assembly', price: '₹4,500', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80' },
-  { id: 'P3', name: 'Hydraulic Pump Filter', price: '₹850', img: 'https://images.unsplash.com/photo-1565108264043-39be61b756b1?auto=format&fit=crop&w=800&q=80' }
+  { id: 'P1', name: 'Rotavator Blades (Boron Steel)', price: '₹2,800/set', img: getVegetableImage('rotavator-blades') },
+  { id: 'P2', name: 'Clutch Plate & Cover Assembly', price: '₹4,500', img: getVegetableImage('clutch-plate') },
+  { id: 'P3', name: 'Hydraulic Pump Filter', price: '₹850', img: getVegetableImage('hydraulic-filter') }
 ];
 
 export default function MachineryModule() {

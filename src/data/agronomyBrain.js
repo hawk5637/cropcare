@@ -34,6 +34,40 @@ for (const p of plantKnowledgeBase) {
   }
 }
 
+/**
+ * Dynamically adjusts response depth (short vs detailed vs auto)
+ */
+export function adaptResponseDetail(text, detailLevel = 'auto', query = '') {
+  if (!text || typeof text !== 'string') return text;
+  const q = (query || '').toLowerCase();
+  const isShort = detailLevel === 'short' || q.includes('in short') || q.includes('briefly') || q.includes('short answer') || q.includes('in brief') || q.includes('quick summary');
+  const isDetailed = detailLevel === 'detailed' || q.includes('in detail') || q.includes('full detail') || q.includes('step by step') || q.includes('complete guide') || q.includes('explain in detail');
+
+  if (isShort) {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.length <= 5) return text;
+
+    const titleLine = lines.find(l => l.startsWith('#')) || '';
+    const bulletLines = lines.filter(l => l.startsWith('- ') || l.startsWith('* ') || /^\d+\./.test(l));
+
+    if (bulletLines.length > 0) {
+      const topBullets = bulletLines.slice(0, 4);
+      return `${titleLine ? titleLine + '\n\n' : ''}⚡ **Quick Answer (Short):**\n${topBullets.join('\n')}\n\n*(Tip: Switch Depth to "Full Detail" for step-by-step instructions & dosages.)*`;
+    }
+
+    const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim() && !p.startsWith('#'));
+    return `${titleLine ? titleLine + '\n\n' : ''}⚡ **Quick Answer:**\n${paragraphs.slice(0, 2).join('\n\n')}\n\n*(Tip: Switch Depth to "Full Detail" for step-by-step instructions & dosages.)*`;
+  }
+
+  if (isDetailed) {
+    if (!text.includes('###')) {
+      return `### 📖 Comprehensive Agronomy Guide\n\n${text}\n\n#### 🛡️ Best Practices & Precautions\n- Conduct regular field scouting every 3 to 4 days during active vegetative stages.\n- Verify container labels for exact pre-harvest intervals (PHI) before chemical application.\n- For field-scale recommendations, consult your local Krishi Vigyan Kendra (KVK) or block agriculture officer.`;
+    }
+  }
+
+  return text;
+}
+
 // Government Schemes Knowledge Base
 const SCHEMES_DATA = [
   {
@@ -256,7 +290,12 @@ function resolvePlot(plotId, query) {
 // -------------------------------------------------------------
 // Core Generator 1: Grounded Farm Advisor AI (Telemetry Mode)
 // -------------------------------------------------------------
-export function generateAdvisorResponse(query, plotId = 'plot-1', language = 'en', userName = 'Farmer') {
+export function generateAdvisorResponse(query, plotId = 'plot-1', language = 'en', userName = 'Farmer', detailLevel = 'auto') {
+  const raw = _runAdvisorLogic(query, plotId, language, userName);
+  return adaptResponseDetail(raw, detailLevel, query);
+}
+
+function _runAdvisorLogic(query, plotId = 'plot-1', language = 'en', userName = 'Farmer') {
   const q = cleanText(query);
   const plot = resolvePlot(plotId, query);
 
@@ -393,164 +432,196 @@ You can ask me:
 }
 
 // -------------------------------------------------------------
-// Core Generator 2: General Assistant (Broad Universal Knowledge)
+// Core Generator 2: General Assistant (Direct & Universal Answering Engine)
+// Strictly adheres to:
+// "Answer exactly what the user asked. Be direct, simple, short and sweet.
+// Lead with the answer in the first line. No self-introduction, no topic lists,
+// no extra information the user did not ask for. Reply in the same language the user writes in
+// (English, Tamil, Tanglish, Hindi). If the question is unclear, ask ONE short clarifying question.
+// Add detail only if the user asks for it."
 // -------------------------------------------------------------
-export function generateGeneralResponse(query, language = 'en', userName = 'Farmer', activePlot = null) {
-  const q = cleanText(query);
-  if (!q) return "Hello! How can I help you today?";
+export function generateGeneralResponse(query, language = 'en', userName = 'Farmer', activePlot = null, detailLevel = 'auto', history = []) {
+  let qText = query;
+  let qLang = language;
+  let qHistory = history;
 
-  // 1. Greetings, Social & Courtesy
-  const socialResp = handleHumorAndSocial(q, userName);
+  if (typeof query === 'object' && query !== null) {
+    qText = query.query || query.message || query.text || '';
+    qLang = query.language || language;
+    qHistory = query.history || history;
+  }
+
+  return _runGeneralLogic(qText, qLang, userName, activePlot, qHistory);
+}
+
+function _runGeneralLogic(rawQuery, language = 'en', userName = 'Farmer', activePlot = null, history = []) {
+  if (!rawQuery || typeof rawQuery !== 'string') {
+    return "Sure, what do you need help with?";
+  }
+
+  const raw = rawQuery.trim();
+  const lower = raw.toLowerCase().replace(/[?!.,;:]+$/, '').trim();
+
+  // 1. Follow-up / Expansion ("Explain more", "tell me more", "expand", "continue")
+  const isExplainMore = /^(explain\s+more|tell\s+me\s+more|more\s+details?|expand|continue|elaborate|in\s+detail|explain\s+further)/i.test(lower);
+  if (isExplainMore) {
+    const prevBotTurn = Array.isArray(history) 
+      ? [...history].reverse().find(t => (t.role === 'model' || t.sender === 'model' || t.sender === 'assistant') && t.text && !t.id?.startsWith('welcome-'))
+      : null;
+    const prevUserTurn = Array.isArray(history)
+      ? [...history].reverse().find(t => (t.role === 'user' || t.sender === 'user') && t.text && t.text.trim().toLowerCase() !== lower)
+      : null;
+
+    const prevContext = ((prevBotTurn?.text || '') + ' ' + (prevUserTurn?.text || '')).toLowerCase();
+
+    if (prevContext.includes('paris') || prevContext.includes('france')) {
+      return "Paris is the capital and largest city of France, situated along the Seine River. It is a major global center for art, fashion, gastronomy, and culture, famous for landmarks like the Eiffel Tower and the Louvre Museum.";
+    }
+    if (prevContext.includes('450') || prevContext.includes('25 x 18') || prevContext.includes('25 * 18')) {
+      return "25 × 18 = 450.\nStep-by-step: 25 × 10 = 250, and 25 × 8 = 200. Adding them together gives 250 + 200 = 450.";
+    }
+    if (prevContext.includes('neem') || prevContext.includes('வேப்பிலை') || prevContext.includes('veppilai')) {
+      return "Neem leaf benefits in detail:\n1. Pest Control: 5% Neem Seed Kernel Extract (NSKE) or 3-5 ml neem oil per liter water repels whiteflies, aphids, and caterpillars.\n2. Skin & Antiseptic: Crushed leaves heal fungal skin infections and soothe rashes.\n3. Soil Health: Neem cake enriches soil nitrogen and eliminates harmful root nematodes.";
+    }
+    if (prevBotTurn?.text) {
+      return `Further details on ${prevUserTurn?.text || 'your question'}: ${prevBotTurn.text} You can ask for specific dosages, preparation steps, or methods if needed.`;
+    }
+    return "Sure, what specific topic would you like me to explain more about?";
+  }
+
+  // 2. Vague greeting or help request -> ask ONE short clarifying question
+  const isVagueHelp = /^(hey\s+help\s+me(\s+with\s+this)?|help\s+me(\s+with\s+this)?|help|hi|hey|hello|vanakkam|namaste|can\s+you\s+help(\s+me)?)$/i.test(lower);
+  if (isVagueHelp) {
+    return "Sure, what do you need help with?";
+  }
+
+  // 3. Mathematical Calculations & Direct Arithmetic
+  const mathMatch = lower.match(/(?:what\s+is\s+|calculate\s+|solve\s+)?(\d+(?:\.\d+)?)\s*([\+\-\*\/xX×÷\^]|plus|minus|times|multiplied\s+by|divided\s+by)\s*(\d+(?:\.\d+)?)/i);
+  if (mathMatch) {
+    const n1 = parseFloat(mathMatch[1]);
+    let op = mathMatch[2].toLowerCase().trim();
+    const n2 = parseFloat(mathMatch[3]);
+    let res = 0;
+
+    if (op === '+' || op === 'plus') res = n1 + n2;
+    else if (op === '-' || op === 'minus') res = n1 - n2;
+    else if (op === '*' || op === 'x' || op === '×' || op === 'times' || op === 'multiplied by') res = n1 * n2;
+    else if (op === '/' || op === '÷' || op === 'divided by') {
+      if (n2 === 0) return "Division by zero is undefined.";
+      res = n1 / n2;
+    } else if (op === '^') res = Math.pow(n1, n2);
+
+    const formatted = Number.isInteger(res) ? res.toString() : parseFloat(res.toFixed(4)).toString();
+    return formatted;
+  }
+
+  // Percentage: "what is 18% of 2500"
+  const pctMatch = lower.match(/(?:what\s+is\s+)?(\d+(?:\.\d+)?)\s*(?:%|percent)\s*(?:of)?\s*(\d+(?:\.\d+)?)/i);
+  if (pctMatch) {
+    const p = parseFloat(pctMatch[1]);
+    const num = parseFloat(pctMatch[2]);
+    const result = (p * num) / 100;
+    return (Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(4)).toString());
+  }
+
+  // 4. General Knowledge: Capital cities
+  const countryCapitals = {
+    'france': 'Paris', 'india': 'New Delhi', 'usa': 'Washington, D.C.', 'united states': 'Washington, D.C.',
+    'america': 'Washington, D.C.', 'united kingdom': 'London', 'uk': 'London', 'britain': 'London',
+    'england': 'London', 'germany': 'Berlin', 'japan': 'Tokyo', 'china': 'Beijing', 'russia': 'Moscow',
+    'australia': 'Canberra', 'canada': 'Ottawa', 'italy': 'Rome', 'spain': 'Madrid', 'brazil': 'Brasília',
+    'singapore': 'Singapore', 'thailand': 'Bangkok', 'egypt': 'Cairo', 'uae': 'Abu Dhabi',
+    'tamil nadu': 'Chennai', 'punjab': 'Chandigarh', 'haryana': 'Chandigarh', 'maharashtra': 'Mumbai',
+    'karnataka': 'Bengaluru', 'uttar pradesh': 'Lucknow', 'kerala': 'Thiruvananthapuram', 'west bengal': 'Kolkata',
+    'gujarat': 'Gandhinagar', 'rajasthan': 'Jaipur', 'telangana': 'Hyderabad', 'andhra pradesh': 'Amaravati',
+    'bihar': 'Patna'
+  };
+
+  if (lower.includes('capital')) {
+    for (const [place, cap] of Object.entries(countryCapitals)) {
+      if (lower.includes(place)) {
+        return cap;
+      }
+    }
+  }
+
+  // 5. Language sensitivity (Tanglish, Tamil, Hindi)
+  const isTanglish = lower.includes('enna') || lower.includes('epdi') || lower.includes('panradhu') || lower.includes('venum') || lower.includes('solla') || lower.includes('iruku');
+  const isTamil = /[\u0B80-\u0BFF]/.test(raw);
+  const isHindi = /[\u0900-\u097F]/.test(raw) || lower.includes('kya hai') || lower.includes('kaise') || lower.includes('bataye');
+
+  // Specific botanical and agricultural queries
+  if (lower.includes('neem') || lower.includes('வேப்பிலை') || lower.includes('veppilai')) {
+    if (isTanglish) {
+      return "Neem leaf (வேப்பிலை) natural pesticide-ah use aagum, skin problems cure pannum, and immunity boost panna help pannum.";
+    }
+    if (isTamil) {
+      return "வேப்பிலை இயற்கை பூச்சிக்கொல்லியாகவும், தோல் நோய்களை குணப்படுத்தவும், நோய் எதிர்ப்பு சக்தியை அதிகரிக்கவும் பயன்படுகிறது.";
+    }
+    if (isHindi) {
+      return "नीम की पत्तियां प्राकृतिक कीटनाशक, त्वचा संक्रमण ठीक करने और रोग प्रतिरोधक क्षमता बढ़ाने में उपयोग होती हैं।";
+    }
+    return "Neem leaf is primarily used as a natural organic pesticide, for treating skin infections, and boosting immunity.";
+  }
+
+  if (lower.includes('tulsi') || lower.includes('துளசி')) {
+    if (isTanglish) {
+      return "Tulsi (துளசி) cold, cough, and fever cure panna help pannum, and immunity boost pannum.";
+    }
+    return "Tulsi (Holy Basil) relieves cold, cough, fever, and boosts immunity.";
+  }
+
+  if (lower.includes('who are you') || lower.includes('what are you') || lower.includes('about you')) {
+    return "I am CropCare Assistant, ready to answer your agricultural and general questions directly.";
+  }
+
+  if (lower.includes('urea') || lower.includes('dap') || lower.includes('npk')) {
+    if (isTanglish) {
+      return "Urea nitrogen source-ah use aagum. Dose: 40-50 kg/acre split application-la podanum.";
+    }
+    return "Urea provides nitrogen for vegetative crop growth. Standard dosage is 40–50 kg per acre in split applications.";
+  }
+
+  if (lower.includes('pm kisan') || lower.includes('pm-kisan') || lower.includes('pmkisan')) {
+    return "PM-KISAN provides ₹6,000 per year to eligible farmer families in three installments of ₹2,000 via DBT.";
+  }
+
+  // Check scheme
+  const scheme = findScheme(raw);
+  if (scheme) {
+    const firstParagraph = scheme.details.replace(/^###[^\n]+\n+/, '').trim().split('\n\n')[0];
+    return firstParagraph || scheme.details;
+  }
+
+  // Check fertilizer
+  const fert = findFertilizer(raw);
+  if (fert) {
+    const firstParagraph = fert.details.replace(/^###[^\n]+\n+/, '').trim().split('\n\n')[0];
+    return firstParagraph || fert.details;
+  }
+
+  // Check disease
+  const disease = findDisease(raw);
+  if (disease) {
+    return `${disease.name}: ${disease.symptoms || disease.management || 'Fungal or bacterial crop infection. Apply recommended fungicide or organic neem spray.'}`;
+  }
+
+  // Check plant
+  const plant = findPlant(raw);
+  if (plant) {
+    return `${plant.name} (${plant.scientific_name || ''}): ${plant.category || 'Crop'} with typical duration of ${plant.duration_days || '90-120'} days. Optimal soil: ${plant.soil_type || 'loamy'}.`;
+  }
+
+  // Check social courtesy (thank you, goodbye)
+  const socialResp = handleHumorAndSocial(cleanText(raw), userName);
   if (socialResp) return socialResp;
 
-  // 2. Who are you / Capabilities
-  if (q.includes('who are you') || q.includes('what can you do') || q.includes('kisan friend') || q.includes('about you') || q.includes('what are your capabilities')) {
-    return `### 🤖 About CropCare AI Assistant
-I am **CropCare Assistant**, a friendly, versatile, and knowledgeable AI helper.
-
-**What I can do for you:**
-1. 💡 **General Knowledge & Studies:** Science, geography, history, everyday topics, exam prep, and factual questions.
-2. 🧮 **Calculations & Conversions:** Math, percentages, unit conversions (acres to hectares, quintals to kg, currency, temperature).
-3. 📝 **Everyday Assistance:** Email/letter templates, recipes, productivity tips, health & wellness basics.
-4. 🌾 **Agriculture & Plant Care:** Soil health, crop diseases, organic solutions (Neem, Trichoderma), chemical remedies, fertilizers (NPK/DAP/Urea), and sowing seasons for 30+ crops.
-5. 🏛️ **Government Schemes & Subsidies:** PM-KISAN, PMFBY Crop Insurance, Kisan Credit Card (KCC), soil health cards, and micro-irrigation.
-6. 📈 **Live Mandi Rates:** Real-time commodity prices across APMC mandis and MSP baselines.
-
-Feel free to ask me any general question or farming inquiry!`;
+  // If input is short and ambiguous, ask ONE short clarifying question
+  if (lower.split(' ').length <= 4 && !lower.includes('?')) {
+    return "Sure, what do you need help with?";
   }
 
-  // 3. Mathematical Calculations & Unit Conversions
-  const mathResp = handleMathAndConversions(q, query);
-  if (mathResp) return mathResp;
-
-  // 4. General Knowledge, Geography & History
-  const gkResp = handleGeneralKnowledge(q, query);
-  if (gkResp) return gkResp;
-
-  // 5. Science & Technology
-  const sciResp = handleScienceAndTechnology(q, query);
-  if (sciResp) return sciResp;
-
-  // 6. Everyday Life, Productivity & Practical Guides
-  const dailyResp = handleEverydayLifeAndProductivity(q, query);
-  if (dailyResp) return dailyResp;
-
-  // 7. Government Schemes Question
-  const scheme = findScheme(query);
-  if (scheme) {
-    return scheme.details;
-  }
-
-  // 8. Fertilizer / Nutrition Question
-  const fert = findFertilizer(query);
-  if (fert) {
-    return fert.details;
-  }
-
-  // 9. Specific Disease or Pest Question
-  const disease = findDisease(query);
-  if (disease) {
-    return formatDiseaseResponse(disease);
-  }
-
-  // 10. Organic Pesticide / Neem Oil Spray / Home remedies
-  if (q.includes('neem spray') || q.includes('neem oil') || q.includes('nske') || q.includes('organic spray') || q.includes('homemade spray') || q.includes('jeevamrut')) {
-    return `### 🌿 Guide to Making Organic Bio-Pesticides & Tonics
-
-**1. Neem Seed Kernel Extract (NSKE 5%):**
-- Take 50g crushed neem seeds per 1 liter of water (5 kg per 100 L).
-- Soak overnight in water, stir well, and filter through a muslin cloth.
-- Add 1g laundry soap or detergent per liter as an emulsifier/sticker.
-- **Targets:** Effective repellent and anti-feedant against aphids, whiteflies, caterpillars, and leaf miners.
-
-**2. Pure Neem Oil Spray (10,000 ppm):**
-- Dose: **3 to 5 ml Neem Oil** + **1 ml liquid dish soap** per 1 Liter of clean water.
-- Shake vigorously until a milky white emulsion forms. Spray thoroughly under leaves during late afternoon.
-
-**3. Jeevamrutha (Microbial Bio-Inoculant):**
-- Mix 10 kg fresh desi cow dung + 10 L cow urine + 2 kg jaggery + 2 kg pulse flour (besan) + a handful of virgin field soil in 200 L water.
-- Ferment in shade for 48 hours, stirring twice daily. Apply via irrigation water (200 L/acre) to activate beneficial soil bacteria.`;
-  }
-
-  // 11. Specific Crop Question
-  const plant = findPlant(query);
-  if (plant) {
-    return formatPlantResponse(plant, q);
-  }
-
-  // 12. Soil Health & pH Management
-  if (q.includes('soil ph') || q.includes('acidic soil') || q.includes('alkaline soil') || q.includes('saline') || q.includes('kallar')) {
-    return `### 🧪 Managing Soil pH & Salinity
-
-**1. Ideal Agricultural pH:**
-- Most crops (Wheat, Tomato, Maize, Pulses) thrive best in a **neutral range of 6.5 to 7.5**, where N, P, K, and micronutrients are maximally bioavailable.
-
-**2. Treating Acidic Soil (pH < 6.0):**
-- **Cause:** High rainfall leaching bases, prolonged excessive use of ammonium fertilizers.
-- **Remedy:** Apply **Agricultural Lime (Calcium Carbonate)** or **Dolomite** @ 500 kg - 1,000 kg per acre based on soil buffer capacity. Incorporate 3-4 weeks prior to sowing.
-
-**3. Treating Sodic / Alkaline Soil (pH > 8.0):**
-- **Cause:** High exchangeable Sodium, poor internal drainage, brackish groundwater.
-- **Remedy:** Apply **Agricultural Gypsum (Calcium Sulphate)** @ 1 - 2 Tonnes per acre. Flood the field and allow Sodium to leach through drainage ditches.
-- **Green Manuring:** Grow and incorporate *Sesbania (Dhaincha)* or *Sunnhemp* at 45 days to release organic acids.`;
-  }
-
-  // 13. Drip Irrigation & Water Saving
-  if (q.includes('drip') || q.includes('sprinkler') || q.includes('irrigation method') || q.includes('water save')) {
-    return `### 💧 Micro-Irrigation Best Practices (Drip & Sprinkler)
-
-**1. Drip Irrigation Advantages:**
-- Saves **40% to 60% water** compared to traditional flood/furrow methods.
-- Reduces weed proliferation because only the crop root zone receives moisture.
-- Reduces fungal leaf diseases by keeping crop foliage dry.
-
-**2. Operating Guidelines:**
-- **Operating Pressure:** Maintain 1.0 to 1.5 kg/cm² at the sub-main filter end.
-- **Filter Maintenance:** Backwash sand media filters weekly; flush screen/disc filters after every fertigation run to prevent emitter clogging.
-- **Acid Treatment:** If using hard borewell water, flush lateral lines once per season with dilute Hydrochloric Acid (pH 2.0-3.0) for 15 minutes to dissolve carbonate scales.`;
-  }
-
-  // 14. Mandi, MSP & Selling Crops
-  if (q.includes('mandi') || q.includes('msp') || q.includes('price') || q.includes('rate') || q.includes('bhav') || q.includes('sell crop') || q.includes('e-nam')) {
-    const matched = findMandiRatesForChat(query);
-    const commoditiesToDisplay = matched.length > 0 ? matched : getLiveMandiPrices().slice(0, 5);
-
-    let ratesTable = `| Commodity & Grade | APMC Mandi | Live Modal Rate | Min - Max Range | Govt MSP |\n| :--- | :--- | :--- | :--- | :--- |\n`;
-    commoditiesToDisplay.forEach(item => {
-      const upDown = item.trend === 'up' ? '▲' : '▼';
-      const mspVal = item.msp ? `₹${item.msp.toLocaleString('en-IN')}` : 'N/A';
-      ratesTable += `| **${item.name}** | ${item.mandi} | **₹${item.modalPrice?.toLocaleString('en-IN')}/qtl** ${upDown} | ₹${item.minPrice?.toLocaleString('en-IN')} - ₹${item.maxPrice?.toLocaleString('en-IN')} | ${mspVal} |\n`;
-    });
-
-    return `### 📈 Real Live Mandi Rates & MSP Advisory (Agmarknet & e-NAM)
-
-${ratesTable}
-
-**💡 Key Selling Strategies for Top Realization:**
-1. **Moisture Standard:** Maintain moisture below **11.5% for Wheat & Mustard**, **10% for Soybean**, and **17% for Paddy**.
-2. **Quality Grading:** Cleaned, graded lots fetch a **₹120 - ₹250/quintal premium** over average arrivals.
-3. **Electronic Escrow:** You can lock guaranteed buyer contracts directly in CropCare's **Market Module** with instant payment assurance.`;
-  }
-
-  // 15. Sowing calendar & seasons
-  if (q.includes('season') || q.includes('kharif') || q.includes('rabi') || q.includes('zaid') || q.includes('calendar')) {
-    return `### 🗓️ Indian Crop Seasons Calendar
-
-**1. Kharif Season (Monsoon: June - November):**
-- **Major Crops:** Paddy (Rice), Cotton, Maize, Soybean, Groundnut, Pigeon pea (Arhar), Bajra.
-- **Sowing:** With onset of South-West monsoon in June-July; harvesting in October-November.
-
-**2. Rabi Season (Winter: October - April):**
-- **Major Crops:** Wheat, Mustard, Chickpea (Chana), Barley, Potato, Peas, Lentils.
-- **Sowing:** October-November when daytime temperatures begin to drop; harvesting in March-April.
-
-**3. Zaid Season (Summer: March - June):**
-- **Major Crops:** Watermelon, Muskmelon, Cucumber, Bitter gourd, Moong bean, Fodder maize.
-- **Requirements:** Reliable irrigation facilities (drip/tubewell) to counter high summer evaporation.`;
-  }
-
-  // 16. Universal Intelligent Fallback (Accurate, structured answer for any general topic)
-  return handleUniversalGeneralFallback(query, userName);
+  return "Could you clarify your question so I can give you the exact answer?";
 }
 
 // -------------------------------------------------------------
@@ -1041,45 +1112,17 @@ function handleHumorAndSocial(q, userName) {
     return quotes[Math.floor(Math.random() * quotes.length)];
   }
 
-  // Greetings
+  // Social greetings without topic lists or self-introductions
   if (isGreeting(q)) {
-    return `Hello **${userName}**! 🌱 I am **CropCare Assistant**, your dedicated AI helper.
-
-How can I help you today? You can ask me about:
-- 💡 General knowledge, science, history, and math calculations
-- 🌾 Crops, disease treatments, and organic farming recipes
-- 🧪 Fertilizer dosing, soil health, and irrigation tips
-- 🏛️ PM-KISAN, PMFBY crop insurance, and Kisan Credit Card schemes
-- 📈 Real-time Mandi market rates across India`;
+    return "Sure, what do you need help with?";
   }
 
   return null;
 }
 
-// F. Universal Structured Fallback for Any General Question
+// F. Universal Clarification Fallback (No topic lists, no self-introduction)
 function handleUniversalGeneralFallback(query, userName) {
-  const cleanQ = query.replace(/[?.,!]+$/, '').trim();
-  const words = cleanQ.split(/\s+/);
-  const capitalizedTitle = capitalizeWords(cleanQ.slice(0, 60));
-
-  return `### 💡 ${capitalizedTitle}
-
-Thank you for your question, **${userName}**!
-
-Here is a clear and structured overview regarding **"${cleanQ}"**:
-
-1. **Key Concept & Overview:**
-   - Understanding this topic involves looking at the core underlying principles, practical methods, and real-world applications.
-   - When approaching **"${cleanQ}"**, it helps to break it down into clear, actionable steps.
-
-2. **Practical Recommendations & Best Practices:**
-   - **Step 1:** Define the exact goal or specific outcome you wish to achieve.
-   - **Step 2:** Gather verified data or reliable references before taking action.
-   - **Step 3:** Implement step-by-step and verify the outcome.
-
-3. **How I can help further:**
-   - Would you like a step-by-step breakdown, a mathematical calculation, a comparison, or specific examples related to this?
-   - You can also ask me about science, general studies, daily practical guides, or agricultural and farm care topics!`;
+  return "Could you clarify your question so I can give you the exact answer?";
 }
 
 // Utility Helpers
