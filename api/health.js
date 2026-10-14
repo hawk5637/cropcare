@@ -21,7 +21,8 @@ export default async function handler(req, res) {
   const hasMandiApiKey = !!(
     process.env.MANDI_API_KEY ||
     process.env.DATA_GOV_IN_API_KEY ||
-    process.env.VITE_MANDI_API_KEY
+    process.env.VITE_MANDI_API_KEY ||
+    '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b'
   );
 
   res.status(200).json({
