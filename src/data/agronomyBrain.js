@@ -188,39 +188,283 @@ function cleanText(text) {
   return (text || '').toLowerCase().trim();
 }
 
-// Find matched plant from knowledge base
+// Helper: Determine if query is asking for prices, mandi rates, or market value
+function isPriceOrMandiQuery(text) {
+  const q = cleanText(text);
+  return /(price|rate|mandi|bhav|msp|cost|market|auction|vilai|dam|daam|rate\s*enna|kitna\s*hai|kya\s*rate|vilai\s*enna)/i.test(q);
+}
+
+// Find matched plant from knowledge base using strict whole-word boundaries
 function findPlant(query) {
   const q = cleanText(query);
-  const words = q.split(/[\s,?.!/]+/).filter(w => w.length > 2);
+  if (!q) return null;
+  const words = q.split(/[\s,?.!/]+/).filter(w => w.length >= 2);
 
-  // Exact or word match
-  for (const [key, plant] of plantIndex.entries()) {
-    if (q.includes(key) || words.includes(key)) {
-      return plant;
-    }
-  }
-
-  // Common aliases
+  // Common aliases checked with whole-word regex
   const aliases = {
-    paddy: 'Rice', dhan: 'Rice', chawal: 'Rice', nellu: 'Rice',
-    gehu: 'Wheat', kanaku: 'Wheat', godhumai: 'Wheat',
-    tamatar: 'Tomato', thakkali: 'Tomato',
-    alu: 'Potato', aaloo: 'Potato', urulaikilangu: 'Potato',
-    pyaz: 'Onion', kanda: 'Onion', vengayam: 'Onion',
-    mirch: 'Chilli', mirchi: 'Chilli', milagai: 'Chilli',
-    makka: 'Maize', corn: 'Maize', bhutta: 'Maize', makki: 'Maize',
-    sarson: 'Mustard', kadugu: 'Mustard',
-    kapas: 'Cotton', rui: 'Cotton', paruthi: 'Cotton',
-    ganna: 'Sugarcane', karumbu: 'Sugarcane'
+    paddy: 'Rice', dhan: 'Rice', chawal: 'Rice', nellu: 'Rice', rice: 'Rice',
+    wheat: 'Wheat', gehu: 'Wheat', gehun: 'Wheat', kanaku: 'Wheat', godhumai: 'Wheat',
+    tomato: 'Tomato', tamatar: 'Tomato', thakkali: 'Tomato',
+    potato: 'Potato', alu: 'Potato', aaloo: 'Potato', urulaikilangu: 'Potato',
+    onion: 'Onion', pyaz: 'Onion', kanda: 'Onion', vengayam: 'Onion',
+    chilli: 'Chilli', mirch: 'Chilli', mirchi: 'Chilli', milagai: 'Chilli', pepper: 'Bell Pepper',
+    maize: 'Maize', makka: 'Maize', corn: 'Maize', bhutta: 'Maize', makki: 'Maize',
+    mustard: 'Mustard', sarson: 'Mustard', kadugu: 'Mustard',
+    cotton: 'Cotton', kapas: 'Cotton', rui: 'Cotton', paruthi: 'Cotton',
+    sugarcane: 'Sugarcane', ganna: 'Sugarcane', karumbu: 'Sugarcane',
+    soybean: 'Soybean', soya: 'Soybean',
+    chana: 'Chickpea', gram: 'Chickpea', chickpea: 'Chickpea',
+    mango: 'Mango', aam: 'Mango', maangai: 'Mango',
+    banana: 'Banana', kela: 'Banana', vazhai: 'Banana',
+    neem: 'Neem', veppilai: 'Neem',
+    tulsi: 'Tulsi'
   };
 
   for (const [alias, standard] of Object.entries(aliases)) {
-    if (q.includes(alias)) {
+    const regex = new RegExp(`\\b${alias}\\b`, 'i');
+    if (regex.test(q)) {
       return plantIndex.get(standard.toLowerCase()) || null;
     }
   }
 
+  // Iterate plantIndex matching multi-word phrases or whole words only
+  let bestMatch = null;
+  let bestMatchLen = 0;
+
+  for (const [key, plant] of plantIndex.entries()) {
+    if (key.length < 3) continue;
+    let matched = false;
+    if (key.includes(' ')) {
+      matched = q.includes(key);
+    } else {
+      matched = words.includes(key);
+    }
+    if (matched && key.length > bestMatchLen) {
+      bestMatch = plant;
+      bestMatchLen = key.length;
+    }
+  }
+
+  return bestMatch;
+}
+
+// Format Mandi Price answers using live/synced APMC prices
+function formatMandiPriceAnswer(query, language = 'en', userName = 'Farmer', plot = null) {
+  const q = cleanText(query);
+  const allMandi = getLiveMandiPrices();
+  const defaultCrop = plot?.current_crop || 'Wheat';
+  const matchedPlant = findPlant(q);
+  const targetCrop = matchedPlant ? matchedPlant.name : (extractCommodityName(q) || defaultCrop);
+
+  const targetWords = targetCrop.toLowerCase().split(/[\s/]+/).filter(w => w.length > 2);
+  const matches = allMandi.filter(item => {
+    const n = (item.name || '').toLowerCase();
+    const c = (item.crop || '').toLowerCase();
+    return targetWords.some(w => n.includes(w) || c.includes(w));
+  });
+
+  const isTanglish = q.includes('enna') || q.includes('epdi') || q.includes('iruku') || q.includes('solla') || q.includes('rate enna');
+  const isTamil = /[\u0B80-\u0BFF]/.test(query);
+  const isHindi = /[\u0900-\u097F]/.test(query) || q.includes('kya hai') || q.includes('kitna') || q.includes('bhav') || q.includes('rate bataye');
+
+  if (matches.length === 0) {
+    if (isTanglish) return `${targetCrop} live mandi rate ippo available-ah illa. Mandi Module-la check pannunga.`;
+    if (isHindi) return `${targetCrop} का लाइव भाव अभी उपलब्ध नहीं है। कृपया मंडी मॉड्यूल में जांचें।`;
+    if (isTamil) return `${targetCrop} நேரடி மண்டி விலை தகவல் தற்போது கிடைக்கவில்லை.`;
+    return `Live APMC mandi data for **${targetCrop}** is not actively reporting right now. Please explore the **Mandi & Market Module** for neighboring APMC tenders.`;
+  }
+
+  const primary = matches[0];
+  const secondary = matches[1];
+
+  if (isTanglish) {
+    let msg = `**${targetCrop}** current mandi price: **₹${primary.modalPrice.toLocaleString()} / Quintal** (${primary.mandi}).`;
+    if (primary.msp) msg += ` Govt MSP: **₹${primary.msp.toLocaleString()} / Quintal**.`;
+    if (secondary) msg += ` In ${secondary.mandi}, rate is **₹${secondary.modalPrice.toLocaleString()} / Quintal**.`;
+    msg += ` Market trend ${primary.trend === 'up' ? 'bullish-ah (+3.2%)' : 'steady-ah'} irukku.`;
+    return msg;
+  }
+
+  if (isTamil) {
+    let msg = `**${targetCrop}** தற்போதைய மண்டி விலை: **₹${primary.modalPrice.toLocaleString()} / குவிண்டால்** (${primary.mandi}).`;
+    if (primary.msp) msg += ` அரசு குறைந்தபட்ச ஆதரவு விலை (MSP): **₹${primary.msp.toLocaleString()} / குவிண்டால்**.`;
+    if (secondary) msg += ` ${secondary.mandi}-ல் விலை: **₹${secondary.modalPrice.toLocaleString()} / குவிண்டால்**.`;
+    return msg;
+  }
+
+  if (isHindi) {
+    let msg = `**${targetCrop}** का वर्तमान मंडी भाव:\n`;
+    msg += `- **${primary.mandi}:** **₹${primary.modalPrice.toLocaleString()} / क्विंटल** (रेंज: ₹${primary.minPrice} – ₹${primary.maxPrice})\n`;
+    if (secondary) {
+      msg += `- **${secondary.mandi}:** **₹${secondary.modalPrice.toLocaleString()} / क्विंटल** (रेंज: ₹${secondary.minPrice} – ₹${secondary.maxPrice})\n`;
+    }
+    if (primary.msp) {
+      msg += `- **सरकारी समर्थन मूल्य (MSP):** **₹${primary.msp.toLocaleString()} / क्विंटल**\n`;
+    }
+    msg += `बाजार का रुझान मजबूत (${primary.trend === 'up' ? '+3.2% उछाल' : 'स्थिर'}) है।`;
+    return msg;
+  }
+
+  // English
+  let response = `### 🌾 ${targetCrop} Mandi Rates & Market Price\n\n`;
+  response += `- **${primary.mandi}:** **₹${primary.modalPrice.toLocaleString()} / Quintal** (Range: ₹${primary.minPrice.toLocaleString()} – ₹${primary.maxPrice.toLocaleString()}) • *${primary.name}*\n`;
+  if (secondary) {
+    response += `- **${secondary.mandi}:** **₹${secondary.modalPrice.toLocaleString()} / Quintal** (Range: ₹${secondary.minPrice.toLocaleString()} – ₹${secondary.maxPrice.toLocaleString()}) • *${secondary.name}*\n`;
+  }
+  if (primary.msp) {
+    response += `- **Government MSP:** **₹${primary.msp.toLocaleString()} / Quintal**\n`;
+  }
+  response += `- **Market Trend:** ${primary.trend === 'up' ? 'Bullish (+3.2% weekly gain, strong demand)' : 'Steady'}\n`;
+
+  if (plot && (plot.current_crop.toLowerCase().includes(targetCrop.toLowerCase()) || targetCrop.toLowerCase().includes('wheat'))) {
+    response += `\n**Plot ${plot.code} (${plot.current_crop}) Revenue:** At your projected yield of **${plot.projected_yield}**, estimated gross realization is **${plot.projected_revenue}**.\n`;
+  }
+
+  response += `\n*(Live benchmark synchronized from CropCare Mandi Module & Agmarknet)*`;
+  return response;
+}
+
+// Helper: Extract commodity name from query
+function extractCommodityName(query) {
+  const q = cleanText(query);
+  const aliasMap = {
+    wheat: 'Wheat', gehu: 'Wheat', gehun: 'Wheat', godhumai: 'Wheat',
+    rice: 'Rice', paddy: 'Rice', dhan: 'Rice', chawal: 'Rice', nellu: 'Rice', basmati: 'Rice',
+    tomato: 'Tomato', tamatar: 'Tomato', thakkali: 'Tomato',
+    onion: 'Onion', pyaz: 'Onion', vengayam: 'Onion',
+    potato: 'Potato', alu: 'Potato', aaloo: 'Potato', urulaikilangu: 'Potato',
+    cotton: 'Cotton', kapas: 'Cotton', paruthi: 'Cotton',
+    chilli: 'Chilli', mirch: 'Chilli', milagai: 'Chilli',
+    mustard: 'Mustard', sarson: 'Mustard', kadugu: 'Mustard',
+    maize: 'Maize', makka: 'Maize', corn: 'Maize',
+    soybean: 'Soybean', soya: 'Soybean',
+    sugarcane: 'Sugarcane', ganna: 'Sugarcane', karumbu: 'Sugarcane',
+    chana: 'Gram / Chickpea', chickpea: 'Gram / Chickpea',
+    mango: 'Mango', aam: 'Mango', banana: 'Banana', kela: 'Banana'
+  };
+
+  for (const [kw, name] of Object.entries(aliasMap)) {
+    if (new RegExp(`\\b${kw}\\b`, 'i').test(q)) return name;
+  }
   return null;
+}
+
+// Format rich botanical, agronomic, disease, and fertilizer answers for plants
+function formatPlantAgronomyAnswer(plant, query, language = 'en') {
+  const q = cleanText(query);
+  const name = plant.name;
+  const sci = plant.scientific_name || '';
+
+  const getArrayText = (val) => Array.isArray(val) ? val.join('; ') : (val || '');
+
+  // 1. Diseases & Pests
+  if (/(disease|pest|fungus|rust|blight|smut|aphid|worm|keeda|rog|poochi)/i.test(q)) {
+    let resp = `### 🛡️ Diseases & Pest Management for ${name} (${sci})\n\n`;
+    if (Array.isArray(plant.diseases) && plant.diseases.length > 0) {
+      for (const d of plant.diseases.slice(0, 4)) {
+        resp += `#### 🔴 ${d.name}\n`;
+        if (d.symptoms) resp += `- **Symptoms:** ${d.symptoms}\n`;
+        if (d.organic_control) resp += `- **Organic Control:** ${d.organic_control}\n`;
+        if (d.chemical_control) resp += `- **Chemical Control:** ${d.chemical_control}\n`;
+        resp += `\n`;
+      }
+    } else {
+      resp += `No major foliar diseases recorded. Maintain regular field scouting and prophylactic 5% neem oil sprays.\n`;
+    }
+    return resp.trim();
+  }
+
+  // 2. Fertilizer & Nutrients
+  if (/(fertilizer|npk|urea|dap|potash|spray|dose|khad|nutrient|dose|manure)/i.test(q)) {
+    let resp = `### 🧪 Fertilizer & Nutrient Schedule for ${name} (${sci})\n\n`;
+    if (plant.fertilizer_schedule) {
+      resp += `${plant.fertilizer_schedule}\n`;
+    } else if (name === 'Wheat') {
+      resp += `- **Recommended Dose (NPK):** 120 : 60 : 40 kg/ha (N:P:K).\n`;
+      resp += `- **Basal Application (At Sowing):** Apply full Phosphorus (DAP @ 55 kg/acre), full Potash (MOP @ 25 kg/acre), and 1/3 Nitrogen (Urea @ 30 kg/acre).\n`;
+      resp += `- **First Top Dressing (21 DAP - Crown Root Stage):** Urea @ 30 kg/acre before first irrigation.\n`;
+      resp += `- **Second Top Dressing (45 DAP - Jointing Stage):** Urea @ 30 kg/acre.\n`;
+      resp += `- **Grain Filling Foliar Boost:** Spray 00:00:50 (Potassium Sulphate) @ 1.5 kg/acre at heading to maximize grain weight and shine.\n`;
+    } else if (name === 'Tomato') {
+      resp += `- **Recommended Dose (NPK):** 100 : 80 : 60 kg/ha.\n`;
+      resp += `- **Basal Dose:** Well-rotted FYM (10 t/acre) + full DAP (70 kg/acre) + full MOP (40 kg/acre) + 1/2 Urea.\n`;
+      resp += `- **Top Dressing:** Remaining Urea in 2 split doses at 30 and 45 days after transplanting.\n`;
+      resp += `- **Fruit Sizing Spray:** 13:00:45 (Potassium Nitrate) @ 5g/L during early fruit set.\n`;
+    } else {
+      resp += `- **Basal Dose:** Well-rotted Farmyard Manure (FYM) @ 5-8 tonnes/acre + balanced NPK basal dose at sowing.\n`;
+      resp += `- **Top Dressing:** Apply Nitrogen in 2 split doses during active vegetative growth.\n`;
+      resp += `- **Micronutrient:** Spray Zinc Sulphate (21%) @ 5g/L if interveinal yellowing is observed.\n`;
+    }
+    return resp.trim();
+  }
+
+  // 3. Water & Irrigation
+  if (/(water|irrigation|schedule|pani|seenchai|how often|thanni)/i.test(q)) {
+    let resp = `### 💧 Irrigation & Water Requirements for ${name} (${sci})\n\n`;
+    if (plant.water) {
+      resp += `${plant.water}\n\n`;
+    }
+    if (name === 'Wheat') {
+      resp += `**Critical Irrigation Stages:**\n`;
+      resp += `1. **Crown Root Initiation (20-25 DAP):** Most critical! Moisture stress here cuts yield by up to 30%.\n`;
+      resp += `2. **Tillering Stage (40-45 DAP):** Drives productive earhead formation.\n`;
+      resp += `3. **Late Jointing Stage (65-70 DAP):** Supports rapid stem elongation.\n`;
+      resp += `4. **Flowering Stage (85-90 DAP):** Ensure steady moisture for pollen viability.\n`;
+      resp += `5. **Milk / Grain Filling Stage (100-105 DAP):** Prevents grain shrivelling.\n`;
+    }
+    return resp.trim();
+  }
+
+  // 4. Seed Rate & Sowing
+  if (/(seed rate|sowing|seed|beej|spacing|planting|how to sow|vithai)/i.test(q)) {
+    let resp = `### 🌱 Sowing & Seed Rate for ${name} (${sci})\n\n`;
+    if (plant.seed_rate_and_sowing) {
+      resp += `${plant.seed_rate_and_sowing}\n\n`;
+    }
+    resp += `- **Seed Treatment:** Treat seed with *Trichoderma viride* @ 5g/kg or *Vitavax* @ 2g/kg to protect against seed-borne fungal rots.\n`;
+    return resp.trim();
+  }
+
+  // 5. Nutritional Benefits & Medicinal Uses
+  if (/(benefit|nutrition|medicinal|vitamin|calorie|health|faayde|nanmaigal)/i.test(q)) {
+    let resp = `### 🥗 Nutrition & Health Benefits of ${name} (${sci})\n\n`;
+    const ben = getArrayText(plant.benefits);
+    if (ben) resp += `**Benefits:** ${ben}\n\n`;
+    if (plant.nutrition_per_100g) {
+      resp += `**Nutritional Value (Per 100g):**\n`;
+      for (const [k, v] of Object.entries(plant.nutrition_per_100g)) {
+        resp += `- **${k.replace(/_/g, ' ')}:** ${v}\n`;
+      }
+      resp += `\n`;
+    }
+    const med = getArrayText(plant.medicinal_uses);
+    if (med) resp += `**Medicinal / Traditional Uses:** ${med}\n`;
+    return resp.trim();
+  }
+
+  // 6. How to Identify
+  if (/(identify|identification|leaf|how to look|recognize)/i.test(q)) {
+    let resp = `### 🔍 How to Identify ${name} (${sci})\n\n`;
+    if (plant.how_to_identify_leaf) resp += `**Leaf Characteristics:** ${plant.how_to_identify_leaf}\n\n`;
+    if (plant.how_to_identify_seed_or_fruit) resp += `**Seed / Fruit Characteristics:** ${plant.how_to_identify_seed_or_fruit}\n\n`;
+    const look = getArrayText(plant.lookalikes);
+    if (look) resp += `**Lookalikes & Differences:** ${look}\n`;
+    return resp.trim();
+  }
+
+  // 7. General Crop Overview
+  let resp = `### 🌾 ${name} (${sci})\n\n`;
+  resp += `**Botanical Classification:** ${plant.category || 'Agricultural Crop'} • Family: *${plant.family || 'Plantae'}*\n`;
+  if (plant.season) resp += `- **Optimal Season:** ${plant.season}\n`;
+  if (plant.soil) resp += `- **Soil Requirements:** ${plant.soil}\n`;
+  if (plant.water) resp += `- **Water & Irrigation:** ${plant.water}\n`;
+  const benFirst = Array.isArray(plant.benefits) ? plant.benefits[0] : (plant.benefits || '');
+  if (benFirst) resp += `- **Key Utility:** ${benFirst}.\n`;
+  if (Array.isArray(plant.diseases) && plant.diseases.length > 0) {
+    resp += `- **Common Diseases:** ${plant.diseases.slice(0, 3).map(d => d.name.split('(')[0].trim()).join(', ')}.\n`;
+  }
+  resp += `\n*Ask me about "${name} price", "${name} fertilizer", "${name} diseases", or "${name} seed rate" for targeted guidance!*`;
+  return resp;
 }
 
 // Find matched disease
@@ -275,13 +519,13 @@ function findFertilizer(query) {
 // Find parcel by query or default
 function resolvePlot(plotId, query) {
   const q = cleanText(query);
-  if (q.includes('b-2') || q.includes('b-3') || q.includes('pepper') || q.includes('polyhouse') || q.includes('plot 2')) {
+  if (/\b(b-2|b-3|pepper|polyhouse|plot\s*2)\b/i.test(q)) {
     return PROJECT_DATA.parcels.find(p => p.id === 'plot-2') || PROJECT_DATA.parcels[1] || PROJECT_DATA.parcels[0];
   }
-  if (q.includes('c-3') || q.includes('rice') || q.includes('mango') || q.includes('lowland') || q.includes('plot 3') || q.includes('d-4')) {
+  if (/\b(c-3|rice|paddy|mango|lowland|plot\s*3|d-4)\b/i.test(q)) {
     return PROJECT_DATA.parcels.find(p => p.id === 'plot-3') || PROJECT_DATA.parcels[2] || PROJECT_DATA.parcels[0];
   }
-  if (q.includes('a-1') || q.includes('wheat') || q.includes('plot 1') || q.includes('north parcel')) {
+  if (/\b(a-1|wheat|gehu|gehun|plot\s*1|north parcel)\b/i.test(q)) {
     return PROJECT_DATA.parcels.find(p => p.id === 'plot-1') || PROJECT_DATA.parcels[0];
   }
   return PROJECT_DATA.parcels.find(p => p.id === plotId) || PROJECT_DATA.parcels[0];
@@ -402,7 +646,12 @@ No critical pathogen threshold breached. Continue visual monitoring along parcel
 3. Check the **Marketplace / Mandi Module** in CropCare for live nearby buyer bids and MSP rates.`;
   }
 
-  // 7. Did the user ask a general crop question while in Advisor mode?
+  // 7. Price / Mandi Rates / Market Value
+  if (isPriceOrMandiQuery(q)) {
+    return formatMandiPriceAnswer(q, language, userName, plot);
+  }
+
+  // 8. Did the user ask a general crop question while in Advisor mode?
   const matchedPlant = findPlant(query);
   const matchedDisease = findDisease(query);
   const matchedScheme = findScheme(query);
@@ -586,6 +835,11 @@ function _runGeneralLogic(rawQuery, language = 'en', userName = 'Farmer', active
     return "PM-KISAN provides ₹6,000 per year to eligible farmer families in three installments of ₹2,000 via DBT.";
   }
 
+  // Check price / Mandi rates
+  if (isPriceOrMandiQuery(lower)) {
+    return formatMandiPriceAnswer(raw, language, userName, activePlot);
+  }
+
   // Check scheme
   const scheme = findScheme(raw);
   if (scheme) {
@@ -609,7 +863,7 @@ function _runGeneralLogic(rawQuery, language = 'en', userName = 'Farmer', active
   // Check plant
   const plant = findPlant(raw);
   if (plant) {
-    return `${plant.name} (${plant.scientific_name || ''}): ${plant.category || 'Crop'} with typical duration of ${plant.duration_days || '90-120'} days. Optimal soil: ${plant.soil_type || 'loamy'}.`;
+    return formatPlantAgronomyAnswer(plant, raw, language);
   }
 
   // Check social courtesy (thank you, goodbye)
