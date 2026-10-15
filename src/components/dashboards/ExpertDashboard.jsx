@@ -222,6 +222,45 @@ export default function ExpertDashboard() {
         </div>
       )}
 
+      {/* Tab: Soil Health */}
+      {activeDashboardTab === 'soilHealth' && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">ICAR Soil Health Card & Regional Chemistry Grid</h3>
+              <p className="text-xs text-slate-500">Macro and micro-nutrient assays compiled from 480 georeferenced soil core samples</p>
+            </div>
+            <span className="text-xs font-bold text-purple-600 bg-purple-50 dark:bg-purple-950 px-2.5 py-1 rounded-lg">ISO 17025 Certified Lab</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { parcel: 'Parcel A-1 (Raipur North)', crop: 'Wheat (HD-2967)', ph: '6.8 (Neutral)', oc: '0.74% (Optimal)', npk: '120:58:42 kg/ha', zinc: '0.82 ppm (Adequate)', alert: 'Ideal for sowing' },
+              { parcel: 'Parcel B-2 (Canal Belt)', crop: 'Basmati Rice', ph: '7.4 (Slightly Alkaline)', oc: '0.52% (Low)', npk: '95:40:35 kg/ha', zinc: '0.45 ppm (Deficient)', alert: 'Add 25kg Zinc Sulfate/ha' },
+              { parcel: 'Parcel C-1 (Tubewell South)', crop: 'Mustard / Brassica', ph: '6.9 (Neutral)', oc: '0.68% (Medium)', npk: '110:50:40 kg/ha', zinc: '0.78 ppm (Adequate)', alert: 'Sulfur top-dressing recommended' }
+            ].map((s, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">{s.parcel}</h4>
+                  <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950 px-2 py-0.5 rounded">
+                    {s.crop}
+                  </span>
+                </div>
+                <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+                  <div className="flex justify-between"><span>Soil pH:</span> <strong>{s.ph}</strong></div>
+                  <div className="flex justify-between"><span>Organic Carbon:</span> <strong>{s.oc}</strong></div>
+                  <div className="flex justify-between"><span>NPK Ratio:</span> <strong>{s.npk}</strong></div>
+                  <div className="flex justify-between"><span>Zinc Status:</span> <strong>{s.zinc}</strong></div>
+                </div>
+                <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-[11px] font-semibold text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+                  📌 {s.alert}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

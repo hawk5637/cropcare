@@ -217,6 +217,70 @@ export default function BuyerDashboard() {
         </div>
       )}
 
+      {/* Tab 3: Forward Farmer Contracts */}
+      {activeDashboardTab === 'contracts' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Active Forward Farmer Contracts & FPO Agreements</h3>
+              <p className="text-xs text-slate-500">Legal e-Contracts stamped with automated WDRA & e-NAM trade guarantees</p>
+            </div>
+            <button
+              onClick={() => confetti({ particleCount: 50, spread: 45 })}
+              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Forward Contract</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { id: 'CTR-2026-081', farmer: 'Khanna Progressive Kisan FPO', crop: 'Sharbati Durum Wheat', qty: '120 MT', price: '₹2,580/Qtl', advance: '₹6,19,200 (Paid)', status: 'Active (Harvest in 12d)' },
+              { id: 'CTR-2026-082', farmer: 'Karnal Basmati Growers Union', crop: '1121 Pusa Steam Basmati', qty: '80 MT', price: '₹3,820/Qtl', advance: '₹6,11,200 (Paid)', status: 'Quality Assayed' },
+              { id: 'CTR-2026-083', farmer: 'Malwa Organic Soybean Cluster', crop: 'Non-GMO Yellow Soybean', qty: '50 MT', price: '₹4,750/Qtl', advance: '₹4,75,000 (Paid)', status: 'In Transit' }
+            ].map((c) => (
+              <div key={c.id} className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 px-2 py-0.5 rounded">
+                    {c.id}
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-600">{c.status}</span>
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-base text-slate-900 dark:text-white">{c.crop}</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">Supplier: {c.farmer}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 flex justify-between text-xs">
+                  <div>
+                    <div className="text-[10px] text-slate-500 font-bold uppercase">Agreed Quantity</div>
+                    <div className="font-extrabold text-slate-900 dark:text-white">{c.qty} @ {c.price}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase">Escrow Advance</div>
+                    <div className="font-extrabold text-amber-600">{c.advance}</div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => alert(`Downloading verified legal contract ${c.id}...`)}
+                    className="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200"
+                  >
+                    Download e-Contract PDF
+                  </button>
+                  <button 
+                    onClick={() => alert(`Assay report for ${c.id}: Moisture 11.2%, Foreign Matter 0.4%, Grade: FAQ Premium`)}
+                    className="px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs font-bold text-amber-800 dark:text-amber-300"
+                  >
+                    View Lab Assay
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Tab 4: Cold-Chain Logistics */}
       {activeDashboardTab === 'logistics' && (
         <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
@@ -227,6 +291,47 @@ export default function BuyerDashboard() {
               <span className="text-emerald-600">Temp: +4.2°C (Optimal)</span>
             </div>
             <p className="text-slate-500">Route: NH-48 Karnal bypass ➔ Delhi Azadpur Mandi. ETA: 2h 15m.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Bank Escrow Settlement */}
+      {activeDashboardTab === 'escrow' && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs">
+                <ShieldCheck className="w-4 h-4" />
+                <span>WDRA & RBI Scheduled Bank Escrow Protected</span>
+              </div>
+              <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mt-1">Escrow Liquidity & Milestone Release Desk</h3>
+              <p className="text-xs text-slate-500">Guarantees T+0 payout to farmers instantly when electronic warehouse receipt (e-NWR) is signed.</p>
+            </div>
+            <button
+              onClick={handleDeposit}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add ₹5,00,000 to Vault</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+              <div className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Available Vault Balance</div>
+              <div className="text-2xl font-black text-emerald-800 dark:text-emerald-200 mt-1">₹{(escrowDeposited / 100000).toFixed(2)} Lakhs</div>
+              <div className="text-[11px] text-emerald-600 mt-1">Active in SBI Escrow Account #...8892</div>
+            </div>
+            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
+              <div className="text-[11px] font-bold text-amber-700 dark:text-amber-300 uppercase">Committed To Active Lots</div>
+              <div className="text-2xl font-black text-amber-800 dark:text-amber-200 mt-1">₹17,05,400</div>
+              <div className="text-[11px] text-amber-600 mt-1">Locked across 3 FPO contracts</div>
+            </div>
+            <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800">
+              <div className="text-[11px] font-bold text-purple-700 dark:text-purple-300 uppercase">T+0 Settled (This Month)</div>
+              <div className="text-2xl font-black text-purple-800 dark:text-purple-200 mt-1">₹68,40,000</div>
+              <div className="text-[11px] text-purple-600 mt-1">100% dispute-free disbursements</div>
+            </div>
           </div>
         </div>
       )}

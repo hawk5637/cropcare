@@ -21,7 +21,11 @@ import {
   Compass,
   Sliders,
   Scale,
-  ExternalLink
+  ExternalLink,
+  Droplets,
+  Wind,
+  Thermometer,
+  CloudRain
 } from 'lucide-react';
 import { getLiveMandiPrices } from '../../services/mandiService';
 
@@ -429,6 +433,203 @@ export default function FarmerDashboard() {
             <span>Open All Indian APMC Mandis & Buyer Cockpit</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
+        </div>
+      )}
+
+      {/* Tab 3: Rain & Spray Radar */}
+      {activeDashboardTab === 'weather' && (
+        <div className="space-y-6">
+          {/* Top Spray Window Hero Banner */}
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white shadow-lg relative overflow-hidden border border-emerald-700/50">
+            <div className="absolute right-0 top-0 translate-x-10 -translate-y-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold tracking-wide">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  LIVE SPRAY WINDOW: OPTIMAL
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black tracking-tight">Hyperlocal Rain & Spray Feasibility Radar</h3>
+                <p className="text-emerald-100/80 text-xs sm:text-sm max-w-2xl leading-relaxed">
+                  Delta-T is <strong className="text-white">3.8</strong> (Ideal 2–8). Wind drift speed is low (7.2 km/h). Safe for foliar fungicide, herbicide & micronutrient spray across all farm parcels.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap md:flex-col items-start md:items-end gap-2 shrink-0">
+                <button
+                  onClick={() => setActiveNav('weather')}
+                  className="px-4 py-2.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-900 font-extrabold text-xs flex items-center gap-2 shadow-md transition-all cursor-pointer"
+                >
+                  <span>Open 14-Day Microclimate Radar</span>
+                  <ExternalLink className="w-4 h-4 text-emerald-700" />
+                </button>
+                <span className="text-[11px] text-emerald-200/70 font-mono">IMD Doppler Station • Updated 4m ago</span>
+              </div>
+            </div>
+
+            {/* Quick Metrics Strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-emerald-700/60">
+              <div className="p-3 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
+                <div className="flex items-center gap-2 text-emerald-200 text-xs font-semibold">
+                  <Thermometer className="w-4 h-4 text-amber-400" />
+                  <span>Ambient Temp</span>
+                </div>
+                <div className="text-xl font-black mt-1">28.4°C</div>
+                <div className="text-[11px] text-emerald-300">Min 19°C • Max 32°C</div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
+                <div className="flex items-center gap-2 text-emerald-200 text-xs font-semibold">
+                  <Droplets className="w-4 h-4 text-cyan-400" />
+                  <span>Humidity</span>
+                </div>
+                <div className="text-xl font-black mt-1">54%</div>
+                <div className="text-[11px] text-emerald-300">Dew Point: 18.2°C</div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
+                <div className="flex items-center gap-2 text-emerald-200 text-xs font-semibold">
+                  <Wind className="w-4 h-4 text-teal-300" />
+                  <span>Wind Speed</span>
+                </div>
+                <div className="text-xl font-black mt-1">7.2 km/h</div>
+                <div className="text-[11px] text-emerald-300">Gusts: 11 km/h (Low Drift)</div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
+                <div className="flex items-center gap-2 text-emerald-200 text-xs font-semibold">
+                  <CloudRain className="w-4 h-4 text-blue-400" />
+                  <span>Rain Risk (48h)</span>
+                </div>
+                <div className="text-xl font-black mt-1">5%</div>
+                <div className="text-[11px] text-emerald-300">No Washout Expected</div>
+              </div>
+            </div>
+          </div>
+
+          {/* 24-Hour Spray & Cloud Timeline */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h4 className="font-extrabold text-base text-slate-900 dark:text-white">Hourly Spray Feasibility & Precipitation Timeline</h4>
+                <p className="text-xs text-slate-500">Real-time Delta-T and droplet evaporation index for today</p>
+              </div>
+              <div className="flex items-center gap-3 text-xs font-bold">
+                <span className="flex items-center gap-1.5 text-emerald-600"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Safe Window</span>
+                <span className="flex items-center gap-1.5 text-amber-500"><span className="w-2.5 h-2.5 rounded-full bg-amber-400" /> Caution</span>
+                <span className="flex items-center gap-1.5 text-red-500"><span className="w-2.5 h-2.5 rounded-full bg-red-500" /> Unsafe / Rain</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 pt-2 overflow-x-auto">
+              {[
+                { time: '06:00', icon: '🌅', temp: '21°C', rain: '0%', status: 'Safe', deltaT: '2.1', safe: true },
+                { time: '09:00', icon: '☀️', temp: '25°C', rain: '0%', status: 'Optimal', deltaT: '3.6', safe: true },
+                { time: '12:00', icon: '☀️', temp: '30°C', rain: '2%', status: 'Optimal', deltaT: '4.8', safe: true },
+                { time: '15:00', icon: '⛅', temp: '32°C', rain: '5%', status: 'Caution', deltaT: '6.4', safe: false, caution: true },
+                { time: '18:00', icon: '🌤️', temp: '28°C', rain: '5%', status: 'Optimal', deltaT: '3.9', safe: true },
+                { time: '21:00', icon: '🌙', temp: '24°C', rain: '0%', status: 'Safe', deltaT: '2.4', safe: true },
+                { time: '00:00', icon: '🌌', temp: '22°C', rain: '0%', status: 'Dew Risk', deltaT: '1.2', safe: false, caution: true },
+                { time: '03:00', icon: '🌫️', temp: '20°C', rain: '0%', status: 'Dew Risk', deltaT: '0.9', safe: false, caution: true },
+              ].map((h, i) => (
+                <div 
+                  key={i} 
+                  className={`p-3 rounded-xl border text-center transition-all ${
+                    h.safe 
+                      ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50' 
+                      : 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/50'
+                  }`}
+                >
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400">{h.time}</div>
+                  <div className="text-xl my-1">{h.icon}</div>
+                  <div className="font-extrabold text-sm text-slate-900 dark:text-white">{h.temp}</div>
+                  <div className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold mt-0.5">🌧️ {h.rain}</div>
+                  <div className={`mt-2 py-0.5 px-1.5 rounded text-[10px] font-extrabold ${
+                    h.safe 
+                      ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200' 
+                      : 'bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200'
+                  }`}>
+                    {h.status}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 5-Day Agro-Meteorological Advisory Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-extrabold text-base text-slate-900 dark:text-white">5-Day Microclimate Forecast & Rainfall Outlook</h4>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-lg">Raipur Farm Cluster A</span>
+              </div>
+
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                {[
+                  { day: 'Today', date: 'Thu, Oct 15', condition: 'Sunny & Clear', icon: '☀️', high: 32, low: 20, rain: 0, sprayWindow: 'Optimal All Day' },
+                  { day: 'Tomorrow', date: 'Fri, Oct 16', condition: 'Partly Sunny', icon: '⛅', high: 31, low: 21, rain: 5, sprayWindow: 'Optimal (08:00 - 16:00)' },
+                  { day: 'Saturday', date: 'Sat, Oct 17', condition: 'Scattered Clouds', icon: '🌤️', high: 30, low: 21, rain: 15, sprayWindow: 'Safe Morning Only' },
+                  { day: 'Sunday', date: 'Sun, Oct 18', condition: 'Breezy & Overcast', icon: '☁️', high: 29, low: 20, rain: 35, sprayWindow: 'Caution (Wind 18km/h)' },
+                  { day: 'Monday', date: 'Mon, Oct 19', condition: 'Light Showers', icon: '🌧️', high: 27, low: 19, rain: 65, sprayWindow: 'Avoid (Washout Risk)' }
+                ].map((d, idx) => (
+                  <div key={idx} className="py-3.5 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{d.icon}</span>
+                      <div>
+                        <div className="font-extrabold text-sm text-slate-900 dark:text-white">{d.day} <span className="text-xs font-normal text-slate-400">({d.date})</span></div>
+                        <div className="text-xs text-slate-500">{d.condition}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div className="text-right">
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">{d.high}° / <span className="text-slate-400">{d.low}°</span></div>
+                        <div className="text-[11px] text-blue-600 font-semibold">{d.rain}% Rain</div>
+                      </div>
+
+                      <div className="hidden sm:block">
+                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
+                          d.rain < 20 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
+                            : d.rain < 50
+                            ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                            : 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+                        }`}>
+                          {d.sprayWindow}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ICAR Official Agro-Met Advisory Card */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>ICAR Agro-Met Bulletin</span>
+                </div>
+                <h5 className="font-extrabold text-sm text-slate-900 dark:text-white leading-snug">
+                  Recommended Spray & Irrigation Protocol
+                </h5>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  With zero precipitation in the 48-hour outlook and optimal relative humidity (54%), farmers are advised to complete foliar nutrition (Zinc Sulfate 0.5% + Urea 1%) and preventative rust sprays before Sunday.
+                </p>
+                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300">
+                  ⚠️ <strong>Soil Moisture Alert:</strong> Parcel B moisture is at 31%. Schedule 45-min drip cycle before tomorrow afternoon.
+                </div>
+              </div>
+
+              <button
+                onClick={() => setActiveNav('weather')}
+                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+              >
+                <span>View Full Meteorological Station</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

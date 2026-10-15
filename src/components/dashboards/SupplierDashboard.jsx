@@ -120,8 +120,63 @@ export default function SupplierDashboard() {
         ))}
       </div>
 
-      {/* Tab: Service Dispatch */}
-      {(activeDashboardTab === 'serviceDispatch' || activeDashboardTab === 'inventory' || !activeDashboardTab) && (
+      {/* Tab 1: Agri-Input & Spares Inventory */}
+      {(activeDashboardTab === 'inventory' || !activeDashboardTab) && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Warehouse Agri-Input & Machinery Spares Stock</h3>
+              <p className="text-xs text-slate-500">Live barcode tracking across regional distribution hubs</p>
+            </div>
+            <button
+              onClick={() => alert('New stock lot intake registered with QR scan.')}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Intake Stock Lot</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { id: 'SKU-091', item: 'Neem-Coated Urea (45kg)', category: 'Fertilizers', stock: '840 Bags', status: 'Optimal', threshold: '200 Bags' },
+              { id: 'SKU-092', item: 'HD-2967 Certified Wheat Seed', category: 'Certified Seeds', stock: '420 Bags (40kg)', status: 'High Demand', threshold: '150 Bags' },
+              { id: 'SKU-093', item: 'Drip Emitter 4 LPH Anti-Clog', category: 'Micro-Irrigation', stock: '12,500 Pcs', status: 'Optimal', threshold: '3,000 Pcs' },
+              { id: 'SKU-094', item: 'Bio-Fungicide Trichoderma Viride', category: 'Bio-Protection', stock: '320 Litres', status: 'Restock Soon', threshold: '300 Litres' },
+              { id: 'SKU-095', item: 'Mahindra 575 DI Filter Assembly', category: 'Tractor Spares', stock: '45 Units', status: 'Optimal', threshold: '10 Units' },
+              { id: 'SKU-096', item: 'Zinc Sulfate Monohydrate (33%)', category: 'Micronutrients', stock: '650 Bags (10kg)', status: 'Optimal', threshold: '100 Bags' }
+            ].map((stk) => (
+              <div key={stk.id} className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 px-2 py-0.5 rounded">
+                    {stk.id}
+                  </span>
+                  <span className={`text-xs font-bold ${stk.status === 'Restock Soon' ? 'text-amber-500' : 'text-emerald-600'}`}>
+                    {stk.status}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-base text-slate-900 dark:text-white">{stk.item}</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">{stk.category}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 flex justify-between text-xs">
+                  <div>
+                    <div className="text-[10px] text-slate-500 font-bold uppercase">In-Warehouse</div>
+                    <div className="font-extrabold text-blue-600">{stk.stock}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase">Safety Buffer</div>
+                    <div className="font-bold text-slate-600 dark:text-slate-300">{stk.threshold}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 2: Service Dispatch */}
+      {activeDashboardTab === 'serviceDispatch' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Emergency Breakdown Requests</h3>
@@ -170,7 +225,7 @@ export default function SupplierDashboard() {
         </div>
       )}
 
-      {/* Tab: Orders */}
+      {/* Tab 3: Orders */}
       {activeDashboardTab === 'orders' && (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Active B2B Spares Orders</h3>
@@ -195,6 +250,37 @@ export default function SupplierDashboard() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Supply Analytics */}
+      {activeDashboardTab === 'supplyAnalytics' && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Regional Territory Fulfillment & Credit Analytics</h3>
+              <p className="text-xs text-slate-500">Logistics dispatch speed, dealer network volume, and payment settlement rates</p>
+            </div>
+            <span className="text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-950 px-2.5 py-1 rounded-lg">99.2% On-Time Delivery</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <div className="text-[11px] font-bold text-slate-500 uppercase">Avg Response Time</div>
+              <div className="text-2xl font-black text-blue-600 mt-1">28 Mins</div>
+              <div className="text-[11px] text-emerald-600 mt-1">14 mins faster than state target</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <div className="text-[11px] font-bold text-slate-500 uppercase">Active Dealer Outlets</div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">64 Retailers</div>
+              <div className="text-[11px] text-slate-500 mt-1">Covering 18 tehsils in Punjab</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <div className="text-[11px] font-bold text-slate-500 uppercase">Net Monthly Throughput</div>
+              <div className="text-2xl font-black text-emerald-600 mt-1">₹48.2 Lakhs</div>
+              <div className="text-[11px] text-emerald-600 mt-1">100% digital invoices</div>
+            </div>
           </div>
         </div>
       )}
