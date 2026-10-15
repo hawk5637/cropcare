@@ -15,16 +15,13 @@ const KEY = (customKey) => {
 };
 
 const PREFERRED_ORDER = [
-  "gemini-3.1-flash-lite",
-  "gemini-3.5-flash-lite",
-  "gemini-3.7-flash",
-  "gemini-3.6-flash",
-  "gemini-3.5-flash",
-  "gemini-flash-lite-latest",
-  "gemini-flash-latest",
   process.env.GEMINI_MODEL,
-  "gemini-3.8-flash",
-  "gemini-pro-latest",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+  "gemini-1.5-flash",
+  "gemini-1.5-pro",
+  "gemini-flash-latest"
 ].filter(Boolean);
 
 let cache = { at: 0, models: null };

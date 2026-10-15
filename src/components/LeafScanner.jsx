@@ -1981,7 +1981,11 @@ export default function LeafScanner() {
       }
 
       const json = await res.json();
-      setPlantNetResult(json);
+      if (json.isPlant === false || json.tier === 'refuse' || !json.topMatch) {
+        setPlantNetResult(null);
+      } else {
+        setPlantNetResult(json);
+      }
 
       // If confident or probable match found, sync crop focus and automatically run health diagnosis
       if (json.topMatch && (json.tier === 'confident' || json.tier === 'probable') && json.isPlant !== false) {
@@ -1997,12 +2001,8 @@ export default function LeafScanner() {
           setSpecimenFocus(cropNameToUse);
         }
         runVisionAnalysis(imagesToSend[0], null, colorStats, cropNameToUse);
-      } else if (json.isPlant === false || (json.tier === 'refuse' && (
-        json.message?.toLowerCase().includes('non-plant') || 
-        json.message?.toLowerCase().includes('detected') || 
-        json.message?.toLowerCase().includes('face') || 
-        json.message?.toLowerCase().includes('person')
-      ))) {
+      } else if (json.isPlant === false || json.tier === 'refuse') {
+        setPlantNetResult(null);
         const detectedName = json.subjectName || 'Non-Plant Subject';
         setScanResult({
           image_type: 'other',
@@ -2390,6 +2390,9 @@ Reply ONLY with valid JSON.`;
         }
       }
 
+      if (data && (data.is_plant_detected === false || data.confidence_pct < 50)) {
+        setPlantNetResult(null);
+      }
       setScanResult(data);
     } catch (err) {
       console.error('[LeafDoctor Scan Error]:', err);
@@ -3446,7 +3449,7 @@ Reply ONLY with valid JSON.`;
           )}
 
           {/* Pl@ntNet Botanical Identification Card */}
-          {plantNetResult && (
+          {plantNetResult && plantNetResult.isPlant !== false && plantNetResult.tier !== 'refuse' && scanResult?.is_plant_detected !== false && !isScanConfidenceLow && (
             <div className={`rounded-3xl p-6 sm:p-8 border shadow-xl space-y-5 animate-in fade-in duration-300 ${
               plantNetResult.tier === 'confident'
                 ? 'bg-gradient-to-br from-emerald-50/90 via-white to-green-50/80 dark:from-slate-900 dark:via-emerald-950/30 dark:to-slate-900 border-emerald-400 dark:border-emerald-700'
@@ -3799,9 +3802,9 @@ Reply ONLY with valid JSON.`;
                 </div>
               )}
 
-              {/* Verdict Banner - Prominently Displayed at Top */}
+              {/* If non-plant or low confidence, give correct answer only: alert notice, observation, and retake actions */}
               {!scanResult.is_plant_detected || isScanConfidenceLow ? (
-                <>
+                <div className="space-y-4">
                   <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 flex items-center justify-between shadow-sm">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
@@ -3825,30 +3828,70 @@ Reply ONLY with valid JSON.`;
                     </span>
                   </div>
 
-                {/* Instant Botanical Specimen Quick-Launcher */}
-                <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-700 space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-emerald-600" />
-                      Try Scanning a Real Crop Leaf (1-Click Instant Test):
-                    </span>
+                  {/* What I See - Observation */}
+                  {scanResult.what_i_see && (
+                    <div className="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 space-y-1">
+                      <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                        <Eye className="w-4 h-4 text-amber-600" />
+                        <span>What I See / अवलोकन</span>
+                      </div>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-relaxed">
+                        {scanResult.what_i_see}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Retake Camera / Upload Clean Buttons */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setScanResult(null);
+                        setImagePreview(null);
+                        startCamera();
+                      }}
+                      className="py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Camera className="w-4 h-4" />
+                      <span>Retake Photo / Open Camera</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="py-3 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-extrabold text-xs rounded-xl border border-slate-300 dark:border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span>Upload Plant Leaf Photo</span>
+                    </button>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {SAMPLE_SPECIMENS.slice(0, 6).map(s => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => selectSampleSpecimen(s)}
-                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-emerald-300 dark:border-slate-600 text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 transition-all shadow-sm flex items-center gap-1.5"
-                      >
-                        <span>{s.icon}</span>
-                        <span>{s.name}</span>
-                      </button>
-                    ))}
+
+                  {/* Instant Botanical Specimen Quick-Launcher */}
+                  <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-700 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-emerald-600" />
+                        Or Try Scanning a Real Crop Leaf (1-Click Instant Test):
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {SAMPLE_SPECIMENS.slice(0, 6).map(s => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => selectSampleSpecimen(s)}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-emerald-300 dark:border-slate-600 text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <span>{s.icon}</span>
+                          <span>{s.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </>
-              ) : scanResult.health_status === 'healthy' ? (
+              ) : (
+                <div className="space-y-6">
+                  {/* Real Plant Health Status Card */}
+                  {scanResult.health_status === 'healthy' ? (
                 <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-7 h-7 text-emerald-600 shrink-0" />
@@ -4315,6 +4358,9 @@ Reply ONLY with valid JSON.`;
                 </div>
 
               </div>
+
+                </div>
+              )}
 
             </div>
           )}

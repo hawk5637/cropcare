@@ -1166,14 +1166,22 @@ Reply ONLY with valid JSON conforming to the schema.`;
         }
       }
 
-      const isPerson = structuredResult.image_type === 'other' && 
-                       /(?:human face|person portrait|selfie|man's face|woman's face)/i.test(structuredResult.title || '');
+      const isPerson = /(?:human|person|people|face|portrait|selfie|man|woman|boy|girl)/i.test(structuredResult.title || '') ||
+                       /(?:human|person|people|face|portrait|selfie|man|woman|boy|girl)/i.test(structuredResult.what_i_see || '');
       const isNotPlant = structuredResult.image_type === 'other' || 
+                         structuredResult.image_type === 'general_object' ||
                          structuredResult.image_type === 'not_a_plant' ||
                          structuredResult.health_status === 'not_applicable' ||
                          structuredResult.is_plant_detected === false ||
                          isPerson ||
-                         /(?:^|\s)(?:not a plant|non-plant|indoor room|furniture|wall|screen)(?:\s|$)/i.test(structuredResult.title || '');
+                         /(?:not a plant|non-plant|non-botanical|indoor room|furniture|wall|screen)/i.test(structuredResult.title || '');
+
+      if (isNotPlant) {
+        structuredResult.health_status = 'not_applicable';
+        structuredResult.severity = 'none';
+        structuredResult.chemical_treatment = [];
+        structuredResult.organic_treatment = [];
+      }
 
       // Real AI Confidence Rules:
       // - 80 or above: "Likely match"

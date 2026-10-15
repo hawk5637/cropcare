@@ -313,52 +313,18 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
     }
   }
 
-  // 3. If no hint matched or auto-detect requested (live camera shot), infer specimen intelligently from organ and visual features
+  // 3. If no hint matched or auto-detect requested, DO NOT guess blindly or return fake crops
   if (!found) {
-    const o = (organ || 'leaf').toLowerCase();
-    if (o === 'seed') {
-      // Golden/yellowish seed -> Wheat grain; otherwise Mustard or Chickpea
-      if (colorStats && (colorStats.foliageYellowRatio > 0.1 || colorStats.avgR > 140)) {
-        found = catalog.find(c => c.expected === 'Wheat') || catalog[2];
-      } else {
-        found = catalog.find(c => c.expected === 'Mustard') || catalog[7];
-      }
-    } else if (o === 'flower') {
-      if (colorStats && colorStats.foliageYellowRatio > 0.2) {
-        found = catalog.find(c => c.expected === 'Mustard') || catalog[7];
-      } else {
-        found = catalog.find(c => c.expected === 'Rose') || catalog[10];
-      }
-    } else if (o === 'fruit') {
-      if (colorStats && (colorStats.avgR > colorStats.avgG * 1.2 || colorStats.avgR > 130)) {
-        found = catalog.find(c => c.expected === 'Tomato') || catalog[0];
-      } else {
-        found = catalog.find(c => c.expected === 'Mango') || catalog[11];
-      }
-    } else if (o === 'bark') {
-      found = catalog.find(c => c.expected === 'Neem') || catalog[1];
-    } else {
-      // Foliar leaf analysis using morphological aspect ratio and pigmentation
-      const ar = colorStats?.aspectRatio || 1.0;
-      const isLinearBlade = ar > 1.8 || ar < 0.55;
-      const isDarkGlossy = (colorStats?.darkGlossyRatio || 0) > 0.12;
-
-      if (isLinearBlade) {
-        // Graminoid linear leaf blade: Wheat or Rice
-        found = catalog.find(c => c.expected === 'Wheat') || catalog[2];
-      } else if (isDarkGlossy) {
-        // Deep green glossy tree foliage: Neem or Mango or Citrus
-        found = catalog.find(c => c.expected === 'Neem') || catalog[1];
-      } else {
-        // Broadleaf dicot foliage: Tomato, Cotton, or Chilli
-        found = catalog.find(c => c.expected === 'Tomato') || catalog[0];
-      }
-    }
+    return {
+      isPlant: false,
+      score: 0,
+      matches: []
+    };
   }
 
   // Generate top 3 matches with calibrated confidence
-  // When hint was explicitly requested, 0.90 is appropriate; for blind auto-fallback, 0.52 (probable)
-  const baseScore = isExplicitHint ? 0.90 : 0.52;
+  // When hint was explicitly requested, 0.90 is appropriate
+  const baseScore = 0.90;
   const runnerUps = catalog.filter(c => c.expected !== found.expected).slice(0, 2);
   return {
     isPlant: true,
@@ -566,19 +532,26 @@ export default async function handler(req, res) {
       }
     }
 
-    // 3. If neither Pl@ntNet nor Gemini yielded results, use offline taxonomy matching
+    // 3. If neither Pl@ntNet nor Gemini yielded results, use offline taxonomy matching ONLY with explicit hint
     if (!nonPlantDetected && (!rawResults || rawResults.length === 0)) {
-      engineUsed = apiKey ? 'Pl@ntNet Architecture (Botanical Knowledge Base)' : 'CropCare Botanical Knowledge Base';
-      const mockResult = matchOfflineTaxonomy(cropHint, organs[0], colorStats);
-      if (mockResult) {
-        if (!mockResult.isPlant) {
+      if (cropHint && cropHint !== 'auto') {
+        engineUsed = 'CropCare Botanical Knowledge Base';
+        const mockResult = matchOfflineTaxonomy(cropHint, organs[0], colorStats);
+        if (mockResult && mockResult.isPlant) {
+          rawResults = mockResult.matches || [];
+        } else {
           nonPlantDetected = true;
           rawResults = [];
-        } else {
-          rawResults = mockResult.matches || [];
         }
       } else {
+        // Blind unverified photo: strictly reject, never guess fake plants
+        nonPlantDetected = true;
         rawResults = [];
+        rejectionDetails = {
+          subjectName: 'Non-Plant / Unverified Subject',
+          category: 'non_plant',
+          reason: 'No agricultural crop leaf, fruit, or plant detected in the photo.'
+        };
       }
     }
 
