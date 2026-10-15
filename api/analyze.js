@@ -955,23 +955,13 @@ export default async function handler(req, res) {
       }
     }
 
-    const candidateKey = 
-      process.env.GEMINI_API_KEY || 
-      req.headers['x-gemini-api-key'] || 
-      process.env.VITE_GEMINI_API_KEY || '';
+    const candidateKey = process.env.GEMINI_API_KEY || '';
 
     if (!isLikelyGeminiKey(candidateKey)) {
-      const fallbackResult = generateFallbackCropDiagnosis(
-        targetCrop || (category === 'tree' ? 'Mango Tree' : category === 'seed' ? 'Chickpea Seed' : 'auto'),
-        'scan_icar',
-        colorStats,
-        category,
-        image
-      );
-      return res.status(200).json({
-        ...fallbackResult,
-        cached: false,
-        _model: 'icar-agronomy-core'
+      return res.status(503).json({
+        error: 'Gemini API key is not configured. Please set the GEMINI_API_KEY environment variable.',
+        message: 'Gemini API key is missing on the server.',
+        status: 503
       });
     }
 
@@ -1020,6 +1010,12 @@ MISSION: Identify and analyze ANY item captured in the image with high accuracy:
 5. HANDS & HOLDING SPECIMENS:
    - If a person's hand or fingers are holding a leaf, fruit, flower, seed, or object, prioritize analyzing the SPECIMEN BEING HELD.${categoryHint}
 
+CONFIDENCE SCORING RULES:
+Provide real visual identification confidence score "confidence_pct" (integer 0 to 100):
+- 80 or above: Likely match
+- 50 to 79: Possible match, please verify
+- below 50: Cannot identify reliably, retake the photo. If below 50, do NOT name a plant.
+
 Output Language: ${targetLang}. Use clean, structured JSON conforming to the schema.
 
 Reply ONLY with valid JSON conforming to the schema.`;
@@ -1037,6 +1033,10 @@ Reply ONLY with valid JSON conforming to the schema.`;
           items: { type: "STRING" } 
         },
         scientific_name: { type: "STRING" },
+        confidence_pct: { 
+          type: "INTEGER",
+          description: "Real AI visual identification confidence percentage from 0 to 100"
+        },
         confidence: { 
           type: "STRING", 
           enum: ["high", "medium", "low"] 
@@ -1120,7 +1120,7 @@ Reply ONLY with valid JSON conforming to the schema.`;
     try {
       const { data, model } = await callGemini(
         { systemInstruction, contents, generationConfig },
-        25000,
+        12000,
         apiKey
       );
       const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -1129,6 +1129,7 @@ Reply ONLY with valid JSON conforming to the schema.`;
         console.error('[analyze] Empty candidate received from Gemini:', data);
         return res.status(502).json({
           code: 'MODEL',
+          error: 'Gemini returned an empty diagnosis candidate.',
           message: 'Gemini returned an empty diagnosis candidate.',
           details: [{ model, status: 502, message: 'Empty candidate received from model' }]
         });
@@ -1141,6 +1142,7 @@ Reply ONLY with valid JSON conforming to the schema.`;
         console.error('[analyze] Failed to parse candidate JSON:', candidate);
         return res.status(502).json({
           code: 'MODEL',
+          error: 'Failed to parse structured botanical JSON from model.',
           message: 'Failed to parse structured botanical JSON from model.',
           details: [{ model, status: 502, message: parseErr.message, raw: candidate }]
         });
@@ -1173,26 +1175,55 @@ Reply ONLY with valid JSON conforming to the schema.`;
                          isPerson ||
                          /(?:^|\s)(?:not a plant|non-plant|indoor room|furniture|wall|screen)(?:\s|$)/i.test(structuredResult.title || '');
 
+      // Real AI Confidence Rules:
+      // - 80 or above: "Likely match"
+      // - 50 to 79: "Possible match, please verify"
+      // - below 50: "Cannot identify reliably, retake the photo". Do not name a plant.
+      const confScore = typeof structuredResult.confidence_pct === 'number'
+        ? Math.min(100, Math.max(0, structuredResult.confidence_pct))
+        : (structuredResult.confidence === 'high' ? 88 : structuredResult.confidence === 'medium' ? 65 : 42);
+
+      let confidenceLabel = 'Likely match';
+      let isBelow50 = false;
+      if (confScore >= 80) {
+        confidenceLabel = 'Likely match';
+      } else if (confScore >= 50) {
+        confidenceLabel = 'Possible match, please verify';
+      } else {
+        confidenceLabel = 'Cannot identify reliably, retake the photo';
+        isBelow50 = true;
+      }
+
+      if (isBelow50 && !isNotPlant) {
+        structuredResult.title = 'Cannot identify reliably, retake the photo';
+        structuredResult.scientific_name = '';
+        structuredResult.plant_name = 'Unidentified Specimen';
+        structuredResult.problem_name = 'Cannot identify reliably, retake the photo';
+        structuredResult.farmer_summary = 'Cannot identify reliably, retake the photo. Please capture a clear, well-lit photo of a single leaf or plant part.';
+      }
+
       const finalTitle = isPerson 
         ? 'Human Face / Person (Not a Plant)'
-        : (isNotPlant ? (structuredResult.title || 'Non-Botanical Subject') : (structuredResult.title || 'Botanical Specimen'));
+        : (isNotPlant ? (structuredResult.title || 'Non-Botanical Subject') : (isBelow50 ? 'Cannot identify reliably, retake the photo' : (structuredResult.title || 'Botanical Specimen')));
 
       const result = {
         ...structuredResult,
         image_type: isNotPlant ? 'other' : structuredResult.image_type,
-        is_plant_detected: !isNotPlant,
+        is_plant_detected: !isNotPlant && !isBelow50,
         title: finalTitle,
-        plant_name: isNotPlant ? 'Non-Botanical' : (structuredResult.title || 'Botanical Specimen'),
-        species: isNotPlant ? finalTitle : `${structuredResult.title || 'Specimen'} (${structuredResult.scientific_name || ''})`,
-        species_confidence: structuredResult.confidence === 'high' ? 0.95 : structuredResult.confidence === 'medium' ? 0.8 : 0.6,
-        health_status: isNotPlant ? 'not_applicable' : (structuredResult.health_status || (isHealthy ? 'healthy' : 'diseased')),
-        disease_name: isNotPlant ? 'None (Non-Plant Subject)' : (structuredResult.problem_name || structuredResult.title),
-        disease_confidence: isNotPlant ? 0 : (structuredResult.confidence === 'high' ? 0.95 : 0.8),
-        severity: isNotPlant ? 'none' : (structuredResult.severity || (isHealthy ? 'none' : 'moderate')),
+        plant_name: isNotPlant ? 'Non-Botanical' : (isBelow50 ? 'Unidentified' : (structuredResult.title || 'Botanical Specimen')),
+        species: isNotPlant ? finalTitle : (isBelow50 ? 'Unidentified Specimen' : `${structuredResult.title || 'Specimen'} (${structuredResult.scientific_name || ''})`),
+        confidence_pct: confScore,
+        confidence_label: confidenceLabel,
+        species_confidence: confScore / 100,
+        health_status: isNotPlant || isBelow50 ? 'not_applicable' : (structuredResult.health_status || (isHealthy ? 'healthy' : 'diseased')),
+        disease_name: isNotPlant || isBelow50 ? 'None' : (structuredResult.problem_name || structuredResult.title),
+        disease_confidence: isNotPlant || isBelow50 ? 0 : (structuredResult.confidence === 'high' ? 0.95 : confScore / 100),
+        severity: isNotPlant || isBelow50 ? 'none' : (structuredResult.severity || (isHealthy ? 'none' : 'moderate')),
         farmer_advice: structuredResult.farmer_summary || '',
         evidence: [structuredResult.what_i_see].filter(Boolean),
-        knowledge_base_verified: !!kbMatch,
-        knowledge_base_match: kbMatch ? {
+        knowledge_base_verified: !!kbMatch && !isBelow50,
+        knowledge_base_match: (kbMatch && !isBelow50) ? {
           name: kbMatch.name,
           scientific_name: kbMatch.scientific_name,
           category: kbMatch.category,
@@ -1207,34 +1238,24 @@ Reply ONLY with valid JSON conforming to the schema.`;
 
       return res.status(200).json({ ...result, _model: model });
     } catch (e) {
-      const errors = e.errors || [{ status: 500, message: String(e.message || e) }];
-      console.warn("Gemini vision analysis failed, serving certified ICAR agronomy fallback:", errors);
-      const fallbackResult = generateFallbackCropDiagnosis(
-        req.body?.targetCrop || 'auto',
-        'scan_icar',
-        req.body?.colorStats,
-        req.body?.category || 'auto',
-        req.body?.image
-      );
-      return res.status(200).json({
-        ...fallbackResult,
-        cached: false,
-        _fallback_note: 'Certified ICAR / FAO Agronomic Engine engaged.'
+      const errors = e.errors || [{ status: 502, message: String(e.message || e) }];
+      console.error("[analyze] Gemini vision analysis failed:", errors);
+      const friendlyObj = typeof friendly === 'function' ? friendly(errors) : { message: errors[0]?.message || 'Gemini vision analysis failed.' };
+      const friendlyMessage = typeof friendlyObj === 'string' ? friendlyObj : (friendlyObj?.message || 'Gemini vision analysis failed.');
+      return res.status(502).json({
+        code: friendlyObj?.code || 'MODEL',
+        error: friendlyMessage,
+        message: friendlyMessage,
+        details: errors,
+        status: 502
       });
     }
   } catch (error) {
-    console.error('[analyze] Unhandled server error, serving certified ICAR agronomy fallback:', error);
-    const fallbackResult = generateFallbackCropDiagnosis(
-      req.body?.targetCrop || 'auto',
-      'scan_icar',
-      req.body?.colorStats,
-      req.body?.category || 'auto',
-      req.body?.image
-    );
-    return res.status(200).json({
-      ...fallbackResult,
-      cached: false,
-      _fallback_note: 'Certified ICAR / FAO Agronomic Engine engaged.'
+    console.error('[analyze] Unhandled server error:', error);
+    return res.status(500).json({
+      error: 'Scanner error. Please retry.',
+      message: 'Scanner error. Please retry.',
+      status: 500
     });
   }
 }

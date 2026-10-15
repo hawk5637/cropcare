@@ -2217,7 +2217,7 @@ Reply ONLY with valid JSON.`;
           if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 22000);
+          const timeoutId = setTimeout(() => controller.abort(), 28000);
 
           const res = await fetch('/api/analyze', {
             method: 'POST',
@@ -2239,9 +2239,17 @@ Reply ONLY with valid JSON.`;
               data = json;
               networkSuccess = true;
             }
+          } else {
+            const errJson = await res.json().catch(() => ({}));
+            throw new Error(errJson.error || errJson.message || `The AI scanner responded with HTTP ${res.status}`);
           }
-        } catch {
-          // Expected on static GitHub Pages or serverless offline builds
+        } catch (fetchErr) {
+          if (fetchErr.name === 'AbortError') {
+            throw new Error('The AI scanner timed out after 28 seconds. Please retry.');
+          }
+          if (fetchErr.message && !fetchErr.message.includes('fetch')) {
+            throw fetchErr;
+          }
         }
       }
 
@@ -2263,9 +2271,10 @@ Reply ONLY with valid JSON.`;
           }
 
           const visionModels = [
+            'gemini-flash-latest',
+            'gemini-flash-lite-latest',
             'gemini-2.5-flash',
-            'gemini-2.0-flash',
-            'gemini-1.5-flash'
+            'gemini-2.0-flash'
           ];
 
           for (const modelCandidate of visionModels) {
@@ -2353,7 +2362,7 @@ Reply ONLY with valid JSON.`;
             } catch (candErr) {
               const isAbort = candErr.name === 'AbortError';
               const errStatus = isAbort ? 408 : (lastGeminiStatus || 500);
-              const errMsg = isAbort ? 'Request timed out after 6 seconds' : (candErr.message || 'Network error');
+              const errMsg = isAbort ? 'Request timed out after 20 seconds' : (candErr.message || 'Network error');
               console.error(`[Gemini API Exception] Status: ${errStatus}, Model: ${modelCandidate}, Message: ${errMsg}`);
               lastGeminiStatus = errStatus;
               lastGeminiMessage = errMsg;
@@ -2367,24 +2376,14 @@ Reply ONLY with valid JSON.`;
       clearTimeout(t1);
       clearTimeout(t2);
 
-      // Step 3: Heuristic & Certified Botanical Offline Diagnostic Engine (Never leave page looking broken)
+      // Step 3: Use buildOfflineSpecimenDiagnosis ONLY when a built-in demo sample (presetSample) is selected.
       if (!networkSuccess && dataUrl) {
-        data = buildOfflineSpecimenDiagnosis(forcedCrop || specimenFocus, currentColors || colorStats, presetSample, lensCategory);
-        data.ai_provider = 'CropCare Certified Offline Engine (ICAR / FAO)';
-        networkSuccess = true;
-
-        if (apiKey && lastGeminiStatus === 429) {
-          setGeminiNotice({
-            type: 'warning',
-            title: 'Gemini API Rate Limit Reached (HTTP 429)',
-            message: 'Your Google Gemini API free-tier quota has been reached. Loaded certified ICAR/FAO offline botanical diagnosis so your analysis is uninterrupted.'
-          });
-        } else if (apiKey && (lastGeminiStatus === 400 || lastGeminiStatus === 403)) {
-          setGeminiNotice({
-            type: 'warning',
-            title: `Gemini API Key Notice (HTTP ${lastGeminiStatus})`,
-            message: `Custom Gemini API key rejected. Showing certified ICAR offline botanical diagnosis.`
-          });
+        if (presetSample) {
+          data = buildOfflineSpecimenDiagnosis(forcedCrop || specimenFocus, currentColors || colorStats, presetSample, lensCategory);
+          data.ai_provider = 'CropCare Certified Offline Engine (ICAR / FAO)';
+          networkSuccess = true;
+        } else {
+          throw new Error('The AI scanner could not analyse this photo right now. Please retry. Nothing was guessed.');
         }
       }
 
@@ -2393,7 +2392,7 @@ Reply ONLY with valid JSON.`;
       console.error('[LeafDoctor Scan Error]:', err);
       setScanResult(null);
       setScanError({
-        message: `Analysis Notice: ${err.message || 'An unexpected error occurred during scan.'}`,
+        message: err.message || 'The AI scanner could not analyse this photo right now. Please retry. Nothing was guessed.',
         details: [{ status: 500, message: err.message || String(err) }]
       });
     } finally {
@@ -2422,6 +2421,20 @@ Reply ONLY with valid JSON.`;
       originalDiagnosis: scanResult
     });
   };
+
+  const scanAiConfidence = scanResult ? (
+    typeof scanResult.confidence_pct === 'number'
+      ? Math.min(100, Math.max(0, scanResult.confidence_pct))
+      : (typeof scanResult.species_confidence === 'number'
+          ? Math.round(scanResult.species_confidence * (scanResult.species_confidence <= 1 ? 100 : 1))
+          : 80)
+  ) : 0;
+  const isScanConfidenceLow = scanResult ? (scanAiConfidence < 50 || scanResult.confidence_label === 'Cannot identify reliably, retake the photo') : false;
+  const scanConfidenceBadgeText = scanAiConfidence >= 80
+    ? `Likely match (${scanAiConfidence}%)`
+    : scanAiConfidence >= 50
+    ? `Possible match, please verify (${scanAiConfidence}%)`
+    : `Cannot identify reliably, retake the photo`;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
@@ -3471,10 +3484,10 @@ Reply ONLY with valid JSON.`;
                       : 'bg-rose-100 text-rose-900 dark:bg-rose-900 dark:text-rose-200'
                   }`}>
                     {plantNetResult.tier === 'confident'
-                      ? 'Verified Botanical Match (≥ 70%)'
+                      ? 'Likely match (≥ 80%)'
                       : plantNetResult.tier === 'probable'
-                      ? 'Probable Match (40% - 70%)'
-                      : 'Identification Refused (< 40%)'}
+                      ? 'Possible match, please verify (50% - 79%)'
+                      : 'Cannot identify reliably, retake the photo (< 50%)'}
                   </span>
                 </div>
                 <span className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400">
@@ -3842,7 +3855,7 @@ Reply ONLY with valid JSON.`;
               )}
 
               {/* Verdict Banner - Prominently Displayed at Top */}
-              {!scanResult.is_plant_detected ? (
+              {!scanResult.is_plant_detected || isScanConfidenceLow ? (
                 <>
                   <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 flex items-center justify-between shadow-sm">
                     <div className="flex items-center gap-3">
@@ -3851,15 +3864,19 @@ Reply ONLY with valid JSON.`;
                       </div>
                       <div>
                         <h4 className="font-extrabold text-amber-950 dark:text-amber-200 text-base">
-                          {scanResult.title || 'Human Face / Non-Plant Subject'}
+                          {isScanConfidenceLow
+                            ? 'Cannot identify reliably, retake the photo'
+                            : (scanResult.title || 'Human Face / Non-Plant Subject')}
                         </h4>
                         <p className="text-xs text-amber-800 dark:text-amber-300 font-semibold mt-0.5">
-                          Non-Botanical Subject • Zero crop foliage or plant disease detected
+                          {isScanConfidenceLow
+                            ? `AI confidence is ${scanAiConfidence}% (below 50%). No plant is named. Please retake photo with clearer lighting and a single leaf.`
+                            : (scanResult.farmer_summary || 'Non-Botanical Subject • Zero crop foliage or plant disease detected')}
                         </p>
                       </div>
                     </div>
                     <span className="px-3 py-1 bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 font-extrabold text-xs rounded-full shrink-0">
-                      Not a Plant
+                      {isScanConfidenceLow ? 'Cannot identify reliably' : 'Not a Plant'}
                     </span>
                   </div>
 
@@ -3899,8 +3916,12 @@ Reply ONLY with valid JSON.`;
                       </p>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 bg-emerald-200 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200 font-extrabold text-xs rounded-full">
-                    {Math.round(scanResult.species_confidence * 100)}% Match
+                  <span className={`px-2.5 py-1 font-extrabold text-xs rounded-full ${
+                    scanAiConfidence >= 80 
+                      ? 'bg-emerald-200 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200' 
+                      : 'bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200'
+                  }`}>
+                    {scanAiConfidence >= 80 ? `Likely match (${scanAiConfidence}%)` : `Possible match, please verify (${scanAiConfidence}%)`}
                   </span>
                 </div>
               ) : (
@@ -3916,8 +3937,12 @@ Reply ONLY with valid JSON.`;
                       </p>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-200 font-extrabold text-xs rounded-full">
-                    {Math.round(scanResult.disease_confidence * 100)}% Confidence
+                  <span className={`px-2.5 py-1 font-extrabold text-xs rounded-full ${
+                    scanAiConfidence >= 80 
+                      ? 'bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-200' 
+                      : 'bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200'
+                  }`}>
+                    {scanAiConfidence >= 80 ? `Likely match (${scanAiConfidence}%)` : `Possible match, please verify (${scanAiConfidence}%)`}
                   </span>
                 </div>
               )}
@@ -3933,31 +3958,48 @@ Reply ONLY with valid JSON.`;
                       Identified Specimen:
                     </span>
                     <div className="font-extrabold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5 flex-wrap">
-                      <span>{scanResult.plant_name || scanResult.title || 'Botanical Specimen'}</span>
-                      {scanResult.scientific_name && (
-                        <span className="text-xs font-normal italic text-slate-400">({scanResult.scientific_name})</span>
+                      {isScanConfidenceLow ? (
+                        <span className="text-amber-700 dark:text-amber-300 font-bold">
+                          Cannot identify reliably, retake the photo
+                        </span>
+                      ) : (
+                        <>
+                          <span>{scanResult.plant_name || scanResult.title || 'Botanical Specimen'}</span>
+                          {scanResult.scientific_name && (
+                            <span className="text-xs font-normal italic text-slate-400">({scanResult.scientific_name})</span>
+                          )}
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ml-1 ${
+                            scanAiConfidence >= 80 
+                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' 
+                              : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
+                          }`}>
+                            {scanAiConfidence >= 80 ? 'Likely match' : 'Possible match, please verify'}
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                    Wrong plant?
-                  </span>
-                  <select
-                    value={scanResult.plant_name || ''}
-                    onChange={(e) => switchDiagnosedPlant(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-200 border-2 border-emerald-400 dark:border-emerald-600 shadow-sm hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                  >
-                    <option value="" disabled>Switch to another crop...</option>
-                    {Array.isArray(plantKnowledgeBase) && plantKnowledgeBase.map(p => (
-                      <option key={p.name} value={p.name}>
-                        {p.icon || '🌿'} {p.name} ({p.scientific_name})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {!isScanConfidenceLow && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                      Wrong plant?
+                    </span>
+                    <select
+                      value={scanResult.plant_name || ''}
+                      onChange={(e) => switchDiagnosedPlant(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-200 border-2 border-emerald-400 dark:border-emerald-600 shadow-sm hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                    >
+                      <option value="" disabled>Switch to another crop...</option>
+                      {Array.isArray(plantKnowledgeBase) && plantKnowledgeBase.map(p => (
+                        <option key={p.name} value={p.name}>
+                          {p.icon || '🌿'} {p.name} ({p.scientific_name})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
               {/* What I See - Observation */}
@@ -4013,36 +4055,36 @@ Reply ONLY with valid JSON.`;
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                     <div className="text-[10px] uppercase font-bold text-slate-500">
-                      {!scanResult.is_plant_detected ? 'Subject' : 'Plant / Crop'}
+                      {!scanResult.is_plant_detected || isScanConfidenceLow ? 'Subject' : 'Plant / Crop'}
                     </div>
                     <div className="font-extrabold text-xs text-slate-900 dark:text-white mt-0.5 truncate">
-                      {!scanResult.is_plant_detected ? (scanResult.title || 'Human Subject') : (scanResult.plant_name || scanResult.species?.split('(')[0] || 'Plant')}
+                      {isScanConfidenceLow ? 'Unidentified' : (!scanResult.is_plant_detected ? (scanResult.title || 'Human Subject') : (scanResult.plant_name || scanResult.species?.split('(')[0] || 'Plant'))}
                     </div>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                     <div className="text-[10px] uppercase font-bold text-slate-500">
-                      {!scanResult.is_plant_detected ? 'Classification' : 'Scientific Name'}
+                      {!scanResult.is_plant_detected || isScanConfidenceLow ? 'Classification' : 'Scientific Name'}
                     </div>
                     <div className="font-bold text-xs text-slate-700 dark:text-slate-300 italic mt-0.5 truncate">
-                      {!scanResult.is_plant_detected ? 'Non-Botanical' : (scanResult.scientific_name || scanResult.species || 'Identified')}
+                      {isScanConfidenceLow ? 'Retake Photo' : (!scanResult.is_plant_detected ? 'Non-Botanical' : (scanResult.scientific_name || scanResult.species || 'Identified'))}
                     </div>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                    <div className="text-[10px] uppercase font-bold text-slate-500">Specimen Type</div>
+                    <div className="text-[10px] uppercase font-bold text-slate-500">Confidence</div>
                     <div className="font-extrabold text-xs text-emerald-600 capitalize mt-0.5">
-                      {!scanResult.is_plant_detected ? 'Non-Plant' : `${scanResult.image_type || 'Leaf'} • ${scanResult.confidence || 'High'}`}
+                      {scanConfidenceBadgeText}
                     </div>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                     <div className="text-[10px] uppercase font-bold text-slate-500">Status</div>
                     <div className="font-extrabold text-xs text-slate-900 dark:text-white mt-0.5 capitalize truncate">
-                      {!scanResult.is_plant_detected ? 'Not Applicable' : (scanResult.health_status?.condition || scanResult.health_status_alias || 'Healthy')}
+                      {isScanConfidenceLow ? 'Cannot identify' : (!scanResult.is_plant_detected ? 'Not Applicable' : (scanResult.health_status?.condition || scanResult.health_status_alias || 'Healthy'))}
                     </div>
                   </div>
                 </div>
 
                 {/* Local Regional Names */}
-                {scanResult.is_plant_detected && scanResult.local_names && scanResult.local_names.length > 0 && (
+                {scanResult.is_plant_detected && !isScanConfidenceLow && scanResult.local_names && scanResult.local_names.length > 0 && (
                   <div className="p-3 bg-emerald-50/60 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs flex flex-wrap items-center gap-2">
                     <span className="font-bold text-emerald-900 dark:text-emerald-300 text-[11px] uppercase tracking-wider">
                       Regional Names:

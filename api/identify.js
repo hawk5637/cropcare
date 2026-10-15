@@ -626,13 +626,13 @@ export default async function handler(req, res) {
     const topScore = topMatch ? topMatch.score : 0;
     const topConfidencePct = topMatch ? topMatch.confidencePct : 0;
 
-    // STEP 4: NEVER GIVE A CONFIDENT WRONG ANSWER
-    // Above 70%: confident match
-    // 40-70%: probable match, show runner-ups and suggest confirming with another angle
-    // Below 40%: refuse to guess!
+    // CONFIDENCE RULES (show the real AI confidence, no hardcoded percentages):
+    // - 80 or above: "Likely match"
+    // - 50 to 79: "Possible match, please verify"
+    // - below 50: "Cannot identify reliably, retake the photo". Do not name a plant.
     let tier = 'refuse';
     let status = 'unreliable';
-    let message = 'Could not reliably identify. Try a clearer photo of a single leaf or flower against a neutral background.';
+    let message = 'Cannot identify reliably, retake the photo.';
 
     if (nonPlantDetected) {
       tier = 'refuse';
@@ -641,17 +641,18 @@ export default async function handler(req, res) {
         (rejectionDetails?.subjectName 
           ? `${rejectionDetails.subjectName} detected. Please point your camera at a crop leaf, fruit, flower, or seed.`
           : 'Non-plant subject detected. Please point your camera at a plant leaf, crop, flower, fruit, or seed.');
-    } else if (topMatch && topScore >= 0.70) {
+    } else if (topMatch && topScore >= 0.80) {
       tier = 'confident';
       status = 'confident';
-      message = `Confident match: ${topMatch.scientificName} (${topConfidencePct}% confidence).`;
-    } else if (topMatch && topScore >= 0.40) {
+      message = `Likely match: ${topMatch.scientificName} (${topConfidencePct}% confidence).`;
+    } else if (topMatch && topScore >= 0.50) {
       tier = 'probable';
       status = 'probable';
-      message = `Probable match: ${topMatch.scientificName} (${topConfidencePct}% confidence). We recommend taking another photo from a different angle or capturing a flower/fruit to confirm.`;
+      message = `Possible match, please verify: ${topMatch.scientificName} (${topConfidencePct}% confidence). We recommend taking another photo from a different angle or capturing a flower/fruit to confirm.`;
     } else {
       tier = 'refuse';
       status = 'unreliable';
+      message = 'Cannot identify reliably, retake the photo.';
     }
 
     const responsePayload = {
