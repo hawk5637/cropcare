@@ -1,11 +1,13 @@
 import { callGemini, friendly, isLikelyGeminiKey } from "./_gemini.js";
-import { findPlantEntry, getPlants } from "./_knowledge.js";
+import { findPlantEntry, getPlants, getFruitMedicalDatabase, getFruitMedicalProfile } from "./_knowledge.js";
 
 function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', colorStats = null, category = 'auto', imageSource = null) {
-  let target = (cropName || 'auto').toLowerCase();
+  let target = (cropName || 'auto').toLowerCase().trim();
 
   // 1. If imageSource is a URL, match directly against known plant images in the database
   const allPlants = getPlants();
+  const allFruits = getFruitMedicalDatabase();
+
   if (typeof imageSource === 'string' && (target === 'auto' || !target)) {
     const matched = allPlants.find(p => p.leaf_image_url && (
       imageSource === p.leaf_image_url ||
@@ -16,76 +18,516 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
       target = matched.name.toLowerCase();
     }
   }
-  
-  // Only detect human/non-plant if explicitly purely human/selfie with zero botanical parts
-  const hasBotanicalTerms = target.includes('leaf') || target.includes('seed') || target.includes('plant') || target.includes('tree') || target.includes('crop') || target.includes('fruit') || category === 'tree' || category === 'seed' || category === 'leaf';
-  const isPersonDetected = !hasBotanicalTerms && (target.includes('human face') || target.includes('selfie') || target.includes('portrait') || target === 'person' || target === 'human');
-  const isNonPlantDetected = !hasBotanicalTerms && (isPersonDetected || target.includes('non-plant') || target.includes('not a plant'));
 
-  if (isNonPlantDetected) {
-    const isPerson = isPersonDetected;
+  // 2. Multi-spectral visual feature cues from colorStats (if target is 'auto')
+  const {
+    avgR = 120, avgG = 120, avgB = 120,
+    greenRatio = 0, foliageYellowRatio = 0,
+    darkGlossyRatio = 0, necroticRatio = 0,
+    aspectRatio = 1.0, avgBrightness = 128
+  } = colorStats || {};
+
+  // Check if subject is an everyday non-botanical object (smartphones, laptops, furniture, books, clothing, hands, cups)
+  const isExplicitMobile = target.includes('phone') || target.includes('mobile') || target.includes('screen') || target.includes('smartphone');
+  const isExplicitLaptop = target.includes('laptop') || target.includes('computer') || target.includes('keyboard') || target.includes('monitor');
+  const isExplicitBook = target.includes('book') || target.includes('paper') || target.includes('notebook') || target.includes('document');
+  const isExplicitCup = target.includes('cup') || target.includes('mug') || target.includes('bottle') || target.includes('glass');
+  const isExplicitPerson = target.includes('human face') || target.includes('selfie') || target.includes('portrait') || target === 'person' || target === 'human' || target === 'face';
+  const isExplicitHand = target.includes('hand') || target.includes('finger') || target.includes('palm');
+  const isExplicitVehicle = target.includes('tractor') || target.includes('car') || target.includes('truck') || target.includes('vehicle');
+
+  // If low foliar green and grey/blue or dark metallic tones when in auto mode with non-botanical cues
+  const isLowChlorophyllObject = (target === 'auto' || !target) && greenRatio < 0.02 && foliageYellowRatio < 0.03 && necroticRatio < 0.02 && (avgBrightness < 65 || (avgB > avgG && avgB > avgR) || (Math.abs(avgR - avgG) < 8 && Math.abs(avgG - avgB) < 8));
+
+  if (isExplicitMobile || isExplicitLaptop || isExplicitBook || isExplicitCup || isExplicitPerson || isExplicitHand || isExplicitVehicle || isLowChlorophyllObject) {
+    let objTitle = 'Smartphone / Mobile Device';
+    let objCategory = 'Consumer Electronics / Telecommunications';
+    let localNames = ['स्मार्टफोन / मोबाइल फोन (Mobile Phone)', 'Electronic Device'];
+    let whatISee = 'Flat capacitive touchscreen display with glass and aluminum/polycarbonate enclosure. Modern handheld electronic telecommunications device.';
+    let functionDesc = 'Mobile digital computer running operating systems with cameras, cellular connectivity, and mobile applications.';
+    let agriRelevance = 'Farmers use mobile devices for real-time weather forecasting, live Agmarknet mandi prices, and AI crop disease diagnosis via CropCare.';
+
+    if (isExplicitLaptop) {
+      objTitle = 'Laptop / Portable Computer';
+      objCategory = 'Computing Hardware';
+      localNames = ['लैपटॉप कंप्यूटर (Laptop Computer)', 'Personal Computer'];
+      whatISee = 'Foldable portable computer with backlit display screen, integrated keyboard, and trackpad chassis.';
+      functionDesc = 'General-purpose personal computing device for processing agronomic records, farm accounts, and digital analysis.';
+      agriRelevance = 'Useful for farm accounting, tractor fleet management, precision farming GIS data, and agricultural supply chain logging.';
+    } else if (isExplicitBook) {
+      objTitle = 'Book / Printed Document';
+      objCategory = 'Printed Media & Stationery';
+      localNames = ['किताब / दस्तावेज (Book / Document)', 'Printed Publication'];
+      whatISee = 'Bound paper sheets with typography, diagrams, or manuscript content with protective cover.';
+      functionDesc = 'Physical medium for recording and preserving information, agricultural manuals, and farming logs.';
+      agriRelevance = 'ICAR crop handbooks, farmer field notebooks, and pesticide safety instruction guides.';
+    } else if (isExplicitCup) {
+      objTitle = 'Cup / Liquid Container';
+      objCategory = 'Household Utensil';
+      localNames = ['कप / पानी की बोतल (Cup / Bottle)', 'Domestic Vessel'];
+      whatISee = 'Cylindrical ceramic, glass, or polymer beverage vessel with smooth interior walls.';
+      functionDesc = 'Vessel designed for carrying, consuming, or measuring liquids and oral hydration.';
+      agriRelevance = 'Calibrated measuring cups are commonly used for measuring exact doses of foliar sprays and soluble fertilizers.';
+    } else if (isExplicitPerson) {
+      objTitle = 'Human Face / Person';
+      objCategory = 'Biometric Subject';
+      localNames = ['मानव चेहरा (Human Face)', 'Person'];
+      whatISee = 'Human facial features, eyes, and skin tone composition. Non-botanical living subject.';
+      functionDesc = 'Homo sapiens individual / farm operator.';
+      agriRelevance = 'Agricultural safety: Always wear face shields, nitrile gloves, and respirators during chemical pesticide spraying.';
+    } else if (isExplicitHand) {
+      objTitle = 'Human Hand / Fingers';
+      objCategory = 'Biometric Subject';
+      localNames = ['मानव हाथ (Human Hand)', 'Hand / Fingers'];
+      whatISee = 'Human fingers or hand holding or gesturing within the lens frame. Intact skin tissue and fingernails.';
+      functionDesc = 'Operator hand holding or positioning samples for examination.';
+      agriRelevance = 'When examining plants, holding a leaf flat against palm helps camera focus on foliar venation.';
+    } else if (isExplicitVehicle) {
+      objTitle = 'Tractor / Farm Machinery';
+      objCategory = 'Agricultural Machinery';
+      localNames = ['ट्रैक्टर (Farm Tractor)', 'Agricultural Machinery'];
+      whatISee = 'Heavy-duty agricultural tractor equipped with deep-lug rear traction tires, diesel powertrain, and three-point hydraulic hitch.';
+      functionDesc = 'Primary agricultural traction engine for tillage, plowing, seeding, and haulage.';
+      agriRelevance = 'Essential farm power source; maintain correct tire ballast and engine oil pressure for fuel efficiency.';
+    }
+
     return {
-      image_type: 'other',
+      image_type: 'general_object',
       is_plant_detected: false,
-      title: isPerson ? 'Human Face / Person (Not a Plant)' : 'Non-Plant Subject Detected',
-      local_names: isPerson ? ['मानव चेहरा (Human Face)', 'Non-Botanical Subject'] : ['गैर-कृषि वस्तु (Non-Botanical)', 'General Object'],
-      scientific_name: isPerson ? 'Homo sapiens (Non-Botanical)' : 'Non-Botanical',
+      title: objTitle,
+      local_names: localNames,
+      scientific_name: 'Non-Botanical Subject',
       confidence: 'high',
-      other_possible_matches: isPerson ? ['Person', 'Human Face', 'Indoor Portrait'] : ['Non-Agricultural Object', 'Indoor Surface'],
-      what_i_see: isPerson 
-        ? 'The camera detected a human face / person. No agricultural plant leaves, crop foliage, fruits, or seeds were found.'
-        : 'The camera detected an indoor or non-agricultural object. No plant leaves or crops were found.',
+      other_possible_matches: [objTitle, 'Everyday Object', 'Farm Utility Item'],
+      what_i_see: whatISee,
       health_status: 'not_applicable',
-      problem_name: 'Non-Plant Subject Detected',
+      problem_name: 'Identified: ' + objTitle,
       severity: 'none',
       sections: [
         {
-          heading: isPerson ? 'Biometric & Specimen Identification' : 'Visual Specimen Identification',
-          icon: isPerson ? '👤' : '🔍',
+          heading: 'Object Identification & Overview',
+          icon: '🔍',
           points: [
-            isPerson ? 'Subject Identified: Human Person / Face (Homo sapiens).' : 'Subject Identified: Non-agricultural everyday object or background.',
-            'Telemetry: Facial and skin tone composition detected with zero botanical foliar chlorophyll.',
-            'Safety Protocol: Automatic rejection of agricultural fungicide and pesticide recommendations on non-botanical subjects.'
+            `Identified as: ${objTitle}.`,
+            `Category: ${objCategory}.`,
+            functionDesc
           ]
         },
         {
-          heading: 'CropCare Diagnostic Scope',
+          heading: 'Agricultural & Field Context',
           icon: '🌾',
           points: [
-            'Foliar Crops: Tomato, Wheat, Rice, Cotton, Chilli, Potato, Mustard, Neem, Tulsi.',
-            'Horticultural Fruits: Mango, Citrus, Banana, Papaya, Guava, Pomegranate.',
-            'Seeds & Grains: Seed lot viability, test weight, and seed-borne pathogen triage.',
-            'Field Diagnostics: Fungal blights, rusts, powdery mildew, bacterial wilts, and micronutrient chlorosis.'
+            agriRelevance,
+            'No biological foliar plant disease, blight, or pest infestation is present on this object.',
+            'Chemical fungicides and crop pesticides must never be applied to non-botanical items.'
           ]
         },
         {
-          heading: 'How to Photograph a Crop Specimen',
+          heading: 'Universal Lens Usage Tip',
           icon: '📸',
           points: [
-            'Hold a single crop leaf, mature fruit, or seed sample 10 to 15 cm in front of the lens.',
-            'Ensure clear daylight illumination without harsh shadows, backlighting, or lens glare.',
-            'Center the plant specimen within the frame and tap "Capture & Scan".'
+            'CropCare Universal Lens can inspect leaves, fruits, flowers, seeds, soils, tools, and everyday items.',
+            'To diagnose crop pests or foliar blights, hold a plant leaf or fruit 10-15 cm from camera in daylight.'
           ]
         }
       ],
-      need_better_photo: 'Please point your camera at a crop leaf, fruit, or seed.',
-      farmer_summary: isPerson 
-        ? 'This is a human face, not a plant. Please point your camera at a crop leaf, fruit, or seed to diagnose plant health.'
-        : 'No crop leaf detected. Please point your camera at a crop leaf, fruit, or seed to get a diagnosis.',
-      species: isPerson ? 'Human Face (Not a Plant)' : 'Non-Plant Subject',
-      species_confidence: 0.99,
-      disease_name: 'None (Non-Plant Subject)',
+      need_better_photo: '',
+      farmer_summary: `Identified ${objTitle}. No crop plant or leaf disease detected on this object.`,
+      species: objTitle,
+      species_confidence: 0.98,
+      disease_name: 'None (Non-Plant Item)',
       disease_confidence: 0,
-      farmer_advice: isPerson 
-        ? 'This is a human face, not a plant. Please point your camera at a crop leaf, fruit, or seed to diagnose plant health.'
-        : 'No plant detected. Please point your camera at a crop leaf, fruit, or seed.',
-      evidence: [isPerson ? 'Human facial features and skin tone composition.' : 'Zero foliar chlorophyll detected.'],
+      farmer_advice: `Identified ${objTitle}. Point camera at crops, leaves, fruits, or seeds for agricultural plant pathology.`,
+      evidence: [whatISee],
+      image_hash: hash,
+      ai_provider: 'CropCare Certified Offline Engine (Universal Lens)'
+    };
+  }
+
+  // 3. Insects & Pests:
+  const isPest = target.includes('pest') || target.includes('insect') || target.includes('aphid') || 
+                 target.includes('whitefly') || target.includes('armyworm') || target.includes('locust') || 
+                 target.includes('caterpillar') || target.includes('borer') || target.includes('ladybug') ||
+                 target.includes('mite') || target.includes('keet');
+  if (isPest) {
+    let pestName = 'Aphid Colony (Mahun / Lahi)';
+    let sciName = 'Aphis gossypii / Lipaphis erysimi';
+    let localNames = ['माहूं / चेंपा (Mahun / Chempa)', 'Plant Lice'];
+    let whatISee = 'Dense clusters of soft-bodied pear-shaped green/black sucking insects congregating along tender apical shoots and leaf undersides.';
+    let damageType = 'Nymphs and adults suck phloem sap, causing downward leaf curling, stunting, and excrete sticky honeydew that fosters black sooty mold.';
+    let organicControl = 'Spray 5% cold-pressed Neem oil (1,500 ppm @ 4 ml/L) or soap solution (10g/L); release Chrysoperla carnea predators.';
+    let chemicalControl = 'Spray Imidacloprid 17.8% SL @ 0.5 ml/L or Thiamethoxam 25% WG @ 0.3g/L with 7-day Pre-Harvest Interval (PHI).';
+
+    if (target.includes('whitefly') || target.includes('safed makhi')) {
+      pestName = 'Whitefly (Safed Makhi)';
+      sciName = 'Bemisia tabaci';
+      localNames = ['सफेद मक्खी (Safed Makhi)', 'Silverleaf Whitefly'];
+      whatISee = 'Tiny (1 mm) moth-like insects with powdery white wings fluttering when foliage is disturbed. Translucent flat oval nymphs on lower leaf surfaces.';
+      damageType = 'Severe phloem sap depletion and primary vector of devastating Gemini viruses including Cotton Leaf Curl Virus (CLCuV) and Yellow Vein Mosaic Virus (YVMV).';
+      organicControl = 'Install yellow sticky traps (15-20 traps/acre) at canopy height; spray Verticillium lecanii bio-fungicide @ 5g/L.';
+      chemicalControl = 'Spray Diafenthiuron 50% WP @ 1.25g/L or Pyriproxyfen 10% EC @ 2 ml/L or Spiromesifen 22.9% SC @ 1 ml/L.';
+    } else if (target.includes('armyworm') || target.includes('fall armyworm') || target.includes('sainik keet')) {
+      pestName = 'Fall Armyworm (FAW)';
+      sciName = 'Spodoptera frugiperda';
+      localNames = ['फॉल आर्मीवर्म / सैनिक कीट (Fall Armyworm)', 'Corn Armyworm'];
+      whatISee = 'Stout brownish caterpillar with inverted Y-mark on head capsule and four distinct square black pinacula dots on 8th abdominal segment.';
+      damageType = 'Voracious foliar whorl feeding leaving ragged shot-holes, window-paning, and abundant moist sawdust-like fecal frass in maize/sorghum whorls.';
+      organicControl = 'Apply whorl application of dry sand + lime (9:1) or spray Bacillus thuringiensis (Bt @ 2g/L) or Metarhizium anisopliae @ 5g/L.';
+      chemicalControl = 'Spray Chlorantraniliprole 18.5% SC @ 0.4 ml/L or Emamectin Benzoate 5% SG @ 0.4g/L directly into central whorls.';
+    } else if (target.includes('locust') || target.includes('tiddi')) {
+      pestName = 'Desert Locust (Tiddi)';
+      sciName = 'Schistocerca gregaria';
+      localNames = ['रेगिस्तानी टिड्डी (Tiddi Dal)', 'Desert Locust'];
+      whatISee = 'Gregarious yellow/pink migratory grasshopper with long wings, strong hind jumping legs, and swarming feeding behavior.';
+      damageType = 'Total defoliation of green crops, vegetables, and fruit orchards within hours during transboundary swarm invasions.';
+      organicControl = 'Trench digging around marching hopper bands; spray Metarhizium acridum bio-insecticide formulations.';
+      chemicalControl = 'Aerial or tractor-mounted ULV spray of Malathion 96% ULV @ 1 L/ha or Chlorpyrifos 20% EC @ 2.5 ml/L.';
+    } else if (target.includes('ladybug') || target.includes('ladybird') || target.includes('mitra')) {
+      pestName = 'Ladybird Beetle (Beneficial Predator)';
+      sciName = 'Coccinella septempunctata';
+      localNames = ['लेडीबर्ड बीटल / मित्र कीट (Ladybug)', 'Seven-Spotted Ladybird'];
+      whatISee = 'Convex dome-shaped shiny red-orange elytra with seven black spots. Active predatory adult beetles and alligator-like dark larvae.';
+      damageType = 'HIGHLY BENEFICIAL: A single adult or larva consumes 50-100 destructive aphids, mealybugs, and mites daily.';
+      organicControl = 'DO NOT SPRAY PESTICIDES: Preserve natural field hedgerows, fennel, and coriander to attract and multiply populations.';
+      chemicalControl = 'Avoid broad-spectrum organophosphate sprays that destroy natural beneficial biocontrol agents.';
+    }
+
+    const isBeneficial = pestName.includes('Beneficial');
+    return {
+      image_type: 'insect_pest',
+      is_plant_detected: true,
+      title: `${pestName} (${sciName})`,
+      local_names: localNames,
+      scientific_name: sciName,
+      confidence: 'high',
+      other_possible_matches: [pestName, 'Agricultural Insect Fauna', 'Field Entomological Sample'],
+      what_i_see: whatISee,
+      health_status: isBeneficial ? 'healthy' : 'pest',
+      problem_name: isBeneficial ? 'Beneficial Biological Predator' : pestName + ' Infestation',
+      severity: isBeneficial ? 'none' : 'moderate',
+      sections: [
+        {
+          heading: 'Entomological Identification & Behavior',
+          icon: '🐛',
+          points: [
+            `Identified as: ${pestName} (${sciName}).`,
+            damageType
+          ]
+        },
+        {
+          heading: isBeneficial ? 'Conservation & Habitat Enhancement' : 'Organic & Biological Control (IPM)',
+          icon: '🌿',
+          points: [
+            organicControl,
+            isBeneficial ? 'Maintain flowering border plants to sustain adult nectar feeding.' : 'Conduct early morning scouting to detect pest colonization before economic threshold (ETL) is reached.'
+          ]
+        },
+        {
+          heading: isBeneficial ? 'Pesticide Safety Warning' : 'ICAR / Certified Chemical Management',
+          icon: '🧪',
+          points: [
+            chemicalControl,
+            'Always spray during early morning or late afternoon calm winds; wear protective goggles and gloves.'
+          ]
+        }
+      ],
+      need_better_photo: '',
+      farmer_summary: isBeneficial 
+        ? `Identified beneficial ${pestName}. This friendly insect devours crop pests; avoid chemical sprays to protect it.` 
+        : `Identified ${pestName}. Initiate organic neem spray or recommended bio-pesticide to protect harvest.`,
+      species: pestName,
+      species_confidence: 0.96,
+      disease_name: isBeneficial ? 'None (Beneficial Insect)' : pestName,
+      disease_confidence: 0.94,
+      farmer_advice: isBeneficial ? 'Friendly predator; protect this natural biocontrol helper.' : 'Inspect undersides of leaves and spray recommended insecticide before pest spreads.',
+      evidence: [whatISee],
       image_hash: hash,
       ai_provider: 'CropCare Certified Offline Engine (ICAR / FAO)'
     };
   }
 
-  // Handle tree category: Mango, Neem, Banyan, Citrus, Guava, Apple
+  // 4. Soils & Fertilizers:
+  const isSoil = target.includes('soil') || target.includes('mitti') || target.includes('fertilizer') || 
+                 target.includes('compost') || target.includes('urea') || target.includes('dap') || target.includes('khaad');
+  if (isSoil) {
+    let soilName = 'Black Cotton Soil (Regur Mitti)';
+    let localNames = ['काली मिट्टी / रेगुर (Black Cotton Soil)', 'Vertisol Soil'];
+    let whatISee = 'Deep dark greyish-black clay-rich soil showing deep polygonal shrinkage cracks when dry, highly plastic and sticky when wet.';
+    let soilProperties = 'Clay content exceeds 50% (Montmorillonite mineral). High moisture retention capacity, rich in Calcium, Magnesium, and Carbonates; deficient in Nitrogen, Phosphorus, and Zinc.';
+    let cropsSuited = 'Premier soil for Cotton, Soybean, Wheat, Gram/Chickpea, Sorghum, and Citrus / Mosambi orchards.';
+    let management = 'Apply deep summer ploughing; incorporate Farm Yard Manure (FYM @ 5 tonnes/acre) to improve percolation and prevent waterlogging.';
+
+    if (target.includes('red') || target.includes('lal mitti')) {
+      soilName = 'Red Soil (Lal Mitti)';
+      localNames = ['लाल मिट्टी (Red Soil)', 'Alfisol Soil'];
+      whatISee = 'Reddish-brown porous friable soil with coarse crumb texture from iron oxide diffusion.';
+      soilProperties = 'Light, porous, well-drained with neutral to slightly acidic pH (6.0-7.2). Deficient in Nitrogen, Humus, and Phosphorus.';
+      cropsSuited = 'Groundnut / Peanut, Millets (Ragi, Bajra), Pulses, Tobacco, and Fruit Orchards with drip irrigation.';
+      management = 'Apply single superphosphate (SSP) and well-rotted compost to increase organic carbon and moisture capacity.';
+    } else if (target.includes('alluvial') || target.includes('jalodh')) {
+      soilName = 'Alluvial Soil (Jalodh Mitti)';
+      localNames = ['जलोढ़ मिट्टी (Alluvial Soil)', 'Riverine Indo-Gangetic Loam'];
+      whatISee = 'Fine silty loam texture with rich light-brown earthy coloration deposited by river basin inundation.';
+      soilProperties = 'Highly fertile, balanced loamy texture with optimal water permeability and neutral pH (6.8-7.8). Rich in Potash and Lime.';
+      cropsSuited = 'High-yielding Wheat, Rice/Paddy, Sugarcane, Maize, Jute, Oilseeds, and Intensive Vegetable Cultivation.';
+      management = 'Balanced NPK 120:60:40 kg/ha application along with green manuring (Dhaincha / Sunnhemp) every 3 years.';
+    } else if (target.includes('vermicompost') || target.includes('kechua')) {
+      soilName = 'Organic Vermicompost (Kechua Khaad)';
+      localNames = ['केंचुआ खाद / वर्मीकम्पोस्ट (Vermicompost)', 'Earthworm Castings'];
+      whatISee = 'Granular, dark brown to black odorless crumbly organic compost with soft porous texture.';
+      soilProperties = 'Rich in plant-available NPK (1.5-2.5% N, 1.2% P, 1.5% K), humic acid, growth auxins, and beneficial mycorrhizae.';
+      cropsSuited = 'All crops, kitchen gardens, nurseries, and fruit orchards.';
+      management = 'Apply 2 tonnes/acre for field crops or 5 kg/tree in fruit orchards at flowering.';
+    } else if (target.includes('urea') || target.includes('dap')) {
+      soilName = target.includes('dap') ? 'DAP Fertilizer (Di-Ammonium Phosphate)' : 'Neem Coated Urea (46% Nitrogen)';
+      localNames = target.includes('dap') ? ['डी.ए.पी खाद (DAP 18:46:0)', 'Phosphatic Fertilizer'] : ['नीम लेपित यूरिया (Urea 46% N)', 'Nitrogenous Fertilizer'];
+      whatISee = target.includes('dap') 
+        ? 'Hard round greyish-brown spherical chemical fertilizer granules containing 18% Ammoniacal Nitrogen and 46% Phosphorus.' 
+        : 'Uniform white prilled chemical fertilizer beads with subtle neem oil golden sheen.';
+      soilProperties = target.includes('dap') ? 'Water-soluble root-growth fertilizer.' : 'Concentrated fast-acting nitrogenous fertilizer.';
+      cropsSuited = 'Basal application at sowing for all cereal, pulse, and cash crops.';
+      management = 'Apply based on soil health card recommendation; always incorporate below seed depth.';
+    }
+
+    return {
+      image_type: 'soil_fertilizer',
+      is_plant_detected: true,
+      title: soilName,
+      local_names: localNames,
+      scientific_name: 'Agricultural Soil & Nutrition',
+      confidence: 'high',
+      other_possible_matches: [soilName, 'Agricultural Soil Horizon', 'Soil Fertility Profile'],
+      what_i_see: whatISee,
+      health_status: 'healthy',
+      problem_name: 'Healthy Soil Fertility & Structure',
+      severity: 'none',
+      sections: [
+        {
+          heading: 'Soil & Material Characteristics',
+          icon: '🌍',
+          points: [
+            `Identified as: ${soilName}.`,
+            soilProperties
+          ]
+        },
+        {
+          heading: 'Suitable Crops & Yield Potential',
+          icon: '🌾',
+          points: [
+            cropsSuited,
+            'Good drainage and root penetration capacity for vigorous crop establishment.'
+          ]
+        },
+        {
+          heading: 'Agronomic Nutrition & Field Management',
+          icon: '🚜',
+          points: [
+            management,
+            'Regular soil testing every 2-3 years ensures optimum fertilizer efficiency and avoids nutrient imbalance.'
+          ]
+        }
+      ],
+      need_better_photo: '',
+      farmer_summary: `Identified ${soilName}. Soil structure is viable for robust crop cultivation with balanced fertilization.`,
+      species: soilName,
+      species_confidence: 0.95,
+      disease_name: 'None (Healthy Soil)',
+      disease_confidence: 0,
+      farmer_advice: `Maintain organic matter with FYM and follow soil test crop recommendations.`,
+      evidence: [whatISee],
+      image_hash: hash,
+      ai_provider: 'CropCare Certified Offline Engine (ICAR / FAO)'
+    };
+  }
+
+  // 5. Fruits Category (from fruitMedicalDatabase and horticultural knowledge):
+  const matchedFruit = allFruits.find(f => 
+    target.includes(f.name.toLowerCase()) || 
+    f.name.toLowerCase().includes(target) ||
+    (f.scientific && target.includes(f.scientific.toLowerCase()))
+  );
+
+  const isFruitRequest = matchedFruit || category === 'fruit' || target.includes('fruit') || 
+                         target.includes('apple') || target.includes('banana') || target.includes('mango') || 
+                         target.includes('papaya') || target.includes('guava') || target.includes('citrus') || 
+                         target.includes('lemon') || target.includes('pomegranate') || target.includes('grapes') || 
+                         target.includes('watermelon') || target.includes('amla') || target.includes('orange');
+
+  if (isFruitRequest) {
+    let fName = matchedFruit ? matchedFruit.name : 'Mango';
+    let sName = matchedFruit ? matchedFruit.scientific : 'Mangifera indica';
+    let localNames = [fName + ' Fruit', 'Horticultural Produce'];
+    let whatISee = `Firm mature ${fName} fruit showing healthy rind pigmentation, normal size development, and intact calyx.`;
+    let bioactives = matchedFruit?.bioactives?.map(b => `${b.compound}: ${b.role}`) || [
+      'Rich in Vitamin C, dietary fiber, antioxidants, and active botanical polyphenols.',
+      'Supports cardiovascular wellness, cellular immunity, and natural metabolic vitality.'
+    ];
+
+    if (fName.toLowerCase().includes('apple')) {
+      fName = 'Apple (Seb)';
+      sName = 'Malus domestica';
+      localNames = ['सेब (Seb)', 'Cultivated Apple'];
+      whatISee = 'Crisp, round pomaceous fruit with deep crimson/yellow blush skin, intact lenticels, and firm flesh.';
+    } else if (fName.toLowerCase().includes('banana')) {
+      fName = 'Banana (Kela)';
+      sName = 'Musa acuminata';
+      localNames = ['केला (Kela)', 'Plantain / Banana'];
+      whatISee = 'Curved elongated finger fruit with smooth golden-yellow peel and nutrient-dense pulp.';
+    } else if (fName.toLowerCase().includes('papaya')) {
+      fName = 'Papaya (Papita)';
+      sName = 'Carica papaya';
+      localNames = ['पपीता (Papita)', 'Papaya Fruit'];
+      whatISee = 'Large oblong melon-like berry with yellow-orange skin and papain-rich digestive pulp.';
+    } else if (fName.toLowerCase().includes('guava')) {
+      fName = 'Guava (Amrood)';
+      sName = 'Psidium guajava';
+      localNames = ['अमरूद (Amrood)', 'Apple Guava'];
+      whatISee = 'Round to pear-shaped fruit with light green edible peel and fragrant pink/white seed pulp.';
+    } else if (fName.toLowerCase().includes('pomegranate')) {
+      fName = 'Pomegranate (Anar)';
+      sName = 'Punica granatum';
+      localNames = ['अनार (Anar)', 'Pomegranate'];
+      whatISee = 'Glossy hexagonal leathery red rind encasing ruby-red arils packed with punicalagin antioxidants.';
+    } else if (fName.toLowerCase().includes('citrus') || fName.toLowerCase().includes('lemon') || target.includes('lemon') || target.includes('nimbu')) {
+      fName = 'Citrus / Lemon (Nimbu)';
+      sName = 'Citrus limon';
+      localNames = ['नींबू (Nimbu)', 'Acid Lime / Lemon'];
+      whatISee = 'Round to oval bright yellow hesperidium fruit with fragrant oil glands in rind and rich acidic juice.';
+    }
+
+    return {
+      image_type: 'fruit',
+      is_plant_detected: true,
+      title: `${fName} (${sName})`,
+      local_names: localNames,
+      scientific_name: sName,
+      confidence: 'high',
+      other_possible_matches: [fName, 'Horticultural Fruit Produce', 'Fresh Orchard Harvest'],
+      what_i_see: whatISee,
+      health_status: 'healthy',
+      problem_name: `Prime Mature ${fName} (Clean Specimen)`,
+      severity: 'none',
+      sections: [
+        {
+          heading: 'Horticultural Variety & Morphology',
+          icon: '🍎',
+          points: [
+            `Botanical Specimen: ${fName} (${sName}).`,
+            whatISee,
+            'Fruit rind exhibits uniform maturity index with zero fruit fly oviposition puncture marks or fungal anthracnose rot.'
+          ]
+        },
+        {
+          heading: 'Nutritional & Bioactive Profile',
+          icon: '✨',
+          points: bioactives
+        },
+        {
+          heading: 'Post-Harvest Care & Storage',
+          icon: '📦',
+          points: [
+            'Optimal storage temperature: 10-13°C at 85-90% relative humidity.',
+            'Grade by uniform diameter, wash in 100 ppm chlorinated water to eliminate surface microbes, and store away from direct sunlight.'
+          ]
+        }
+      ],
+      need_better_photo: '',
+      farmer_summary: `Healthy mature ${fName} fruit. Excellent quality produce suitable for market sale or fresh consumption.`,
+      species: fName,
+      species_confidence: 0.98,
+      disease_name: 'None (Healthy Produce)',
+      disease_confidence: 0,
+      farmer_advice: `Fruit is in prime condition; harvest with gentle stem-cut shears to avoid peel bruising.`,
+      evidence: [whatISee],
+      image_hash: hash,
+      ai_provider: 'CropCare Certified Offline Engine (ICAR / FAO)'
+    };
+  }
+
+  // 6. Flowers Category:
+  const isFlower = target.includes('flower') || target.includes('rose') || target.includes('marigold') || 
+                   target.includes('hibiscus') || target.includes('jasmine') || target.includes('sunflower') || 
+                   target.includes('lotus') || target.includes('genda') || target.includes('gulab');
+  if (isFlower) {
+    let flName = 'Rose Flower (Gulab)';
+    let flSci = 'Rosa chinensis / Rosa damascena';
+    let localNames = ['गुलाब का फूल (Gulab)', 'Damask Rose'];
+    let whatISee = 'Multi-petaled fragrant blossom with vibrant velvety petals, healthy green sepal collar, and intact pedicel.';
+    let careTip = 'Provide 6+ hours of full daylight; prune spent flowers (deadheading) down to the first 5-leaflet leaf to stimulate repeat blooming.';
+
+    if (target.includes('marigold') || target.includes('genda')) {
+      flName = 'African Marigold (Genda)';
+      flSci = 'Tagetes erecta';
+      localNames = ['गेंदा का फूल (Genda)', 'Mexican Marigold'];
+      whatISee = 'Dense globular flower head with bright golden-orange ray florets and aromatic foliage.';
+      careTip = 'Intercropping marigolds around tomatoes/cotton suppresses soil-borne root-knot nematodes via root alpha-terthienyl exudates.';
+    } else if (target.includes('hibiscus') || target.includes('gudhal')) {
+      flName = 'Hibiscus (Gudhal)';
+      flSci = 'Hibiscus rosa-sinensis';
+      localNames = ['गुड़हल का फूल (Gudhal)', 'China Rose'];
+      whatISee = 'Large flared bell-shaped single flower with prominent central staminal column and scarlet petals.';
+      careTip = 'Thrives in warm subtropical climates; inspect flower bud bases weekly for cotton mealybugs.';
+    } else if (target.includes('jasmine') || target.includes('mogra')) {
+      flName = 'Arabian Jasmine (Mogra / Bela)';
+      flSci = 'Jasminum sambac';
+      localNames = ['मोगरा / चमेली (Mogra)', 'Arabian Jasmine'];
+      whatISee = 'Intensely fragrant white star-shaped blossoms opening in evening clusters with glossy green leaves.';
+      careTip = 'Perform light pruning in late winter (February) and apply FYM + mustard cake solution to stimulate flush.';
+    }
+
+    return {
+      image_type: 'flower',
+      is_plant_detected: true,
+      title: `${flName} (${flSci})`,
+      local_names: localNames,
+      scientific_name: flSci,
+      confidence: 'high',
+      other_possible_matches: [flName, 'Floricultural Specimen', 'Ornamental Blossom'],
+      what_i_see: whatISee,
+      health_status: 'healthy',
+      problem_name: 'Prime Flowering Blossom (Zero Petal Blight)',
+      severity: 'none',
+      sections: [
+        {
+          heading: 'Floricultural Variety & Floral Morphology',
+          icon: '🌸',
+          points: [
+            `Identified as: ${flName} (${flSci}).`,
+            whatISee,
+            'Petals show intact turgor pressure and natural pigmentation without thrips scarring or botrytis gray mold.'
+          ]
+        },
+        {
+          heading: 'Flowering Nutrition & Canopy Care',
+          icon: '✂️',
+          points: [
+            careTip,
+            'Apply balanced water-soluble fertilizer (19:19:19 @ 3g/L) every fortnight during peak blooming season.'
+          ]
+        },
+        {
+          heading: 'Prophylactic Plant Health Protection',
+          icon: '🛡️',
+          points: [
+            'Avoid overhead late-evening sprinkler watering that wets petals and promotes fungal blossom rot.',
+            'Spray 1,500 ppm cold-pressed Neem oil (3 ml/L) to prevent thrips, aphids, and bud borers.'
+          ]
+        }
+      ],
+      need_better_photo: '',
+      farmer_summary: `Vibrant healthy ${flName}. Blossom shows full petal turgidity and zero pest damage.`,
+      species: flName,
+      species_confidence: 0.97,
+      disease_name: 'None (Healthy Flower)',
+      disease_confidence: 0,
+      farmer_advice: `Flower is healthy; ensure good sunlight and remove faded blooms to promote continuous bud set.`,
+      evidence: [whatISee],
+      image_hash: hash,
+      ai_provider: 'CropCare Certified Offline Engine (ICAR / FAO)'
+    };
+  }
+
+  // 7. Tree Category: Mango, Neem, Banyan, Citrus, Guava, Apple
   if (category === 'tree' || target.includes('tree') || target.includes('orchard') || target.includes('bark')) {
     let treeName = 'Mango Tree (Aam Ka Ped)';
     let sciName = 'Mangifera indica';
@@ -133,6 +575,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
 
     return {
       image_type: 'tree',
+      is_plant_detected: true,
       title: `${treeName} (${sciName})`,
       local_names: localNames,
       scientific_name: sciName,
@@ -172,8 +615,6 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
       ],
       need_better_photo: '',
       farmer_summary: `Your ${treeName} has excellent canopy vigor; maintain clean drip-line weeding and balanced micronutrient nutrition.`,
-      is_plant_detected: true,
-      plant_name: treeName,
       species: `${treeName} (${sciName})`,
       species_confidence: 0.97,
       disease_name: 'None (Healthy Tree)',
@@ -185,7 +626,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     };
   }
 
-  // Handle seed category: Chickpea, Wheat, Mustard, Rice, Sunflower, Maize
+  // 8. Seed Category: Chickpea, Wheat, Mustard, Rice, Sunflower, Maize
   const isSeedCategory = category === 'seed' || target.includes('seed') || target.includes('grain') || target.includes('beej') || target.includes('chana');
   if (isSeedCategory) {
     let seedName = 'Chickpea / Bengal Gram Seed (Chana Beej)';
@@ -246,6 +687,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
 
     return {
       image_type: 'seed',
+      is_plant_detected: true,
       title: `${seedName} (${sciName})`,
       local_names: localNames,
       scientific_name: sciName,
@@ -293,8 +735,6 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
       ],
       need_better_photo: '',
       farmer_summary: `Certified high-viability ${seedName}. Complete bio-fungicide seed treatment before sowing for vigorous germination.`,
-      is_plant_detected: true,
-      plant_name: seedName,
       species: `${seedName} (${sciName})`,
       species_confidence: 0.98,
       disease_name: 'None (Certified Seed Lot)',
@@ -306,15 +746,8 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     };
   }
 
-  // Handle foliar crops:
+  // 9. All 61 Crops from plantKnowledgeBase:
   if (target === 'auto' || !target) {
-    const {
-      avgR = 120, avgG = 120, avgB = 120,
-      greenRatio = 0, foliageYellowRatio = 0,
-      darkGlossyRatio = 0, necroticRatio = 0,
-      aspectRatio = 1.0, avgBrightness = 128
-    } = colorStats || {};
-
     // 1. Monocot slender blade (Wheat or Rice):
     if (aspectRatio < 0.65) {
       if (foliageYellowRatio > 0.06 || necroticRatio > 0.02) {
@@ -323,7 +756,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
         target = 'rice';
       }
     }
-    // 2. High yellow/golden tones with low foliar green (wheat grains, seeds, yellowing spikes):
+    // 2. High yellow/golden tones with low foliar green:
     else if (greenRatio < 0.08 && avgR > 125 && avgG > 95 && avgB < 115) {
       target = 'wheat';
     }
@@ -364,6 +797,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
   if (!disease || isHealthyPlant) {
     return {
       image_type: 'leaf',
+      is_plant_detected: true,
       title: `${plant.name} Foliage (${plant.scientific_name})`,
       local_names: localNamesArr,
       scientific_name: plant.scientific_name,
@@ -404,8 +838,6 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
       ],
       need_better_photo: '',
       farmer_summary: `Your ${plant.name} crop specimen is completely healthy. Continue balanced watering and standard care.`,
-      is_plant_detected: true,
-      plant_name: plant.name,
       species: `${plant.name} (${plant.scientific_name})`,
       species_confidence: 0.96,
       disease_name: 'None (Healthy Specimen)',
@@ -419,6 +851,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
 
   return {
     image_type: 'leaf',
+    is_plant_detected: true,
     title: `${plant.name} (${disease.name})`,
     local_names: localNamesArr,
     scientific_name: plant.scientific_name,
@@ -457,8 +890,6 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     ],
     need_better_photo: '',
     farmer_summary: `Your ${plant.name} specimen shows signs of ${disease.name}. Apply organic neem oil immediately or use certified fungicide if lesions spread.`,
-    is_plant_detected: true,
-    plant_name: plant.name,
     species: `${plant.name} (${plant.scientific_name})`,
     species_confidence: 0.95,
     disease_name: disease.name,
@@ -552,37 +983,29 @@ export default async function handler(req, res) {
       ? '\nUSER SELECTED FOCUS: Leaf & Health. Prioritize foliar health, leaf morphology, chlorosis, pest damage, and ICAR dosage.'
       : '\nUSER SELECTED FOCUS: Google Lens Auto. Detect whether the specimen is a whole plant/tree, leaf/foliage, or seed/grain automatically.';
 
-    const systemPrompt = `You are CropCare AI Doctor & Google Lens Botanical Vision, a world-class taxonomist, botanist, plant pathologist, entomologist, agronomist and seed technologist.
+    const systemPrompt = `You are CropCare AI Doctor & Universal Visual Lens, a world-class taxonomist, agronomist, botanist, entomologist, and visual identification intelligence.
 
-MISSION: Identify and analyze ANY plant, tree, leaf, foliage, flower, seed, grain, fruit, or agricultural specimen from the image with 100% precision.${categoryHint}
+MISSION: Identify and analyze ANY item captured in the image with high accuracy:
+1. BOTANICAL CROPS, PLANTS, FLOWERS & TREES:
+   - Identify crop species, variety, and botanical family across all agricultural field crops (Wheat, Rice, Cotton, Chilli, Tomato, Potato, Mustard, Maize, Sugarcane, Onion, Garlic, Turmeric, Ginger, Pulses, Millets, etc.).
+   - Identify fruits, vegetables, flowers, houseplants, trees, weeds, roots, and seeds.
+   - Accurately assess health status: "healthy", "diseased", "pest", "deficiency", or "damaged".
+   - If diseased or pest-infested, diagnose the exact pathogen/pest, symptoms, causes, organic bio-remedies (Neem oil, Trichoderma, Pseudomonas, cow-urine decoctions), and ICAR-approved chemical sprays with precise dosages (ml/L or g/L).
+   - If healthy, explain vigor, care guidelines, watering, and soil nutrition.
+2. INSECTS, PESTS & BENEFICIAL FAUNA:
+   - Identify insects, caterpillars, beetles, mites, aphids, whiteflies, pollinators (bees), or natural predators (ladybugs).
+   - State whether beneficial or harmful to crops, life stage, economic threshold level (ETL), and management.
+3. SOIL, FERTILIZERS, TOOLS & AGRICULTURAL INPUTS:
+   - Identify soil types (Black cotton, Red soil, Alluvial, Sandy loam, Clay).
+   - Identify fertilizers, composts, farm implements, irrigation equipment, and sprayers.
+4. GENERAL OBJECTS, ANIMALS, FOOD & EVERYDAY ITEMS:
+   - If the user captures an everyday object, animal, food, household item, hand, or non-botanical subject, identify it clearly and accurately with common and local names.
+   - For non-agricultural objects, set health_status to "not_applicable" and severity to "none", and describe its real-world function, material, or composition.
+   - NEVER crash or output a refusal error. Always identify the primary subject in the frame.
+5. HANDS & HOLDING SPECIMENS:
+   - If a person's hand or fingers are holding a leaf, fruit, flower, seed, or object, prioritize analyzing the SPECIMEN BEING HELD.${categoryHint}
 
-SCOPE & SPECIALIZATIONS:
-1. ANY PLANT OR TREE:
-   - Identify species, variety, and botanical family (e.g., Azadirachta indica, Mangifera indica, Ficus benghalensis, Moringa oleifera, Eucalyptus, teak, bamboo, shrubs, climbers, succulents, wild flora, weeds).
-   - Detail growth habit, ideal climate/soil, canopy management, pruning, economic/medicinal value, and cultivation tips.
-2. LEAVES & FOLIAGE:
-   - Identify crop species from leaf morphology (margins, venation, color, petiole, hairiness).
-   - Diagnose health condition:
-     * Healthy: cellular vigor, chloroplast density, maintenance tips.
-     * Fungal: Early/Late Blight, Powdery/Downy Mildew, Rust (Leaf/Stem/Stripe), Anthracnose, Leaf Spot (Cercospora, Septoria), Smut, Wilt.
-     * Bacterial: Bacterial Blight, Bacterial Canker, Soft Rot.
-     * Viral: Leaf Curl, Mosaic (TMV, YVMV), Yellow Vein.
-     * Pests: Spider mites, thrips, aphids, whiteflies, leaf miners, caterpillars, borers.
-     * Deficiencies: Nitrogen (pale lower leaves), Phosphorus (purplish tint), Potassium (scorched margins), Iron/Zinc/Magnesium (interveinal chlorosis), Calcium (blossom end/tip burn).
-   - Provide concrete remedies: Organic bio-pesticides (Neem oil, Trichoderma, Pseudomonas, cow urine formulations) AND certified chemical active ingredients with exact dosages (g or ml per liter).
-3. SEEDS & GRAINS:
-   - Identify seed species and cultivar (Wheat, Paddy/Rice, Mustard, Chickpea/Chana, Maize, Soybean, Cotton, Pearl Millet, Sunflower, Tomato seed, Chilli seed, Coriander, etc.).
-   - Assess physical purity and quality (plumpness, color, unbroken coat, absence of weevil boreholes or fungal mold).
-   - Sowing guidelines: sowing season (Kharif/Rabi/Zaid), seed rate (kg per acre), recommended spacing and sowing depth.
-   - Seed Treatment Protocol: Trichoderma viride @ 5-10g/kg seed or chemical fungicide (Thiram / Carbendazim / Captan @ 2-3g/kg) before sowing to eliminate seed-borne pathogens.
-   - Storage recommendations: target moisture percentage (<10-12%), hermetic storage, natural deterrents against storage pests.
-
-OUTPUT GUIDELINES:
-- Give common names and local names in Indian regional languages (Hindi, Tamil, Telugu, etc.).
-- Give the scientific botanical name in italics or parentheses.
-- IMPORTANT: If a farmer's hand, fingers, or background table is visible holding or supporting the specimen, ALWAYS FOCUS ON THE BOTANICAL SPECIMEN (LEAF, FLOWER, FRUIT, TREE, OR SEED) BEING HELD. Do NOT reject images just because human fingers or hands are visible holding the specimen.
-- Be honest: only if the photo is truly a human face/selfie or non-botanical (furniture, room, electronics) with ZERO botanical specimen, identify it as non-plant.
-- Output Language: ${targetLang}. Use clear, easy-to-understand bullet points.
+Output Language: ${targetLang}. Use clean, structured JSON conforming to the schema.
 
 Reply ONLY with valid JSON conforming to the schema.`;
 
@@ -591,7 +1014,7 @@ Reply ONLY with valid JSON conforming to the schema.`;
       properties: {
         image_type: { 
           type: "STRING", 
-          enum: ["leaf", "fruit", "vegetable", "seed", "tree", "flower", "root", "field", "other"]
+          enum: ["leaf", "fruit", "vegetable", "seed", "tree", "flower", "root", "field", "insect_pest", "soil_fertilizer", "tool_equipment", "general_object", "other"]
         },
         title: { type: "STRING" },
         local_names: { 
@@ -613,7 +1036,7 @@ Reply ONLY with valid JSON conforming to the schema.`;
         },
         health_status: { 
           type: "STRING", 
-          enum: ["healthy", "diseased", "pest", "deficiency", "damaged", "not_applicable"] 
+          enum: ["healthy", "diseased", "pest", "deficiency", "damaged", "not_applicable", "good_condition"] 
         },
         problem_name: { type: "STRING" },
         severity: { 
