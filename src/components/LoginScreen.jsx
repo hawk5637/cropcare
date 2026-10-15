@@ -137,15 +137,6 @@ export default function LoginScreen({ onLoginSuccess }) {
               </button>
             ))}
           </div>
-
-          {/* Quick API Key Settings */}
-          <button
-            onClick={() => setIsConfigModalOpen(true)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white/80 transition-colors"
-            title="Configure Gemini API Key"
-          >
-            <Key className="w-4 h-4" />
-          </button>
         </div>
       </div>
 

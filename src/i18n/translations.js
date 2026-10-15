@@ -65,7 +65,7 @@ export const translations = {
       profile: {
         verified: "Verified Member",
         signOut: "Sign Out",
-        settings: "Settings & API Key",
+        settings: "Farm Profile & Settings",
         switchRole: "Switch Operating Role"
       },
       languageLabel: "Language"
@@ -238,7 +238,7 @@ export const translations = {
       feedbackSubmitted: "Thank you! Your feedback has been sent to the Agronomist review queue.",
       errorTitle: "Diagnostic Analysis Error",
       retryBtn: "Retry Scan",
-      configureKey: "Configure Gemini API Key",
+      configureKey: "AI Diagnostic Engine Ready",
       details: {
         objectType: "Specimen Type",
         species: "Identified Species",
@@ -423,7 +423,7 @@ export const translations = {
       profile: {
         verified: "सत्यापित सदस्य",
         signOut: "लॉग आउट करें",
-        settings: "सेटिंग्स व एपीआई कुंजी",
+        settings: "फार्म सेटिंग्स",
         switchRole: "भूमिका बदलें"
       },
       languageLabel: "भाषा"
@@ -596,7 +596,7 @@ export const translations = {
       feedbackSubmitted: "धन्यवाद! आपकी प्रतिक्रिया विशेषज्ञ समीक्षा कतार में भेज दी गई है।",
       errorTitle: "विश्लेषण में त्रुटि",
       retryBtn: "पुनः प्रयास करें",
-      configureKey: "जेमिनी एपीआई कुंजी दर्ज करें",
+      configureKey: "एआई निदान प्रणाली सक्रिय",
       details: {
         objectType: "नमूना प्रकार",
         species: "पहचानी गई प्रजाति",
@@ -781,7 +781,7 @@ export const translations = {
       profile: {
         verified: "சான்றளிக்கப்பட்ட உறுப்பினர்",
         signOut: "வெளியேறு",
-        settings: "அமைப்புகள் & ஏபிஐ சாவி",
+        settings: "பண்ணை அமைப்புகள்",
         switchRole: "பங்கை மாற்று"
       },
       languageLabel: "மொழி"
@@ -954,7 +954,7 @@ export const translations = {
       feedbackSubmitted: "நன்றி! உங்கள் கருத்து விஞ்ஞானி பார்வைக்கு அனுப்பப்பட்டுள்ளது.",
       errorTitle: "பகுப்பாய்வு பிழை",
       retryBtn: "மீண்டும் முயற்சி செய்",
-      configureKey: "ஜெமினி ஏபிஐ சாவி உள்ளிடுக",
+      configureKey: "ஏஐ கண்டறிதல் அமைப்பு தயார்",
       details: {
         objectType: "மாதிரி வகை",
         species: "கண்டறியப்பட்ட பயிர்",
@@ -1139,7 +1139,7 @@ export const translations = {
       profile: {
         verified: "Membre Vérifié",
         signOut: "Se Déconnecter",
-        settings: "Paramètres & Clé API",
+        settings: "Paramètres de la Ferme",
         switchRole: "Changer de Rôle"
       },
       languageLabel: "Langue"
@@ -1312,7 +1312,7 @@ export const translations = {
       feedbackSubmitted: "Merci ! Votre retour a été transmis à la file de validation des agronomes.",
       errorTitle: "Erreur lors de l'Analyse",
       retryBtn: "Réessayer l'Analyse",
-      configureKey: "Configurer la Clé API Gemini",
+      configureKey: "Moteur IA Prêt",
       details: {
         objectType: "Type d'Organe",
         species: "Espèce Identifiée",

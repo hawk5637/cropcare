@@ -379,17 +379,6 @@ export default function Header() {
 
                   <button
                     onClick={() => {
-                      setIsConfigModalOpen(true);
-                      setProfileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg text-left transition-colors"
-                  >
-                    <Key className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>{t('header.profile.settings')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
                       if (replayIntro) replayIntro();
                       setProfileMenuOpen(false);
                     }}
@@ -496,21 +485,10 @@ export default function Header() {
                 setIsIntroModalOpen(true);
                 setMobileMenuOpen(false);
               }}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 min-h-[44px]"
             >
               <Sparkles className="w-4 h-4 text-emerald-600" />
-              <span>Interactive Tour</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsConfigModalOpen(true);
-                setMobileMenuOpen(false);
-              }}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 min-h-[44px]"
-            >
-              <Key className="w-4 h-4 text-emerald-600" />
-              <span>API Keys</span>
+              <span>Interactive Platform Tour</span>
             </button>
           </div>
 

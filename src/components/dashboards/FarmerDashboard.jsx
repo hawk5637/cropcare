@@ -25,7 +25,11 @@ import {
   Droplets,
   Wind,
   Thermometer,
-  CloudRain
+  CloudRain,
+  Activity,
+  Cpu,
+  Gauge,
+  Zap
 } from 'lucide-react';
 import { getLiveMandiPrices } from '../../services/mandiService';
 
@@ -33,6 +37,7 @@ export default function FarmerDashboard() {
   const { 
     userName, 
     mode, 
+    setMode,
     language,
     setActiveNav, 
     setActiveModule,
@@ -110,9 +115,75 @@ export default function FarmerDashboard() {
   };
 
   const plots = [
-    { id: 'plot-a', name: 'Parcel A-1 (Wheat HD-2967)', size: '6.5 Acres', moisture: soilMoisture, npk: '120:60:40', health: 'Optimal' },
-    { id: 'plot-b', name: 'Parcel B-2 (Mustard Pusa Bold)', size: '4.0 Acres', moisture: 34, npk: '80:40:40', health: 'Good' },
-    { id: 'plot-c', name: 'Parcel C-3 (Basmati Rice Nursery)', size: '4.0 Acres', moisture: 42, npk: '100:50:50', health: 'Vegetative' }
+    { 
+      id: 'plot-a', 
+      name: 'Parcel A-1 (Wheat HD-2967)', 
+      cropName: 'Sharbati Wheat',
+      variety: 'HD-2967 (T. aestivum)',
+      nodeId: 'LORA-NODE-092',
+      battery: '94%',
+      signalRssi: '-84 dBm',
+      size: '6.5 Acres', 
+      moisture: soilMoisture, 
+      vwc: '36.4%',
+      waterPotential: '-33 kPa (Field Capacity)',
+      soilTemp: '22.8°C',
+      npk: '120:60:40', 
+      ph: '6.82',
+      ec: '1.24 dS/m',
+      flowPressure: '1.84 Bar',
+      emitterDischarge: '4.2 L/h',
+      etDeficit: '-1.82 mm/d',
+      health: 'Optimal',
+      simpleStatus: 'Healthy & Vibrant 🟢',
+      simpleAdvice: 'Soil moisture is optimal. Next irrigation due in 3 days.'
+    },
+    { 
+      id: 'plot-b', 
+      name: 'Parcel B-2 (Mustard Pusa Bold)', 
+      cropName: 'Yellow Mustard',
+      variety: 'Pusa Bold (B. juncea)',
+      nodeId: 'LORA-NODE-104',
+      battery: '88%',
+      signalRssi: '-89 dBm',
+      size: '4.0 Acres', 
+      moisture: 34, 
+      vwc: '34.1%',
+      waterPotential: '-42 kPa',
+      soilTemp: '23.4°C',
+      npk: '80:40:40', 
+      ph: '7.10',
+      ec: '1.18 dS/m',
+      flowPressure: '1.75 Bar',
+      emitterDischarge: '4.0 L/h',
+      etDeficit: '-1.45 mm/d',
+      health: 'Good',
+      simpleStatus: 'Good Growth 🟢',
+      simpleAdvice: 'Flowering stage initiated. Safe for micronutrient foliar spray.'
+    },
+    { 
+      id: 'plot-c', 
+      name: 'Parcel C-3 (Basmati Rice Nursery)', 
+      cropName: 'Basmati Rice',
+      variety: 'Pusa-1121 (O. sativa)',
+      nodeId: 'LORA-NODE-119',
+      battery: '96%',
+      signalRssi: '-78 dBm',
+      size: '4.0 Acres', 
+      moisture: 42, 
+      vwc: '42.0%',
+      waterPotential: '-18 kPa (Saturated)',
+      soilTemp: '21.9°C',
+      npk: '100:50:50', 
+      ph: '6.75',
+      ec: '1.30 dS/m',
+      flowPressure: '1.90 Bar',
+      emitterDischarge: '4.4 L/h',
+      etDeficit: '-2.10 mm/d',
+      health: 'Vegetative',
+      simpleStatus: 'Nursery Sprouting 🌾',
+      simpleAdvice: 'Standing water level adequate. Keep nursery weed-free.'
+    }
   ];
 
   const liveCommodities = getLiveMandiPrices(language);
@@ -120,8 +191,14 @@ export default function FarmerDashboard() {
     crop: item.name,
     mandi: item.mandi,
     spotPrice: `₹${item.modalPrice?.toLocaleString('en-IN')} / qtl`,
+    msp: item.msp ? `₹${item.msp?.toLocaleString('en-IN')}` : '₹2,225',
+    mspSpread: item.modalPrice ? `+₹${Math.max(120, item.modalPrice - 2225)}/qtl (+${Math.round(((item.modalPrice - 2225) / 2225) * 100)}% over MSP)` : '+₹225/qtl (+10.1%)',
     change: `${item.trend === 'up' ? '+' : ''}${item.change}%`,
-    trend: item.trend
+    trend: item.trend,
+    qualityGrade: 'Grade A-1 FAQ • Moisture 11.2%',
+    arbitrageMandi: 'Rajpura Terminal APMC',
+    arbitrageSpread: '+₹42/qtl Net Margin',
+    futuresSpread: '+₹40/qtl Contango (NCDEX)'
   }));
 
   const buyerBids = [
@@ -213,32 +290,162 @@ export default function FarmerDashboard() {
         </div>
       </div>
 
-      {/* 4 Role KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.land')}</div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">14.5 Acres</div>
-          <div className="text-xs text-emerald-600 font-semibold mt-1">{t('roles.farmer.kpis.landSub')}</div>
+      {/* Dynamic Mode Context HUD: Simple vs Advance Cockpit */}
+      {mode === 'easy' ? (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 dark:from-emerald-950/40 dark:via-slate-900 dark:to-teal-950/30 border-2 border-emerald-300 dark:border-emerald-700/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shrink-0 shadow-md shadow-emerald-600/30">
+              🍃
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white uppercase tracking-wider">
+                  Simple Mode Active
+                </span>
+                <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                  Clean 1-Click Operations • Simplified Farmer Cockpit
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                Showing friendly crop status, 1-touch watering, instant AI leaf diagnostics, and transparent APMC mandi price advice without complex technical jargon.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+            <button
+              onClick={() => setMode('detailed')}
+              className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <span>Switch to Advance Mode</span>
+              <span className="text-sm">🔬</span>
+            </button>
+          </div>
         </div>
+      ) : (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white border-2 border-indigo-500/50 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl shrink-0 shadow-md shadow-indigo-600/30">
+              🔬
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-indigo-500 text-white uppercase tracking-wider">
+                  Advance Precision Mode Active
+                </span>
+                <span className="text-xs font-mono text-indigo-300">
+                  Multi-Spectral Sentinel-2 NDVI • LoRaWAN IoT Telemetry • Stoichiometric Modeling
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2 text-[11px] font-mono text-slate-300 flex-wrap">
+                <span className="px-2 py-0.5 rounded-lg bg-black/40 border border-white/10 text-emerald-400 font-bold flex items-center gap-1">
+                  <Activity className="w-3 h-3" /> NDVI: 0.84 (Dense Canopy)
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-black/40 border border-white/10 text-teal-300 flex items-center gap-1">
+                  <Gauge className="w-3 h-3" /> Soil EC: 1.24 dS/m
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-black/40 border border-white/10 text-amber-300 flex items-center gap-1">
+                  <Droplet className="w-3 h-3" /> ET₀: 3.4 mm/d
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-black/40 border border-white/10 text-cyan-300 flex items-center gap-1">
+                  <Cpu className="w-3 h-3" /> LoRa RSSI: -84 dBm
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+            <button
+              onClick={() => setMode('easy')}
+              className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <span>Switch to Simple Mode</span>
+              <span className="text-sm">🍃</span>
+            </button>
+          </div>
+        </div>
+      )}
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.yield')}</div>
-          <div className="text-2xl font-black text-amber-600 mt-1">242 Qtls</div>
-          <div className="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-1">{t('roles.farmer.kpis.yieldSub')}</div>
-        </div>
+      {/* 4 Role KPI Cards - Adaptively Rendered based on Mode */}
+      {mode === 'easy' ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.land')}</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">Healthy 🟢</span>
+            </div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white mt-1.5">14.5 Acres</div>
+            <div className="text-xs text-emerald-600 font-semibold mt-1">3 Active Plots • Soil Moist & Ready</div>
+          </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.income')}</div>
-          <div className="text-2xl font-black text-blue-600 mt-1">₹13,00,100</div>
-          <div className="text-xs text-blue-700 dark:text-blue-400 font-semibold mt-1">{t('roles.farmer.kpis.incomeSub')}</div>
-        </div>
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.yield')}</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-bold">In 18 Days 🌾</span>
+            </div>
+            <div className="text-2xl font-black text-amber-600 mt-1.5">242 Qtls</div>
+            <div className="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-1">Sharbati Wheat & Mustard Crop</div>
+          </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.escrow')}</div>
-          <div className="text-2xl font-black text-emerald-600 mt-1">₹3,76,500</div>
-          <div className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1">{t('roles.farmer.kpis.escrowSub')}</div>
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.income')}</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold">+18% vs Last Yr</span>
+            </div>
+            <div className="text-2xl font-black text-blue-600 mt-1.5">₹13,00,100</div>
+            <div className="text-xs text-blue-700 dark:text-blue-400 font-semibold mt-1">₹3.2L Expected Direct to Bank</div>
+          </div>
+
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('roles.farmer.kpis.escrow')}</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">100% Safe 🛡️</span>
+            </div>
+            <div className="text-2xl font-black text-emerald-600 mt-1.5">₹3,76,500</div>
+            <div className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1">Locked in Bank Guarantee Escrow</div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-indigo-900/60 text-white shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-indigo-400 uppercase tracking-wider">Canopy LAI & Area</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">NDVI: 0.84</span>
+            </div>
+            <div className="text-2xl font-black text-white mt-1.5">14.50 Ha</div>
+            <div className="text-[11px] font-mono text-emerald-400 mt-1">LAI: 3.42 • Canopy Temp 24.1°C</div>
+            <div className="text-[10px] font-mono text-slate-400 mt-0.5">Sentinel-2 Orbit L2A • High Vigor</div>
+          </div>
+
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-amber-900/60 text-white shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-wider">Phenology & Biomass</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700">±4.2% σ</span>
+            </div>
+            <div className="text-2xl font-black text-amber-400 mt-1.5">242.0 Qtls</div>
+            <div className="text-[11px] font-mono text-amber-300 mt-1">GDD: 1,480 °C-d • Grain-Filling</div>
+            <div className="text-[10px] font-mono text-slate-400 mt-0.5">Assimilate Translocation 88%</div>
+          </div>
+
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-blue-900/60 text-white shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-blue-400 uppercase tracking-wider">EBITDA & Net Margin</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700">68.3% Margin</span>
+            </div>
+            <div className="text-2xl font-black text-cyan-400 mt-1.5">₹13,00,100</div>
+            <div className="text-[11px] font-mono text-blue-300 mt-1">₹89,662/Acre • CapEx ₹4.12L</div>
+            <div className="text-[10px] font-mono text-slate-400 mt-0.5">Working Capital Ratio 2.4x</div>
+          </div>
+
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-emerald-900/60 text-white shadow-sm card-hover">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">WDRA Collateral</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700">e-NWR Tier-1</span>
+            </div>
+            <div className="text-2xl font-black text-emerald-400 mt-1.5">₹3,76,500</div>
+            <div className="text-[11px] font-mono text-emerald-300 mt-1">T+0 Clearing • Bank BG #8841</div>
+            <div className="text-[10px] font-mono text-slate-400 mt-0.5">Nil Default Risk • Escrow Secured</div>
+          </div>
+        </div>
+      )}
 
       {/* Interactive Platform Feature Spotlight Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -345,83 +552,314 @@ export default function FarmerDashboard() {
       {(activeDashboardTab === 'overview' || !activeDashboardTab) && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Active Cultivated Parcels</h3>
-            <div className="space-y-3">
-              {plots.map((p) => (
-                <div key={p.id} className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">{p.name}</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">{p.size} • Soil Health: {p.health}</p>
-                    {mode === 'detailed' && (
-                      <p className="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 mt-1">
-                        Sensor NPK Ratio: {p.npk} | pH: 6.8 | EC: 1.2 dS/m
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
-                      <div className="text-xs text-slate-500 font-bold uppercase">Moisture</div>
-                      <div className="text-lg font-black text-emerald-600">{p.moisture}%</div>
+            <div className="flex items-center justify-between">
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Active Cultivated Parcels</h3>
+              <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                mode === 'easy' 
+                  ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' 
+                  : 'bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 font-mono'
+              }`}>
+                {mode === 'easy' ? '🍃 Simple Action View' : '🔬 LoRaWAN Telemetry Stream'}
+              </span>
+            </div>
+
+            {mode === 'easy' ? (
+              /* Simple Mode Parcel Cards */
+              <div className="space-y-3">
+                {plots.map((p) => (
+                  <div key={p.id} className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-base text-slate-900 dark:text-white">{p.cropName}</h4>
+                          <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold">
+                            {p.simpleStatus}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1">{p.name} • {p.size}</p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={toggleDrip}
+                          className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                            isDripRunning 
+                              ? 'bg-amber-400 text-slate-900 shadow-md animate-pulse' 
+                              : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm'
+                          }`}
+                        >
+                          <Droplets className="w-4 h-4" />
+                          <span>{isDripRunning ? 'Watering Running 💧' : 'Water Now (15 Min)'}</span>
+                        </button>
+                        <button
+                          onClick={() => setActiveNav('scanner')}
+                          className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <Camera className="w-4 h-4 text-emerald-600" />
+                          <span>Scan Leaf</span>
+                        </button>
+                      </div>
                     </div>
-                    <button 
-                      onClick={toggleDrip}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-slate-800 border border-emerald-300 dark:border-slate-700 text-xs font-bold text-emerald-800 dark:text-emerald-300"
+
+                    {/* Simple Moisture Progress Bar */}
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Soil Moisture Level</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">{p.moisture}% (Good Moisture)</span>
+                      </div>
+                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
+                          style={{ width: `${p.moisture}%` }}
+                        />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
+                        💡 {p.simpleAdvice}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Advance Mode Parcel Cards: Deep IoT Telemetry Matrix */
+              <div className="space-y-4">
+                {plots.map((p) => (
+                  <div key={p.id} className="p-5 rounded-2xl bg-slate-900 border border-indigo-900/60 text-white shadow-md space-y-4">
+                    {/* Top Node & Parcel Identity */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-indigo-950">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
+                            {p.nodeId}
+                          </span>
+                          <h4 className="font-extrabold text-sm text-white">{p.name}</h4>
+                          <span className="text-[10px] font-mono text-slate-400">({p.variety})</span>
+                        </div>
+                        <p className="text-[11px] font-mono text-slate-400 mt-1">
+                          Area: {p.size} • LoRa RSSI: {p.signalRssi} • LiFePO4 Node Battery: {p.battery} • Health: {p.health}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button 
+                          onClick={toggleDrip}
+                          className={`px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                            isDripRunning 
+                              ? 'bg-amber-400 text-slate-900 shadow-md animate-pulse' 
+                              : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                          }`}
+                        >
+                          <Zap className="w-3.5 h-3.5" />
+                          <span>{isDripRunning ? 'Valve 1.8 Bar Active' : 'Pulse Solenoid Valve'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 3-Column Precision Telemetry Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                        <div className="text-[10px] text-indigo-400 uppercase tracking-wider flex items-center gap-1 font-bold">
+                          <Droplets className="w-3 h-3 text-cyan-400" /> Subsurface Hydrology
+                        </div>
+                        <div className="text-sm font-bold text-white">VWC: {p.vwc}</div>
+                        <div className="text-[11px] text-cyan-300">Potential: {p.waterPotential}</div>
+                        <div className="text-[10px] text-slate-400">Temp @15cm: {p.soilTemp}</div>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                        <div className="text-[10px] text-emerald-400 uppercase tracking-wider flex items-center gap-1 font-bold">
+                          <Activity className="w-3 h-3 text-emerald-400" /> Stoichiometry & EC
+                        </div>
+                        <div className="text-sm font-bold text-emerald-400">NPK: {p.npk} kg/ha</div>
+                        <div className="text-[11px] text-emerald-300">Soil pH: {p.ph} • Safe Buffering</div>
+                        <div className="text-[10px] text-slate-400">Electrical Cond: {p.ec}</div>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                        <div className="text-[10px] text-amber-400 uppercase tracking-wider flex items-center gap-1 font-bold">
+                          <Gauge className="w-3 h-3 text-amber-400" /> Hydraulics & ET₀
+                        </div>
+                        <div className="text-sm font-bold text-amber-400">Pressure: {p.flowPressure}</div>
+                        <div className="text-[11px] text-amber-300">Discharge: {p.emitterDischarge}</div>
+                        <div className="text-[10px] text-slate-400">ET₀ Deficit: {p.etDeficit}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-extrabold text-base text-slate-900 dark:text-white">
+              {mode === 'easy' ? 'Weather & Spray Guide' : 'Atmospheric Boundary Layer Radar'}
+            </h3>
+            
+            {mode === 'easy' ? (
+              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CloudSun className="w-6 h-6 text-amber-500" />
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900 dark:text-white">Partly Sunny • 28°C</div>
+                      <div className="text-xs text-slate-500">Ludhiana, Punjab</div>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold rounded-md">
+                    Optimal Spray
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Ideal spray window. No rainfall predicted for the next 48 hours. Safe for foliar spray on all parcels.
+                </p>
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                  <div>
+                    <span className="text-slate-500">Wind Speed</span>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">7 km/h (Gentle)</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500">Rain Chance</span>
+                    <p className="font-bold text-emerald-600">0% for 2 Days</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 rounded-2xl bg-slate-900 border border-indigo-900/60 text-white shadow-sm space-y-3 font-mono">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CloudSun className="w-5 h-5 text-amber-400" />
+                    <div>
+                      <div className="font-bold text-sm text-white">28.4°C • Dry Bulb</div>
+                      <div className="text-[11px] text-slate-400">IMD Doppler Station #412</div>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold rounded">
+                    Δ-T: 4.2°C (Optimal)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-indigo-950">
+                  <div className="p-2 rounded bg-black/40 border border-white/5">
+                    <span className="text-slate-400">VPD (Vapor Deficit)</span>
+                    <p className="text-cyan-400 font-bold">1.15 kPa</p>
+                  </div>
+                  <div className="p-2 rounded bg-black/40 border border-white/5">
+                    <span className="text-slate-400">Solar Irradiance</span>
+                    <p className="text-amber-400 font-bold">680 W/m²</p>
+                  </div>
+                  <div className="p-2 rounded bg-black/40 border border-white/5">
+                    <span className="text-slate-400">Dew Point</span>
+                    <p className="text-teal-400 font-bold">16.4°C</p>
+                  </div>
+                  <div className="p-2 rounded bg-black/40 border border-white/5">
+                    <span className="text-slate-400">Wind Vector</span>
+                    <p className="text-indigo-400 font-bold">7.2 km/h NW</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 2: Mandi Spot Rates & Basis Arbitrage */}
+      {activeDashboardTab === 'mandi' && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">
+                {mode === 'easy' ? 'Today\'s Mandi Market Rates' : 'APMC Spot Rates & Inter-Mandi Arbitrage Matrix'}
+              </h3>
+              <p className="text-xs text-slate-500">
+                {mode === 'easy' ? 'Real-time prices from nearby APMC mandis' : 'e-NAM Live Agmarknet Feed • MSP Basis Spreads • NCDEX Futures Contango'}
+              </p>
+            </div>
+            <span className="text-xs text-emerald-600 font-bold">Refreshed 2m ago</span>
+          </div>
+
+          {mode === 'easy' ? (
+            /* Simple Mode Mandi Table */
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              {mandiRates.map((m, idx) => (
+                <div key={idx} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-sm text-slate-900 dark:text-white">{m.crop}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold">
+                        Good Time to Sell 📈
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-500 mt-0.5">{m.mandi} • Govt MSP: {m.msp}/qtl</div>
+                  </div>
+                  <div className="flex items-center gap-3 self-end sm:self-center">
+                    <div className="text-right">
+                      <div className="font-black text-base text-slate-900 dark:text-white">{m.spotPrice}</div>
+                      <div className="text-xs font-bold text-emerald-600">
+                        {m.mspSpread}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveNav('module');
+                        setActiveModule('market');
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
                     >
-                      Irrigate
+                      Sell Now
                     </button>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          ) : (
+            /* Advance Mode Mandi Arbitrage Matrix */
+            <div className="space-y-3 font-mono">
+              {mandiRates.map((m, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-slate-900 border border-indigo-900/50 text-white space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-white">{m.crop}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">
+                          {m.qualityGrade}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Terminal APMC: {m.mandi} • Ref Standard Agmarknet #AG-991</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-base font-black text-emerald-400">{m.spotPrice}</div>
+                      <div className="text-[11px] text-emerald-300 font-bold">{m.mspSpread}</div>
+                    </div>
+                  </div>
 
-          <div className="space-y-4">
-            <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Weather & Spray Radar</h3>
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CloudSun className="w-6 h-6 text-amber-500" />
-                  <div>
-                    <div className="font-extrabold text-sm text-slate-900 dark:text-white">Partly Sunny • 28°C</div>
-                    <div className="text-xs text-slate-500">Ludhiana, Punjab</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-2 border-t border-indigo-950">
+                    <div className="p-2 rounded bg-black/40 border border-white/5">
+                      <span className="text-slate-400">Inter-Mandi Arbitrage</span>
+                      <p className="text-cyan-300 font-bold">{m.arbitrageMandi} ({m.arbitrageSpread})</p>
+                    </div>
+                    <div className="p-2 rounded bg-black/40 border border-white/5">
+                      <span className="text-slate-400">NCDEX 30-Day Spread</span>
+                      <p className="text-amber-300 font-bold">{m.futuresSpread}</p>
+                    </div>
+                    <div className="p-2 rounded bg-black/40 border border-white/5 flex items-center justify-between">
+                      <div>
+                        <span className="text-slate-400">Warehouse Pledge</span>
+                        <p className="text-emerald-400 font-bold">WDRA e-NWR Ready</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setActiveNav('module');
+                          setActiveModule('market');
+                        }}
+                        className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold cursor-pointer"
+                      >
+                        Arbitrage
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold rounded-md">
-                  Optimal Spray
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Delta-T is 4.2 (ideal window). No rainfall predicted for the next 48 hours. Safe for fungicide spray on Parcel A-1.
-              </p>
+              ))}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tab 2: Mandi Spot Rates */}
-      {activeDashboardTab === 'mandi' && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Live APMC Mandi Spot Prices</h3>
-            <span className="text-xs text-emerald-600 font-bold">Refreshed 2m ago</span>
-          </div>
-
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
-            {mandiRates.map((m, idx) => (
-              <div key={idx} className="py-3 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-sm text-slate-900 dark:text-white">{m.crop}</div>
-                  <div className="text-xs text-slate-500">{m.mandi}</div>
-                </div>
-                <div className="text-right">
-                  <div className="font-extrabold text-sm text-slate-900 dark:text-white">{m.spotPrice}</div>
-                  <div className={`text-xs font-bold ${m.trend === 'up' ? 'text-emerald-600' : 'text-red-500'}`}>
-                    {m.change}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          )}
 
           <button
             onClick={() => {

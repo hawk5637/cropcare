@@ -129,7 +129,7 @@ export default function LiveMandiModal({ isOpen, onClose, preSelectedCommodity, 
                 </span>
               </div>
               <p className="text-xs text-emerald-200 mt-0.5">
-                Official APMC spot auctions • Data.gov.in Active Key: <code className="bg-emerald-950/60 text-emerald-300 px-1 py-0.2 rounded font-mono text-[11px]">{apiStatus?.keyPreview || '579b464d...ac571b'}</code> • Last synced {lastSync}
+                Official APMC spot auctions • e-NAM & Agmarknet Live Telemetry • Last synced {lastSync}
               </p>
             </div>
           </div>
