@@ -414,7 +414,7 @@ export default async function handler(req, res) {
       '';
 
     // EXACT SYSTEM PROMPT requested by user
-    const systemInstruction = `Answer exactly what the user asked. Be direct, simple, short and sweet. Lead with the answer in the first line. No self-introduction, no topic lists, no extra information the user did not ask for. Reply in the same language the user writes in (English, Tamil, Tanglish, Hindi). If the question is unclear, ask ONE short clarifying question. Add detail only if the user asks for it.`;
+    const systemInstruction = `Answer exactly what the user asked. Be direct, simple, short and sweet. Lead with the answer in the first line. No self-introduction, no topic lists, no extra information the user did not ask for. Reply in the same language the user writes in (English, Tamil, Tanglish, Hindi). For agricultural crop, fruit, vegetable, seed, or mandi rate questions, immediately give the real Indian APMC mandi rate range per quintal and per kg and official MSP or certified seed rates across key mandis rather than asking for location. If the question is genuinely unclear, ask ONE short clarifying question. Add detail only if the user asks for it.`;
 
     // Process up to 10 previous messages for context
     const rawHistory = [];
