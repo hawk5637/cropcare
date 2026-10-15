@@ -1398,10 +1398,15 @@ export default function LeafScanner() {
     if (preset) return preset;
 
     const targetLower = (targetFocus || '').toLowerCase();
-    const hasBotanical = targetLower.includes('leaf') || targetLower.includes('seed') || targetLower.includes('plant') || targetLower.includes('tree') || targetLower.includes('crop') || targetLower.includes('fruit') || activeCategory === 'tree' || activeCategory === 'seed' || activeCategory === 'leaf';
-    const isExplicitlyHuman = !hasBotanical && (targetLower.includes('human face') || targetLower.includes('selfie') || targetLower.includes('portrait') || targetLower === 'person' || targetLower === 'human');
+    const isExplicitlyHuman = targetLower.includes('human face') || targetLower.includes('selfie') || targetLower.includes('portrait') || targetLower === 'person' || targetLower === 'human' || targetLower === 'face';
+    const isSkinTone = sampledColors && (
+      sampledColors.avgR > 135 && 
+      sampledColors.avgR > (sampledColors.avgG || 100) * 1.15 && 
+      (sampledColors.greenRatio || 0) < 0.05 && 
+      (sampledColors.foliageYellowRatio || 0) < 0.05
+    );
 
-    if (isExplicitlyHuman) {
+    if (isExplicitlyHuman || isSkinTone) {
       return {
         image_type: 'other',
         is_plant_detected: false,
@@ -1728,17 +1733,33 @@ export default function LeafScanner() {
       }
     }
 
-    const plant = (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase : []).find(p => 
+    const matchedPlant = (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase : []).find(p => 
       p.name.toLowerCase().includes(targetCrop.toLowerCase()) ||
       targetCrop.toLowerCase().includes(p.name.toLowerCase())
-    ) || (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase[0] : null) || {
+    );
+
+    const isHouseplantOrOrnamental = /monstera|philodendron|pothos|ficus|palm|fern|succulent|cactus|snake plant|calathea|dracaena|money plant|rose/i.test(targetCrop);
+
+    const plant = matchedPlant || (isHouseplantOrOrnamental ? {
+      name: targetCrop.charAt(0).toUpperCase() + targetCrop.slice(1),
+      scientific_name: targetCrop.toLowerCase().includes('monstera') ? 'Monstera deliciosa' : `${targetCrop} sp.`,
+      local_names: { en: targetCrop },
+      category: 'Ornamental / Houseplant',
+      diseases: []
+    } : (targetCrop && targetCrop !== 'auto' ? {
       name: targetCrop,
       scientific_name: 'Botanical Cultivar',
-      local_names: { hi: targetCrop },
+      local_names: { en: targetCrop },
       diseases: []
-    };
+    } : (Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase[0] : {
+      name: 'Wheat',
+      scientific_name: 'Triticum aestivum',
+      local_names: { hi: 'गेहूं' },
+      diseases: []
+    })));
 
-    const disease = (!isHealthy && plant.diseases && plant.diseases.length > 0)
+    const effectiveHealthy = isHealthy || isHouseplantOrOrnamental;
+    const disease = (!effectiveHealthy && plant.diseases && plant.diseases.length > 0)
       ? plant.diseases[0]
       : null;
 
@@ -1931,9 +1952,22 @@ export default function LeafScanner() {
     }
 
     try {
+      const isGeminiKeyValid = (key) => {
+        if (!key || typeof key !== 'string') return false;
+        const k = key.trim();
+        if (k.length < 25) return false;
+        return k.startsWith('AIza') || k.startsWith('AQ.') || k.length >= 35;
+      };
+      const activeGeminiKey = isGeminiKeyValid(runtimeApiKey) ? runtimeApiKey.trim() : '';
+
+      const reqHeaders = { 'Content-Type': 'application/json' };
+      if (activeGeminiKey) {
+        reqHeaders['x-gemini-api-key'] = activeGeminiKey;
+      }
+
       const res = await fetch('/api/identify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: reqHeaders,
         body: JSON.stringify({
           images: imagesToSend,
           organs: organsToSend,
@@ -1950,7 +1984,7 @@ export default function LeafScanner() {
       setPlantNetResult(json);
 
       // If confident or probable match found, sync crop focus and automatically run health diagnosis
-      if (json.topMatch && (json.tier === 'confident' || json.tier === 'probable')) {
+      if (json.topMatch && (json.tier === 'confident' || json.tier === 'probable') && json.isPlant !== false) {
         const primaryCommonName = json.topMatch.commonNames?.[0] || '';
         const sciName = json.topMatch.scientificName || '';
         const matchedCrop = Array.isArray(plantKnowledgeBase) ? plantKnowledgeBase.find(c => 
@@ -1958,21 +1992,29 @@ export default function LeafScanner() {
           primaryCommonName.toLowerCase().includes(c.name.toLowerCase()) ||
           (c.scientific_name && (c.scientific_name.toLowerCase().includes(sciName.toLowerCase()) || sciName.toLowerCase().includes(c.scientific_name.toLowerCase())))
         ) : null;
-        const cropNameToUse = matchedCrop ? matchedCrop.name : (primaryCommonName || 'Tomato');
-        setSpecimenFocus(cropNameToUse);
+        const cropNameToUse = matchedCrop ? matchedCrop.name : (primaryCommonName || (sciName ? sciName : 'auto'));
+        if (cropNameToUse && cropNameToUse !== 'auto') {
+          setSpecimenFocus(cropNameToUse);
+        }
         runVisionAnalysis(imagesToSend[0], null, colorStats, cropNameToUse);
-      } else if (json.tier === 'refuse' && (json.message?.includes('Non-plant') || json.message?.includes('non-plant'))) {
+      } else if (json.isPlant === false || (json.tier === 'refuse' && (
+        json.message?.toLowerCase().includes('non-plant') || 
+        json.message?.toLowerCase().includes('detected') || 
+        json.message?.toLowerCase().includes('face') || 
+        json.message?.toLowerCase().includes('person')
+      ))) {
+        const detectedName = json.subjectName || 'Non-Plant Subject';
         setScanResult({
           image_type: 'other',
           is_plant_detected: false,
-          title: 'Non-Plant Subject Detected',
-          local_names: ['गैर-कृषि वस्तु (Non-Botanical)', 'Non-Plant Object'],
+          title: `${detectedName} (Not a Plant)`,
+          local_names: ['गैर-कृषि वस्तु (Non-Botanical)', detectedName],
           scientific_name: 'Non-Botanical',
           confidence: 'high',
           health_status: 'not_applicable',
-          problem_name: 'Non-Plant Subject Detected',
+          problem_name: `${detectedName} Detected`,
           severity: 'none',
-          what_i_see: json.message || 'The camera detected a non-plant object. No agricultural plant leaves, crops, flowers, or seeds were found.',
+          what_i_see: json.message || 'The camera detected a non-plant subject. No agricultural plant leaves, crops, flowers, or seeds were found.',
           farmer_summary: 'Please point your camera at a crop leaf, fruit, or seed to diagnose plant health.',
           farmer_advice: 'Hold a single crop leaf, mature fruit, or seed sample 10 to 15 cm in front of the lens in good daylight.',
           sections: [
@@ -1980,7 +2022,7 @@ export default function LeafScanner() {
               heading: 'Non-Plant Detection Notice',
               icon: '🔍',
               points: [
-                'The camera detected an everyday non-agricultural object or surface.',
+                json.message || 'The camera detected an everyday non-agricultural subject or person.',
                 'Safety rule: Agricultural medicines, fungicides, and chemical sprays cannot be applied on non-plants.',
                 'Please point the lens directly at a crop leaf, fruit, flower, or grain sample.'
               ]
@@ -1989,12 +2031,12 @@ export default function LeafScanner() {
         });
       } else {
         // Fallback diagnosis so user is never left without care advice
-        const fallbackCrop = specimenFocus && specimenFocus !== 'auto' ? specimenFocus : 'Tomato';
+        const fallbackCrop = specimenFocus && specimenFocus !== 'auto' ? specimenFocus : 'auto';
         runVisionAnalysis(imagesToSend[0], null, colorStats, fallbackCrop);
       }
     } catch (err) {
       console.error('[LeafScanner] Botanical identification failed:', err);
-      const fallbackCrop = specimenFocus && specimenFocus !== 'auto' ? specimenFocus : 'Tomato';
+      const fallbackCrop = specimenFocus && specimenFocus !== 'auto' ? specimenFocus : 'auto';
       runVisionAnalysis(imagesToSend[0], null, colorStats, fallbackCrop);
     } finally {
       setIsIdentifying(false);

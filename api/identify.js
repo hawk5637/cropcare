@@ -3,6 +3,7 @@
 // Implements multi-photo, organ disambiguation, and strict confidence threshold rejection.
 
 import { findPlantEntry, getPlants, getFruitMedicalProfile } from './_knowledge.js';
+import { callGemini, isLikelyGeminiKey } from './_gemini.js';
 
 // In-memory identification attempt log (most recent 100 queries)
 const identificationLogs = [];
@@ -31,6 +32,107 @@ function parseBase64Image(dataStr) {
 
   const buffer = Buffer.from(base64Data, 'base64');
   return { buffer, mimeType };
+}
+
+// Multimodal AI Botanical Vision Engine via Google Gemini
+async function identifyWithGemini(images, organs = ['leaf'], cropHint = '', customApiKey = null) {
+  const candidateKey = customApiKey || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
+  if (!isLikelyGeminiKey(candidateKey)) return null;
+
+  const firstImg = images[0];
+  let mimeType = 'image/jpeg';
+  let base64Data = firstImg;
+  if (typeof firstImg === 'string' && firstImg.startsWith('data:')) {
+    const match = firstImg.match(/^data:([^;]+);base64,(.+)$/);
+    if (match) {
+      mimeType = match[1];
+      base64Data = match[2];
+    }
+  }
+
+  const systemPrompt = `You are a world-class botanical taxonomist and universal visual identification AI.
+Examine the image with extreme visual precision:
+
+1. BOTANICAL CROPS, PLANTS, FLOWERS, FRUITS, TREES, HOUSEPLANTS, SUCCULENTS & SEEDS:
+   - Set is_plant: true
+   - Identify exact botanical scientific name (genus and species, e.g. "Monstera deliciosa", "Solanum lycopersicum", "Rosa chinensis", "Ficus benghalensis", "Azadirachta indica", "Mangifera indica", "Triticum aestivum", "Ocimum tenuiflorum", "Gossypium hirsutum", etc.).
+   - Identify botanical family (e.g. "Araceae", "Solanaceae", "Rosaceae", "Poaceae", "Lamiaceae", "Meliaceae", etc.).
+   - List English common names (e.g. ["Monstera", "Swiss Cheese Plant", "Split-leaf philodendron"]).
+   - Specify the primary organ: "leaf", "flower", "fruit", "bark", "seed", or "habit".
+   - Set confidence_pct between 50 and 99.
+   - Provide 2 real botanical runner-up species for comparison.
+
+2. HUMAN PERSON / FACE / SELFIE:
+   - If a human person, selfie, portrait, or human face is the main subject:
+     Set is_plant: false
+     Set subject_name: "Human Face / Person"
+     Set non_plant_category: "human_face"
+     Set confidence_pct: 99
+     Set rejection_reason: "A human face or person was detected in the frame. No agricultural plants, crops, leaves, or seeds are present."
+
+3. EVERYDAY OBJECTS, ROOMS, FURNITURE, ANIMALS, SCREENS, CLOTHING:
+   - If a non-botanical item is shown:
+     Set is_plant: false
+     Set subject_name: Name of the object (e.g. "Office Chair", "Smartphone", "Computer Keyboard", "Wall", "Cat", "Dog")
+     Set non_plant_category: "object"
+     Set confidence_pct: 95
+     Set rejection_reason: "Non-plant object detected."
+
+4. HANDS HOLDING SAMPLES:
+   - If a human hand or fingers are holding a plant leaf, fruit, flower, seed, or twig, FOCUS EXCLUSIVELY ON THE BOTANICAL SPECIMEN BEING HELD (set is_plant: true).
+
+Reply ONLY with valid JSON conforming to the schema.`;
+
+  const schema = {
+    type: "OBJECT",
+    properties: {
+      is_plant: { type: "BOOLEAN" },
+      non_plant_category: { type: "STRING" },
+      subject_name: { type: "STRING" },
+      scientific_name: { type: "STRING" },
+      family: { type: "STRING" },
+      common_names: { type: "ARRAY", items: { type: "STRING" } },
+      organ: { type: "STRING" },
+      confidence_pct: { type: "INTEGER" },
+      rejection_reason: { type: "STRING" },
+      runner_ups: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            scientific_name: { type: "STRING" },
+            common_name: { type: "STRING" },
+            score: { type: "NUMBER" }
+          },
+          required: ["scientific_name", "common_name", "score"]
+        }
+      }
+    },
+    required: ["is_plant", "subject_name", "confidence_pct"]
+  };
+
+  const { data, model } = await callGemini({
+    systemInstruction: systemPrompt,
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: "Identify the botanical specimen or subject in this image with high taxonomic precision." },
+          { inlineData: { mimeType, data: base64Data } }
+        ]
+      }
+    ],
+    generationConfig: {
+      temperature: 0.1,
+      responseMimeType: "application/json",
+      responseSchema: schema
+    }
+  }, 12000, candidateKey);
+
+  const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!rawText) return null;
+  const parsed = JSON.parse(rawText);
+  return { ...parsed, model };
 }
 
 // Fallback botanical knowledge matching for offline/demo/testing when API key is not configured
@@ -173,8 +275,15 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
 
   // Only reject on colorStats if it explicitly flag isNonPlant === true (never reject on low green when organ is seed, fruit, bark, or dry leaf)
   const isColorNonPlant = colorStats && colorStats.isNonPlant === true;
+  // Biometric skin-tone check (high red, low green chlorophyll)
+  const isSkinTone = colorStats && (
+    colorStats.avgR > 135 && 
+    colorStats.avgR > (colorStats.avgG || 100) * 1.15 && 
+    (colorStats.greenRatio || 0) < 0.05 && 
+    (colorStats.foliageYellowRatio || 0) < 0.05
+  );
 
-  if (isExplicitNonPlant || isColorNonPlant) {
+  if (isExplicitNonPlant || isColorNonPlant || isSkinTone) {
     return {
       isPlant: false,
       score: 0.08,
@@ -184,7 +293,8 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
 
   // 2. If cropHint provided, match in catalog or 61-crop KB
   let found = null;
-  if (lowerHint && lowerHint !== 'auto') {
+  const isExplicitHint = lowerHint && lowerHint !== 'auto';
+  if (isExplicitHint) {
     found = catalog.find(c => c.keywords.some(k => lowerHint.includes(k)));
     if (!found) {
       const kbMatch = allKbPlants.find(p => 
@@ -246,14 +356,16 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
     }
   }
 
-  // Generate top 3 matches with high confidence (>90%)
+  // Generate top 3 matches with calibrated confidence
+  // When hint was explicitly requested, 0.90 is appropriate; for blind auto-fallback, 0.52 (probable)
+  const baseScore = isExplicitHint ? 0.90 : 0.52;
   const runnerUps = catalog.filter(c => c.expected !== found.expected).slice(0, 2);
   return {
     isPlant: true,
-    score: 0.92,
+    score: baseScore,
     matches: [
       {
-        score: 0.92,
+        score: baseScore,
         species: {
           scientificNameWithoutAuthor: found.scientificName,
           scientificName: `${found.scientificName} L.`,
@@ -262,7 +374,7 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
         }
       },
       {
-        score: 0.05,
+        score: Math.min(0.20, Math.round((1 - baseScore) * 0.6 * 100) / 100),
         species: {
           scientificNameWithoutAuthor: runnerUps[0].scientificName,
           scientificName: `${runnerUps[0].scientificName} L.`,
@@ -271,7 +383,7 @@ function matchOfflineTaxonomy(cropHint, organ = 'leaf', colorStats = null) {
         }
       },
       {
-        score: 0.02,
+        score: Math.min(0.10, Math.round((1 - baseScore) * 0.3 * 100) / 100),
         species: {
           scientificNameWithoutAuthor: runnerUps[1].scientificName,
           scientificName: `${runnerUps[1].scientificName} L.`,
@@ -399,9 +511,64 @@ export default async function handler(req, res) {
       }
     }
 
-    // 2. If no API key configured or fallback needed (e.g. offline testing/demo/no results)
+    // 2. Multimodal AI Botanical Vision with Google Gemini
+    let rejectionDetails = null;
     if (!rawResults || rawResults.length === 0) {
-      engineUsed = apiKey && rawResults ? 'Pl@ntNet API v2 (Botanical Fallback)' : 'Pl@ntNet Architecture (Botanical Knowledge Base)';
+      const geminiApiKey = (
+        headers['x-gemini-api-key'] ||
+        process.env.GEMINI_API_KEY ||
+        process.env.VITE_GEMINI_API_KEY ||
+        ''
+      ).trim();
+
+      if (isLikelyGeminiKey(geminiApiKey)) {
+        try {
+          const geminiResult = await identifyWithGemini(images, organs, cropHint, geminiApiKey);
+          if (geminiResult) {
+            if (geminiResult.is_plant === false) {
+              nonPlantDetected = true;
+              rawResults = [];
+              engineUsed = `CropCare Vision AI (${geminiResult.model || 'Gemini'})`;
+              rejectionDetails = {
+                subjectName: geminiResult.subject_name || 'Non-Plant Subject',
+                category: geminiResult.non_plant_category || 'object',
+                reason: geminiResult.rejection_reason || 'Non-plant subject detected.'
+              };
+            } else {
+              engineUsed = `CropCare Vision AI (${geminiResult.model || 'Gemini'})`;
+              const mainScore = (geminiResult.confidence_pct || 90) / 100;
+              const runners = Array.isArray(geminiResult.runner_ups) ? geminiResult.runner_ups : [];
+              rawResults = [
+                {
+                  score: mainScore,
+                  species: {
+                    scientificNameWithoutAuthor: geminiResult.scientific_name || geminiResult.subject_name,
+                    scientificName: geminiResult.scientific_name ? `${geminiResult.scientific_name}` : (geminiResult.subject_name || 'Unknown Species'),
+                    family: { scientificNameWithoutAuthor: geminiResult.family || '' },
+                    commonNames: geminiResult.common_names || [geminiResult.subject_name]
+                  }
+                },
+                ...runners.map(r => ({
+                  score: typeof r.score === 'number' ? (r.score > 1 ? r.score / 100 : r.score) : 0.05,
+                  species: {
+                    scientificNameWithoutAuthor: r.scientific_name,
+                    scientificName: r.scientific_name,
+                    family: { scientificNameWithoutAuthor: '' },
+                    commonNames: [r.common_name]
+                  }
+                }))
+              ];
+            }
+          }
+        } catch (geminiErr) {
+          console.warn('[identify] Gemini vision identification failed:', geminiErr);
+        }
+      }
+    }
+
+    // 3. If neither Pl@ntNet nor Gemini yielded results, use offline taxonomy matching
+    if (!nonPlantDetected && (!rawResults || rawResults.length === 0)) {
+      engineUsed = apiKey ? 'Pl@ntNet Architecture (Botanical Knowledge Base)' : 'CropCare Botanical Knowledge Base';
       const mockResult = matchOfflineTaxonomy(cropHint, organs[0], colorStats);
       if (mockResult) {
         if (!mockResult.isPlant) {
@@ -415,7 +582,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // 3. Process and format results according to strict confidence tiers
+    // 4. Process and format results according to strict confidence tiers
     const formattedMatches = (rawResults || []).slice(0, 3).map((item) => {
       const score = typeof item.score === 'number' ? item.score : 0;
       const confidencePct = Math.round(score * 100);
@@ -459,17 +626,22 @@ export default async function handler(req, res) {
     const topScore = topMatch ? topMatch.score : 0;
     const topConfidencePct = topMatch ? topMatch.confidencePct : 0;
 
-    // STEP 3: NEVER GIVE A CONFIDENT WRONG ANSWER
+    // STEP 4: NEVER GIVE A CONFIDENT WRONG ANSWER
     // Above 70%: confident match
     // 40-70%: probable match, show runner-ups and suggest confirming with another angle
     // Below 40%: refuse to guess!
     let tier = 'refuse';
     let status = 'unreliable';
-    let message = nonPlantDetected 
-      ? 'Non-plant subject detected. Please point your camera at a plant leaf, crop, flower, fruit, or seed.'
-      : 'Could not reliably identify. Try a clearer photo of a single leaf or flower against a neutral background.';
+    let message = 'Could not reliably identify. Try a clearer photo of a single leaf or flower against a neutral background.';
 
-    if (topMatch && topScore >= 0.70) {
+    if (nonPlantDetected) {
+      tier = 'refuse';
+      status = 'unreliable';
+      message = rejectionDetails?.reason || 
+        (rejectionDetails?.subjectName 
+          ? `${rejectionDetails.subjectName} detected. Please point your camera at a crop leaf, fruit, flower, or seed.`
+          : 'Non-plant subject detected. Please point your camera at a plant leaf, crop, flower, fruit, or seed.');
+    } else if (topMatch && topScore >= 0.70) {
       tier = 'confident';
       status = 'confident';
       message = `Confident match: ${topMatch.scientificName} (${topConfidencePct}% confidence).`;
@@ -480,23 +652,22 @@ export default async function handler(req, res) {
     } else {
       tier = 'refuse';
       status = 'unreliable';
-      if (nonPlantDetected) {
-        message = 'Non-plant subject detected. Please point your camera at a plant leaf, crop, flower, fruit, or seed.';
-      }
     }
 
     const responsePayload = {
       status,
       tier,
       message,
+      isPlant: !nonPlantDetected,
+      subjectName: rejectionDetails?.subjectName || (topMatch ? topMatch.commonNames?.[0] : null),
       engine: engineUsed,
       hasApiKey: !!apiKey,
       remainingCalls: remainingCalls ?? lastKnownQuota,
       photosCount: images.length,
       organsUsed: organs,
-      topMatch: tier !== 'refuse' ? topMatch : null,
-      matches: tier !== 'refuse' ? formattedMatches : [],
-      allCandidates: formattedMatches, // kept for debugging / runner-up review
+      topMatch: (tier !== 'refuse' && !nonPlantDetected) ? topMatch : null,
+      matches: (tier !== 'refuse' && !nonPlantDetected) ? formattedMatches : [],
+      allCandidates: nonPlantDetected ? [] : formattedMatches,
       latencyMs: Date.now() - startTime
     };
 

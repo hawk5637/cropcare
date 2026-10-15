@@ -19,7 +19,7 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     }
   }
 
-  // 2. Multi-spectral visual feature cues from colorStats (if target is 'auto')
+  // Multi-spectral visual feature cues from colorStats (if target is 'auto')
   const {
     avgR = 120, avgG = 120, avgB = 120,
     greenRatio = 0, foliageYellowRatio = 0,
@@ -27,17 +27,25 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     aspectRatio = 1.0, avgBrightness = 128
   } = colorStats || {};
 
+  // Biometric skin tone check
+  const isSkinTone = colorStats && (
+    avgR > 135 && 
+    avgR > (avgG || 100) * 1.15 && 
+    (greenRatio || 0) < 0.05 && 
+    (foliageYellowRatio || 0) < 0.05
+  );
+
   // Check if subject is an everyday non-botanical object (smartphones, laptops, furniture, books, clothing, hands, cups)
   const isExplicitMobile = target.includes('phone') || target.includes('mobile') || target.includes('screen') || target.includes('smartphone');
   const isExplicitLaptop = target.includes('laptop') || target.includes('computer') || target.includes('keyboard') || target.includes('monitor');
   const isExplicitBook = target.includes('book') || target.includes('paper') || target.includes('notebook') || target.includes('document');
   const isExplicitCup = target.includes('cup') || target.includes('mug') || target.includes('bottle') || target.includes('glass');
-  const isExplicitPerson = target.includes('human face') || target.includes('selfie') || target.includes('portrait') || target === 'person' || target === 'human' || target === 'face';
+  const isExplicitPerson = isSkinTone || target.includes('human face') || target.includes('selfie') || target.includes('portrait') || target === 'person' || target === 'human' || target === 'face';
   const isExplicitHand = target.includes('hand') || target.includes('finger') || target.includes('palm');
   const isExplicitVehicle = target.includes('tractor') || target.includes('car') || target.includes('truck') || target.includes('vehicle');
 
   // If low foliar green and grey/blue or dark metallic tones when in auto mode with non-botanical cues
-  const isLowChlorophyllObject = (target === 'auto' || !target) && greenRatio < 0.02 && foliageYellowRatio < 0.03 && necroticRatio < 0.02 && (avgBrightness < 65 || (avgB > avgG && avgB > avgR) || (Math.abs(avgR - avgG) < 8 && Math.abs(avgG - avgB) < 8));
+  const isLowChlorophyllObject = (target === 'auto' || !target || isSkinTone) && greenRatio < 0.02 && foliageYellowRatio < 0.03 && necroticRatio < 0.02 && (avgBrightness < 65 || (avgB > avgG && avgB > avgR) || (Math.abs(avgR - avgG) < 8 && Math.abs(avgG - avgB) < 8) || isSkinTone);
 
   if (isExplicitMobile || isExplicitLaptop || isExplicitBook || isExplicitCup || isExplicitPerson || isExplicitHand || isExplicitVehicle || isLowChlorophyllObject) {
     let objTitle = 'Smartphone / Mobile Device';
@@ -783,14 +791,21 @@ function generateFallbackCropDiagnosis(cropName = 'auto', hash = 'scan_icar', co
     }
   }
 
-  const plant = (allPlants.find(p => p.name.toLowerCase() === target))
+  const matchedPlant = (allPlants.find(p => p.name.toLowerCase() === target))
     || (allPlants.find(p => p.name.toLowerCase().includes(target))) 
-    || (allPlants.find(p => target.includes(p.name.toLowerCase())))
-    || (allPlants.find(p => p.name.toLowerCase() === 'wheat'))
-    || allPlants[0] 
-    || { name: 'Wheat', scientific_name: 'Triticum aestivum', local_names: { hi: 'गेहूं' }, diseases: [] };
+    || (allPlants.find(p => target.includes(p.name.toLowerCase())));
 
-  const isHealthyPlant = target.includes('neem') || target.includes('tulsi') || target.includes('healthy') || target.includes('mint') || target.includes('aloe');
+  const isHouseplantOrOrnamental = /monstera|philodendron|pothos|ficus|palm|fern|succulent|cactus|snake plant|calathea|dracaena|money plant|rose/i.test(target);
+
+  const plant = matchedPlant || (isHouseplantOrOrnamental ? {
+    name: target.charAt(0).toUpperCase() + target.slice(1),
+    scientific_name: target.toLowerCase().includes('monstera') ? 'Monstera deliciosa' : `${target} sp.`,
+    local_names: { en: target.charAt(0).toUpperCase() + target.slice(1) },
+    category: 'Ornamental / Houseplant',
+    diseases: []
+  } : ((allPlants.find(p => p.name.toLowerCase() === 'wheat')) || allPlants[0] || { name: 'Wheat', scientific_name: 'Triticum aestivum', local_names: { hi: 'गेहूं' }, diseases: [] }));
+
+  const isHealthyPlant = isHouseplantOrOrnamental || target.includes('neem') || target.includes('tulsi') || target.includes('healthy') || target.includes('mint') || target.includes('aloe');
   const disease = (!isHealthyPlant && plant.diseases && plant.diseases[0]) || null;
   const localNamesArr = plant.local_names ? Object.values(plant.local_names) : [plant.name];
 
