@@ -214,8 +214,147 @@ export function answerDirectly(message, history = [], language = 'en') {
       return "Bell Pepper Mandi Rates:\n• Azadpur APMC (Delhi): ₹3,500 / Quintal\n• Ooty Market (Tamil Nadu): ₹3,800 / Quintal";
     }
 
+    // Mango
+    if (/\b(mango|aam|maangai)\b/i.test(lower)) {
+      if (isTanglish) return "Mango (மாங்காய்) current mandi rate ₹4,800 - ₹6,500 / Quintal (Ratnagiri Alphonso ₹6,500, Salem Banganapalli ₹4,800).";
+      if (isHindi) return "आम (Mango) का वर्तमान मंडी भाव ₹4,800 - ₹6,500 / क्विंटल (रत्नागिरी अल्फोंसो: ₹6,500, मलीहाबाद दशहरी: ₹4,800) है।";
+      if (isTamil) return "மாம்பழம் (Mango) தற்போதைய மண்டி விலை ₹4,800 - ₹6,500 / குவிண்டால் (சேலம் பங்கனபள்ளி: ₹4,800).";
+      return "Mango Mandi Rates:\n• Ratnagiri APMC (Maharashtra): ₹6,500 / Quintal (Alphonso / Hapus)\n• Malihabad APMC (UP): ₹4,800 / Quintal (Dasheri Grade-A)\n• Salem APMC (Tamil Nadu): ₹4,200 / Quintal (Banganapalli)";
+    }
+
+    // Banana
+    if (/\b(banana|kela|vaazhaipazham|vazhaipazham)\b/i.test(lower)) {
+      if (isTanglish) return "Banana (வாழைப்பழம்) current mandi rate ₹1,850 - ₹2,350 / Quintal (Jalgaon APMC).";
+      if (isHindi) return "केला (Banana) का जलगांव मंडी भाव ₹1,850 - ₹2,350 / क्विंटल (ग्रैंड नैने) है।";
+      if (isTamil) return "வாழைப்பழம் (Banana) தற்போதைய மண்டி விலை ₹1,850 - ₹2,350 / குவிண்டால் (ஜல்கான் / தேனி மண்டி).";
+      return "Banana Mandi Rates:\n• Jalgaon APMC (Maharashtra): ₹2,150 / Quintal (Grand Naine Grade-A)\n• Theni APMC (Tamil Nadu): ₹1,950 / Quintal (Robusta / Cavendish)";
+    }
+
+    // Apple
+    if (/\b(apple|seb|aappil)\b/i.test(lower)) {
+      if (isTanglish) return "Apple (ஆப்பிள்) current mandi rate ₹6,500 - ₹8,500 / Quintal (Shimla Royal Delicious).";
+      if (isHindi) return "सेब (Apple) का शिमला मंडी भाव ₹6,500 - ₹8,500 / क्विंटल (रॉयल डिलीशियस) है।";
+      return "Apple Mandi Rates:\n• Shimla APMC (Himachal Pradesh): ₹7,800 / Quintal (Royal Delicious Grade-A)\n• Sopore APMC (Kashmir): ₹6,900 / Quintal (Red Delicious)";
+    }
+
+    // Guava
+    if (/\b(guava|amrood|koyyapazham)\b/i.test(lower)) {
+      if (isHindi) return "अमरूद (Guava) का वर्तमान मंडी भाव ₹2,200 - ₹3,100 / क्विंटल (इलाहाबाद सफेदा) है।";
+      return "Guava Mandi Rates:\n• Prayagraj APMC (UP): ₹2,800 / Quintal (Allahabad Safeda)\n• Dholka APMC (Gujarat): ₹2,400 / Quintal";
+    }
+
+    // Papaya
+    if (/\b(papaya|papita|pappali)\b/i.test(lower)) {
+      return "Papaya Mandi Rates:\n• Anantapur APMC (AP): ₹1,650 / Quintal (Taiwan Red Lady 786)\n• Pune APMC (Maharashtra): ₹1,850 / Quintal";
+    }
+
+    // Pomegranate
+    if (/\b(pomegranate|anar|maadulai|madulai)\b/i.test(lower)) {
+      return "Pomegranate Mandi Rates:\n• Solapur APMC (Maharashtra): ₹9,800 / Quintal (Bhagwa Grade-A Export)\n• Bangalore APMC (Karnataka): ₹8,500 / Quintal";
+    }
+
+    // Citrus / Lemon / Lime / Orange
+    if (/\b(lemon|lime|nimbu|elumichai|citrus|orange|santra|mosambi)\b/i.test(lower)) {
+      return "Citrus & Lemon Mandi Rates:\n• Tenali APMC (AP): ₹4,200 / Quintal (Acid Lime / Nimbu)\n• Nagpur APMC (Maharashtra): ₹4,600 / Quintal (Nagpur Mandarin Orange)";
+    }
+
+    // Grapes
+    if (/\b(grapes|angoor|dhrakshai)\b/i.test(lower)) {
+      return "Grapes Mandi Rates:\n• Nashik APMC (Maharashtra): ₹5,800 / Quintal (Thompson Seedless White)\n• Sangli APMC: ₹6,400 / Quintal (Tas-A-Ganesh)";
+    }
+
+    // Watermelon
+    if (/\b(watermelon|tarbooz|tharpusani)\b/i.test(lower)) {
+      return "Watermelon Mandi Rates:\n• Kolar APMC (Karnataka): ₹1,150 / Quintal (Kiran Hybrid Black Sugar)\n• Anantapur APMC: ₹1,050 / Quintal";
+    }
+
+    // Brinjal / Eggplant
+    if (/\b(brinjal|eggplant|baingan|kathirikai)\b/i.test(lower)) {
+      if (isHindi) return "बैंगन (Brinjal) का वर्तमान मंडी भाव ₹1,650 - ₹2,200 / क्विंटल है।";
+      return "Brinjal / Eggplant Mandi Rates:\n• Belagavi APMC (Karnataka): ₹1,850 / Quintal\n• Varanasi APMC (UP): ₹1,650 / Quintal (Round Purple)";
+    }
+
+    // Okra / Ladyfinger / Bhindi
+    if (/\b(okra|ladyfinger|lady\s*finger|bhindi|vendaikkai)\b/i.test(lower)) {
+      if (isHindi) return "भिंडी (Okra) का वर्तमान मंडी भाव ₹2,600 - ₹3,400 / क्विंटल है।";
+      return "Okra / Bhindi Mandi Rates:\n• Surat APMC (Gujarat): ₹3,200 / Quintal\n• Jaipur APMC (Rajasthan): ₹2,800 / Quintal";
+    }
+
+    // Cabbage
+    if (/\b(cabbage|patta\s*gobhi|muttakose)\b/i.test(lower)) {
+      return "Cabbage Mandi Rates:\n• Nashik APMC (Maharashtra): ₹1,150 / Quintal\n• Kolar APMC (Karnataka): ₹1,050 / Quintal";
+    }
+
+    // Cauliflower
+    if (/\b(cauliflower|phool\s*gobhi|kaaliflower)\b/i.test(lower)) {
+      return "Cauliflower Mandi Rates:\n• Agra APMC (UP): ₹1,450 / Quintal\n• Ranchi APMC (Jharkhand): ₹1,600 / Quintal";
+    }
+
+    // Cucumber
+    if (/\b(cucumber|kheera|vellarikkai)\b/i.test(lower)) {
+      return "Cucumber Mandi Rates:\n• Alwar APMC (Rajasthan): ₹1,350 / Quintal\n• Malerkotla APMC (Punjab): ₹1,400 / Quintal";
+    }
+
+    // Carrot & Radish
+    if (/\b(carrot|gajar|radish|mooli|mullangi)\b/i.test(lower)) {
+      return "Carrot & Radish Mandi Rates:\n• Indore APMC (MP): ₹1,650 / Quintal (Red Carrot)\n• Varanasi APMC (UP): ₹1,050 / Quintal (White Radish)";
+    }
+
+    // Garlic
+    if (/\b(garlic|lahsun|poondu)\b/i.test(lower)) {
+      return "Garlic Mandi Rates:\n• Mandsaur APMC (MP): ₹13,500 / Quintal (Desi Extra Bold Grade-A)\n• Ooty Market (TN): ₹14,800 / Quintal";
+    }
+
+    // Ginger
+    if (/\b(ginger|adrak|inji)\b/i.test(lower)) {
+      return "Ginger Mandi Rates:\n• Wayanad APMC (Kerala): ₹7,800 / Quintal (Green Ginger)\n• Shimoga APMC (Karnataka): ₹8,200 / Quintal";
+    }
+
+    // Chilli / Green Chilli
+    if (/\b(chilli|chili|mirch|milagai|hari\s*mirch)\b/i.test(lower)) {
+      return "Chilli Mandi Rates:\n• Guntur APMC (AP): ₹4,800 / Quintal (Green Hybrid), ₹18,500 / Quintal (Teja Dry Red)\n• Indore APMC: ₹4,200 / Quintal (Green Chilli)";
+    }
+
+    // Chickpea / Gram / Chana
+    if (/\b(chana|chickpea|gram|bengal\s*gram|kondakadalai)\b/i.test(lower)) {
+      return "Chickpea / Chana Mandi Rates:\n• Bikaner APMC (Rajasthan): ₹5,850 / Quintal (Desi Chana)\n• Akola APMC (Maharashtra): ₹6,100 / Quintal\n• Government MSP: ₹5,440 / Quintal";
+    }
+
+    // Moong / Green Gram
+    if (/\b(moong|mung|green\s*gram|paasi\s*payaru)\b/i.test(lower)) {
+      return "Moong Mandi Rates:\n• Merta City APMC (Rajasthan): ₹8,150 / Quintal\n• Government MSP: ₹8,558 / Quintal";
+    }
+
+    // Urad / Black Gram
+    if (/\b(urad|black\s*gram|ulunthu)\b/i.test(lower)) {
+      return "Urad Mandi Rates:\n• Latur APMC (Maharashtra): ₹7,450 / Quintal\n• Government MSP: ₹6,950 / Quintal";
+    }
+
+    // Tur / Arhar / Pigeon Pea
+    if (/\b(tur|arhar|pigeon\s*pea|thuvaram\s*paruppu)\b/i.test(lower)) {
+      return "Tur / Arhar Mandi Rates:\n• Kalaburagi APMC (Karnataka): ₹9,850 / Quintal\n• Government MSP: ₹7,000 / Quintal";
+    }
+
+    // Groundnut / Peanut
+    if (/\b(groundnut|peanut|mungfali|verkadala)\b/i.test(lower)) {
+      return "Groundnut Mandi Rates:\n• Rajkot APMC (Gujarat): ₹6,250 / Quintal (Bold Pods)\n• Government MSP: ₹6,377 / Quintal";
+    }
+
+    // Sunflower
+    if (/\b(sunflower|surajmukhi|sooriyakaanthi)\b/i.test(lower)) {
+      return "Sunflower Mandi Rates:\n• Latur APMC (Maharashtra): ₹5,100 / Quintal\n• Government MSP: ₹6,760 / Quintal";
+    }
+
+    // Certified Seeds (Seed Rates, Seed Lots, Hybrid Seeds)
+    if (/\b(seed|seeds|beej|bija|vithai)\b/i.test(lower)) {
+      if (isHindi) {
+        return "प्रमाणित बीज (Certified Seeds) सरकारी दरें:\n• गेहूं बीज (HD-2967, DBW-187): ₹38 - ₹42 / किग्रा\n• धान बीज (बासमती / हाइब्रिड): ₹42 - ₹55 / किग्रा\n• चना बीज (JG-11, JAKI): ₹75 - ₹82 / किग्रा\n• सरसों बीज (पूसा बोल्ड): ₹140 - ₹180 / किग्रा\n• टमाटर हाइब्रिड: ₹550 - ₹850 प्रति 10 ग्राम पाउच\n• बीटी कॉटन हाइब्रिड: ₹853 प्रति 450 ग्राम पैकेट";
+      }
+      return "Certified Seed Rates (NSC & State Seed Corp Official Standards):\n• Certified Wheat Seed (HD-2967, DBW-187): ₹3,800 – ₹4,200 / Qtl (₹38–₹42/kg)\n• Certified Paddy / Rice Seed: ₹4,200 – ₹5,500 / Qtl (₹42–₹55/kg)\n• Certified Chana / Gram Seed (JG-11): ₹7,500 – ₹8,200 / Qtl (₹75–₹82/kg)\n• Certified Mustard Seed (Pusa Bold): ₹140 – ₹180 / kg\n• Certified Soybean Seed (JS-9560): ₹7,000 – ₹7,600 / Qtl (₹70–₹76/kg)\n• Hybrid Tomato Seed (Seminis Abhinav): ₹550 – ₹850 per 10g pouch\n• Hybrid Chilli Seed: ₹650 – ₹1,100 per 10g pouch\n• Bt Cotton Hybrid Seed: ₹853 per 450g packet (Govt Ceiling Rate)";
+    }
+
     // General Mandi price overview
-    return "Today's Key APMC Mandi Rates & MSP:\n• Wheat: ₹2,480 / Qtl (Indore) | MSP: ₹2,275\n• Basmati Rice: ₹3,820 / Qtl (Karnal) | MSP: ₹2,183\n• Cotton: ₹7,150 / Qtl (Rajkot) | MSP: ₹6,620\n• Tomato: ₹2,450 / Qtl (Madanapalle)\n• Onion: ₹2,420 / Qtl (Lasalgaon)\n• Soybean: ₹4,620 / Qtl (Indore) | MSP: ₹4,600";
+    return "Today's Key APMC Mandi Rates & MSP:\n• Wheat: ₹2,480 / Qtl (Indore) | MSP: ₹2,275\n• Basmati Rice: ₹3,820 / Qtl (Karnal) | MSP: ₹2,183\n• Cotton: ₹7,150 / Qtl (Rajkot) | MSP: ₹6,620\n• Tomato: ₹2,450 / Qtl (Madanapalle)\n• Onion: ₹2,420 / Qtl (Lasalgaon)\n• Soybean: ₹4,620 / Qtl (Indore) | MSP: ₹4,600\n• Mango: ₹4,800 - ₹6,500 / Qtl (Ratnagiri / Malihabad)\n• Chana: ₹5,850 / Qtl | MSP: ₹5,440";
   }
 
   // 7. Crop & Agronomic Queries

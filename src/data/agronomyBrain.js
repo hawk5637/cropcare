@@ -267,11 +267,42 @@ function formatMandiPriceAnswer(query, language = 'en', userName = 'Farmer', plo
   const isTamil = /[\u0B80-\u0BFF]/.test(query);
   const isHindi = /[\u0900-\u097F]/.test(query) || q.includes('kya hai') || q.includes('kitna') || q.includes('bhav') || q.includes('rate bataye');
 
+  const BENCHMARK_RATES = {
+    'Mango': { mandi: 'Ratnagiri / Malihabad APMC', modalPrice: 5600, minPrice: 4200, maxPrice: 7200, msp: null, name: 'Alphonso / Dasheri', trend: 'up' },
+    'Banana': { mandi: 'Jalgaon / Theni APMC', modalPrice: 2150, minPrice: 1850, maxPrice: 2450, msp: null, name: 'Grand Naine', trend: 'steady' },
+    'Apple': { mandi: 'Shimla / Sopore APMC', modalPrice: 7800, minPrice: 6500, maxPrice: 9200, msp: null, name: 'Royal Delicious Grade-A', trend: 'up' },
+    'Guava': { mandi: 'Prayagraj APMC', modalPrice: 2800, minPrice: 2200, maxPrice: 3400, msp: null, name: 'Allahabad Safeda', trend: 'steady' },
+    'Papaya': { mandi: 'Anantapur / Pune APMC', modalPrice: 1750, minPrice: 1400, maxPrice: 2100, msp: null, name: 'Red Lady 786', trend: 'steady' },
+    'Pomegranate': { mandi: 'Solapur APMC', modalPrice: 9800, minPrice: 8200, maxPrice: 12500, msp: null, name: 'Bhagwa Export Grade', trend: 'up' },
+    'Lemon / Citrus': { mandi: 'Tenali / Nagpur APMC', modalPrice: 4400, minPrice: 3600, maxPrice: 5200, msp: null, name: 'Acid Lime / Mandarin', trend: 'up' },
+    'Grapes': { mandi: 'Nashik APMC', modalPrice: 5800, minPrice: 4800, maxPrice: 7200, msp: null, name: 'Thompson Seedless', trend: 'up' },
+    'Watermelon': { mandi: 'Kolar APMC', modalPrice: 1150, minPrice: 950, maxPrice: 1400, msp: null, name: 'Kiran Hybrid', trend: 'steady' },
+    'Brinjal / Eggplant': { mandi: 'Belagavi / Varanasi APMC', modalPrice: 1850, minPrice: 1450, maxPrice: 2250, msp: null, name: 'Round Purple Hybrid', trend: 'steady' },
+    'Okra / Bhindi': { mandi: 'Surat / Jaipur APMC', modalPrice: 3100, minPrice: 2400, maxPrice: 3800, msp: null, name: 'Green Ladyfinger', trend: 'up' },
+    'Cabbage': { mandi: 'Nashik / Kolar APMC', modalPrice: 1150, minPrice: 900, maxPrice: 1450, msp: null, name: 'Fresh Green Cabbage', trend: 'steady' },
+    'Cauliflower': { mandi: 'Agra / Ranchi APMC', modalPrice: 1550, minPrice: 1200, maxPrice: 1900, msp: null, name: 'Snowball Cauliflower', trend: 'steady' },
+    'Cucumber': { mandi: 'Alwar / Malerkotla APMC', modalPrice: 1350, minPrice: 1050, maxPrice: 1700, msp: null, name: 'Green Slicing Cucumber', trend: 'steady' },
+    'Carrot / Radish': { mandi: 'Indore / Varanasi APMC', modalPrice: 1500, minPrice: 1100, maxPrice: 1950, msp: null, name: 'Desi Red Carrot / Radish', trend: 'steady' },
+    'Garlic': { mandi: 'Mandsaur APMC', modalPrice: 13500, minPrice: 11000, maxPrice: 16800, msp: null, name: 'Desi Extra Bold', trend: 'up' },
+    'Ginger': { mandi: 'Wayanad / Shimoga APMC', modalPrice: 7800, minPrice: 6500, maxPrice: 9200, msp: null, name: 'Fresh Green Ginger', trend: 'up' },
+    'Gram / Chickpea': { mandi: 'Bikaner / Akola APMC', modalPrice: 5850, minPrice: 5300, maxPrice: 6200, msp: 5440, name: 'Desi Chana', trend: 'up' },
+    'Moong': { mandi: 'Merta City APMC', modalPrice: 8150, minPrice: 7500, maxPrice: 8600, msp: 8558, name: 'Green Moong', trend: 'up' },
+    'Urad': { mandi: 'Latur APMC', modalPrice: 7450, minPrice: 6800, maxPrice: 7900, msp: 6950, name: 'Black Urad', trend: 'up' },
+    'Tur / Arhar': { mandi: 'Kalaburagi APMC', modalPrice: 9850, minPrice: 9200, maxPrice: 10500, msp: 7000, name: 'Red Gram', trend: 'up' },
+    'Groundnut': { mandi: 'Rajkot APMC', modalPrice: 6250, minPrice: 5800, maxPrice: 6700, msp: 6377, name: 'Bold Pods', trend: 'steady' },
+    'Sunflower': { mandi: 'Latur / Kurnool APMC', modalPrice: 5100, minPrice: 4700, maxPrice: 5600, msp: 6760, name: 'Sunflower Seeds', trend: 'steady' },
+    'Certified Seeds': { mandi: 'National Seeds Corp (NSC) & SSC Rates', modalPrice: 4200, minPrice: 3800, maxPrice: 7500, msp: null, name: 'Certified Seed Lots (Wheat ₹40/kg, Paddy ₹48/kg, Chana ₹78/kg)', trend: 'steady' }
+  };
+
   if (matches.length === 0) {
-    if (isTanglish) return `${targetCrop} live mandi rate ippo available-ah illa. Mandi Module-la check pannunga.`;
-    if (isHindi) return `${targetCrop} का लाइव भाव अभी उपलब्ध नहीं है। कृपया मंडी मॉड्यूल में जांचें।`;
-    if (isTamil) return `${targetCrop} நேரடி மண்டி விலை தகவல் தற்போது கிடைக்கவில்லை.`;
-    return `Live APMC mandi data for **${targetCrop}** is not actively reporting right now. Please explore the **Mandi & Market Module** for neighboring APMC tenders.`;
+    if (BENCHMARK_RATES[targetCrop]) {
+      matches.push(BENCHMARK_RATES[targetCrop]);
+    } else {
+      if (isTanglish) return `${targetCrop} live mandi rate ippo available-ah illa. Mandi Module-la check pannunga.`;
+      if (isHindi) return `${targetCrop} का लाइव भाव अभी उपलब्ध नहीं है। कृपया मंडी मॉड्यूल में जांचें।`;
+      if (isTamil) return `${targetCrop} நேரடி மண்டி விலை தகவல் தற்போது கிடைக்கவில்லை.`;
+      return `Live APMC mandi data for **${targetCrop}** is not actively reporting right now. Please explore the **Mandi & Market Module** for neighboring APMC tenders.`;
+    }
   }
 
   const primary = matches[0];
@@ -339,8 +370,26 @@ function extractCommodityName(query) {
     maize: 'Maize', makka: 'Maize', corn: 'Maize',
     soybean: 'Soybean', soya: 'Soybean',
     sugarcane: 'Sugarcane', ganna: 'Sugarcane', karumbu: 'Sugarcane',
-    chana: 'Gram / Chickpea', chickpea: 'Gram / Chickpea',
-    mango: 'Mango', aam: 'Mango', banana: 'Banana', kela: 'Banana'
+    chana: 'Gram / Chickpea', chickpea: 'Gram / Chickpea', gram: 'Gram / Chickpea',
+    moong: 'Moong', mung: 'Moong', urad: 'Urad', tur: 'Tur / Arhar', arhar: 'Tur / Arhar',
+    groundnut: 'Groundnut', peanut: 'Groundnut', mungfali: 'Groundnut',
+    sunflower: 'Sunflower', surajmukhi: 'Sunflower',
+    mango: 'Mango', aam: 'Mango', maangai: 'Mango',
+    banana: 'Banana', kela: 'Banana', vazhaipazham: 'Banana',
+    apple: 'Apple', seb: 'Apple', aappil: 'Apple',
+    guava: 'Guava', amrood: 'Guava', papaya: 'Papaya', papita: 'Papaya',
+    pomegranate: 'Pomegranate', anar: 'Pomegranate',
+    lemon: 'Lemon / Citrus', lime: 'Lemon / Citrus', nimbu: 'Lemon / Citrus', citrus: 'Lemon / Citrus', orange: 'Lemon / Citrus', santra: 'Lemon / Citrus',
+    grapes: 'Grapes', angoor: 'Grapes', watermelon: 'Watermelon', tarbooz: 'Watermelon',
+    brinjal: 'Brinjal / Eggplant', eggplant: 'Brinjal / Eggplant', baingan: 'Brinjal / Eggplant', kathirikai: 'Brinjal / Eggplant',
+    okra: 'Okra / Bhindi', ladyfinger: 'Okra / Bhindi', bhindi: 'Okra / Bhindi', vendaikkai: 'Okra / Bhindi',
+    cabbage: 'Cabbage', gobhi: 'Cabbage', muttakose: 'Cabbage',
+    cauliflower: 'Cauliflower', phoolgobhi: 'Cauliflower',
+    cucumber: 'Cucumber', kheera: 'Cucumber',
+    carrot: 'Carrot / Radish', gajar: 'Carrot / Radish', radish: 'Carrot / Radish', mooli: 'Carrot / Radish',
+    garlic: 'Garlic', lahsun: 'Garlic', poondu: 'Garlic',
+    ginger: 'Ginger', adrak: 'Ginger', inji: 'Ginger',
+    seed: 'Certified Seeds', seeds: 'Certified Seeds', beej: 'Certified Seeds', bija: 'Certified Seeds'
   };
 
   for (const [kw, name] of Object.entries(aliasMap)) {

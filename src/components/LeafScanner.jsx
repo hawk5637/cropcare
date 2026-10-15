@@ -13,6 +13,7 @@ import {
   Sparkles, 
   ExternalLink, 
   ShieldAlert, 
+  ShieldCheck,
   Activity, 
   Leaf, 
   Info, 
@@ -1126,7 +1127,7 @@ export default function LeafScanner() {
   const startCamera = async (overrideFacing, isSilent = false) => {
     try {
       setScanError(null);
-      setCameraError(null);
+      if (!isSilent) setCameraError(null);
       setImagePreview(null);
       setIsCameraLoading(true);
 
@@ -1138,36 +1139,29 @@ export default function LeafScanner() {
       const facing = overrideFacing || cameraFacing;
 
       // Check browser mediaDevices support (WebRTC requires HTTPS or localhost)
-      const isSecure = window.isSecureContext || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (!isSecure || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setIsCameraLoading(false);
         setIsCameraActive(false);
-        setCameraError({
-          title: 'Live Camera Permission / Insecure Protocol',
-          message: 'Live video streaming in modern browsers requires HTTPS or Localhost. You can take a photo with your device camera directly or choose an image below.'
-        });
+        if (!isSilent) {
+          setCameraError({
+            title: 'Live Camera Permission / Insecure Protocol',
+            message: 'Live video streaming in modern browsers requires HTTPS or Localhost. You can take a photo with your device camera directly or choose an image below.'
+          });
+        }
         return;
       }
 
-      // Safe constraints using { ideal } with 3.5s timeout per attempt
       const attempts = [
         { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
         { video: { facingMode: { ideal: facing } }, audio: false },
         { video: true, audio: false }
       ];
 
-      const getStreamWithTimeout = (constraint, timeoutMs = 3500) => {
-        return Promise.race([
-          navigator.mediaDevices.getUserMedia(constraint),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeoutMs))
-        ]);
-      };
-
       let stream = null;
       let lastErr = null;
       for (const constraint of attempts) {
         try {
-          stream = await getStreamWithTimeout(constraint, 3500);
+          stream = await navigator.mediaDevices.getUserMedia(constraint);
           if (stream) break;
         } catch (errTry) {
           lastErr = errTry;
@@ -1177,14 +1171,16 @@ export default function LeafScanner() {
       if (!stream) {
         setIsCameraLoading(false);
         setIsCameraActive(false);
-        setCameraError({
-          title: 'Camera Access Notice',
-          message: lastErr?.name === 'NotAllowedError'
-            ? 'Camera permission was denied. Please allow camera access in browser settings or use the Device Camera button below.'
-            : lastErr?.name === 'NotFoundError'
-            ? 'No camera sensor was detected on this device. You can upload a photo or use a 1-click test specimen.'
-            : 'Could not connect to live camera feed. Please tap "Take Photo with Device Camera" or upload a leaf photo.'
-        });
+        if (!isSilent) {
+          setCameraError({
+            title: 'Camera Access Notice',
+            message: lastErr?.name === 'NotAllowedError'
+              ? 'Camera permission was denied. Please allow camera access in browser settings or use the Device Camera button below.'
+              : lastErr?.name === 'NotFoundError'
+              ? 'No camera sensor was detected on this device. You can upload a photo or use a 1-click test specimen.'
+              : 'Could not connect to live camera feed. Please tap "Take Photo with Device Camera" or upload a leaf photo.'
+          });
+        }
         return;
       }
 
@@ -1202,15 +1198,18 @@ export default function LeafScanner() {
       setCameraStream(stream);
       setIsCameraActive(true);
       setIsCameraLoading(false);
+      setCameraError(null);
       setActiveTab('camera');
     } catch (err) {
       console.warn('[LeafScanner] Camera live feed unavailable:', err);
       setIsCameraActive(false);
       setIsCameraLoading(false);
-      setCameraError({
-        title: 'Camera Stream Notice',
-        message: err?.message || 'Unable to open camera feed. Tap "Take Photo with Device Camera" below.'
-      });
+      if (!isSilent) {
+        setCameraError({
+          title: 'Camera Stream Notice',
+          message: err?.message || 'Unable to open camera feed. Tap "Take Photo with Device Camera" below.'
+        });
+      }
     }
   };
 

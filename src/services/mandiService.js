@@ -870,7 +870,7 @@ export const ALL_INDIA_MANDI_ITEMS = [
 
   // ─── KARNATAKA ─────────────────────────────────────────────────────────────
   {
-    id: "ka-tomato-kolar",
+    id: "ka-tomato-kolar-table",
     name: { en: "Tomato (Kolar Hybrid F1 Table Grade)", hi: "टमाटर (कोलार हाइब्रिड F1)", ta: "தக்காளி (கோலார் F1)", fr: "Tomate de Table (Kolar)" },
     category: { en: "Vegetables", hi: "सब्जियां", ta: "காய்கறிகள்", fr: "Légumes" },
     mandi: "Kolar APMC, Karnataka",
@@ -952,7 +952,7 @@ export const ALL_INDIA_MANDI_ITEMS = [
     qualitySpecs: { en: "Lustrous heavy grain, Protein > 13.5%, Moisture < 11%", hi: "चमकदार मोटा दाना, प्रोटीन > 13.5%", ta: "புரதம் > 13.5%", fr: "Protéines > 13.5%" }
   },
   {
-    id: "mp-garlic-mandsaur",
+    id: "mp-garlic-mandsaur-bold",
     name: { en: "Garlic (Mandsaur G-282 Extra Bold)", hi: "लहसुन (मंदसौर G-282 एक्स्ट्रा बोल्ड)", ta: "பூண்டு (மண்ட்சவுர்)", fr: "Ail Blanc Extra-Gros" },
     category: { en: "Vegetables", hi: "सब्जियां", ta: "காய்கறிகள்", fr: "Légumes & Épices" },
     mandi: "Mandsaur APMC, Madhya Pradesh",
@@ -1225,7 +1225,7 @@ export const ALL_INDIA_MANDI_ITEMS = [
 
   // ─── UTTAR PRADESH ─────────────────────────────────────────────────────────
   {
-    id: "up-potato-agra",
+    id: "up-potato-agra-bahar",
     name: { en: "Potato (Agra Kufri Bahar Cold Storage)", hi: "आलू (आगरा कुफरी बहार)", ta: "உருளைக்கிழங்கு (ஆக்ரா)", fr: "Pommes de Terre (Agra)" },
     category: { en: "Vegetables", hi: "सब्जियां", ta: "காய்கறிகள்", fr: "Légumes" },
     mandi: "Agra Fatehabad Road APMC, Uttar Pradesh",

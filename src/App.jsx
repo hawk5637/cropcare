@@ -18,6 +18,7 @@ import AnimatedOpeningLogo from './components/AnimatedOpeningLogo.jsx';
 import AnimatedIntroScreen from './components/AnimatedIntroScreen.jsx';
 import LiveMandiTicker from './components/LiveMandiTicker.jsx';
 import Footer from './components/Footer.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 // All 18 modules
 import LandSoilModule from './components/modules/LandSoilModule.jsx';
@@ -139,7 +140,9 @@ export default function App() {
       <Header />
       <LiveMandiTicker />
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        {renderActiveView()}
+        <ErrorBoundary>
+          {renderActiveView()}
+        </ErrorBoundary>
       </main>
       <Footer />
       <PlatformIntroModal 
